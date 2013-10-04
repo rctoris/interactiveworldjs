@@ -1,4 +1,4 @@
-interactiveworldjs [![Build Status](https://api.travis-ci.org/wpi-rail/interactiveworldjs.png)](https://travis-ci.org/wpi-rail/interactiveworldjs)
+interactiveworldjs [![Build Status](https://api.travis-ci.org/WPI-RAIL/interactiveworldjs.png)](https://travis-ci.org/WPI-RAIL/interactiveworldjs)
 ==================
 
 #### 3D Visualization Interface for Learning Object Reference Frames

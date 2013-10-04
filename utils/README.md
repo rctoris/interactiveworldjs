@@ -28,6 +28,6 @@ To run the build tasks:
  1. `cd /path/to/interactiveworldjs/utils/`
  2. `grunt build`
 
-`grunt build` will concatenate and minimize the files under src and replace interactiveworldjs.js and interactiveworldjs.min.js in the build directory. It will also run the linter. This is what [Travis CI](https://travis-ci.org/wpi-rail/interactiveworldjs) runs when a Pull Request is submitted.
+`grunt build` will concatenate and minimize the files under src and replace interactiveworldjs.js and interactiveworldjs.min.js in the build directory. It will also run the linter. This is what [Travis CI](https://travis-ci.org/WPI-RAIL/interactiveworldjs) runs when a Pull Request is submitted.
 
 `grunt doc` will rebuild all JSDoc for the project.
