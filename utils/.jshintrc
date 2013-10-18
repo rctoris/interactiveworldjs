@@ -1,7 +1,8 @@
 {
   "globals": {
     "module": true,
-    "THREE": true
+    "THREE": true,
+    "requestAnimationFrame": true
   },
   "curly": true,
   "eqeqeq": true,

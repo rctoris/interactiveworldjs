@@ -2,15 +2,23 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<script type="text/javascript" src="../include/threejs/three.js"></script>
-<script type="text/javascript" src="../build/interactiveworld.js"></script>
+<script src="three.js"></script>
+<script src="interactiveworld.js"></script>
+<script src="ColladaLoader.js"></script>
+<style type="text/css">
+*{margin:0;padding:0;overflow:hidden}
+</style>
 
-<script type="text/javascript" type="text/javascript">
+<script>
   /**
    * Setup all visualization elements when the page is loaded. 
    */
   function init() {
-
+    // create the viewer
+    var viewer = new INTERACTIVEWORLD.Viewer({
+      antialias : true,
+      divID : 'viewer'
+    })
   }
 </script>
 </head>
