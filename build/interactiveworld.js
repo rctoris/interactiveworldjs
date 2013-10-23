@@ -16,53 +16,243 @@ INTERACTIVEWORLD.WEST_WALL = 3;
 INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE = 0;
 INTERACTIVEWORLD.POSITIVE_DOOR_SIDE = 1;
 
+INTERACTIVEWORLD.WORLD_WIDTH = 20;
+INTERACTIVEWORLD.WORLD_HEIGHT = 20;
+INTERACTIVEWORLD.WORLD_FLOOR_TEXTURE = 'resources/textures/grass.jpg';
+
 INTERACTIVEWORLD.WALL_WIDTH = 0.05;
-INTERACTIVEWORLD.WALL_HEIGHT = 1.5;
+INTERACTIVEWORLD.WALL_HEIGHT = 0.75;
 INTERACTIVEWORLD.DOOR_WIDTH = 0.8;
 
-INTERACTIVEWORLD.WORLD_WIDTH = 100;
-INTERACTIVEWORLD.WORLD_HEIGHT = 100;
-INTERACTIVEWORLD.WORLD_FLOOR_TEXTURE = 'grass.jpg';
+INTERACTIVEWORLD.HALLWAY_WIDTH = 1;
 
-INTERACTIVEWORLD.HOUSE_WIDTH = 10;
-INTERACTIVEWORLD.HOUSE_HEIGHT = 8;
-INTERACTIVEWORLD.HOUSE_WALL_TEXTURE = 'wall.jpg';
-INTERACTIVEWORLD.HOUSE_FLOOR_TEXTURE = 'floor.jpg';
+INTERACTIVEWORLD.ROOM_WIDTH = 4.9;
+INTERACTIVEWORLD.ROOM_HEIGHT = 4;
 
-INTERACTIVEWORLD.BEDROOM_WIDTH = 4.9;
-INTERACTIVEWORLD.BEDROOM_HEIGHT = 4.5;
-INTERACTIVEWORLD.BEDROOM_WALL_TEXTURE = 'bedroom.jpg';
-INTERACTIVEWORLD.BEDROOM_FLOOR_TEXTURE = 'carpet.jpg';
+INTERACTIVEWORLD.HOUSE_WIDTH = (INTERACTIVEWORLD.ROOM_WIDTH * 2)
+    + INTERACTIVEWORLD.HALLWAY_WIDTH;
+INTERACTIVEWORLD.HOUSE_HEIGHT = (INTERACTIVEWORLD.ROOM_HEIGHT * 2)
+    + INTERACTIVEWORLD.HALLWAY_WIDTH;
+INTERACTIVEWORLD.HOUSE_WALL_TEXTURE = 'resources/textures/bricks.jpg';
+INTERACTIVEWORLD.HOUSE_FLOOR_TEXTURE = 'resources/textures/hardwood-light.jpg';
 
-INTERACTIVEWORLD.BED_MODEL = 'bed.dae';
+INTERACTIVEWORLD.BEDROOM_WALL_TEXTURE = 'resources/textures/painted-wall-blue.jpg';
+INTERACTIVEWORLD.BEDROOM_FLOOR_TEXTURE = 'resources/textures/carpet-grey.jpg';
 
-INTERACTIVEWORLD.DRESSER_MODEL = 'dresser.dae';
+INTERACTIVEWORLD.KITCHEN_WALL_TEXTURE = 'resources/textures/tile-wall.jpg';
+INTERACTIVEWORLD.KITCHEN_FLOOR_TEXTURE = 'resources/textures/tile-floor.jpg';
+
+INTERACTIVEWORLD.DINING_ROOM_WALL_TEXTURE = 'resources/textures/wallpaper-light.jpg';
+INTERACTIVEWORLD.DINING_ROOM_FLOOR_TEXTURE = 'resources/textures/hardwood-dark.jpg';
+
+INTERACTIVEWORLD.LIVING_ROOM_WALL_TEXTURE = 'resources/textures/painted-wall-red.jpg';
+INTERACTIVEWORLD.LIVING_ROOM_FLOOR_TEXTURE = 'resources/textures/carpet-tan.jpg';
+
+INTERACTIVEWORLD.BED_MODEL = 'resources/models/bed.dae';
+INTERACTIVEWORLD.DRESSER_MODEL = 'resources/models/dresser.dae';
+INTERACTIVEWORLD.NIGHTSTAND_MODEL = 'resources/models/nightstand.dae';
+INTERACTIVEWORLD.DINING_TABLE_MODEL = 'resources/models/dining-table.dae';
+INTERACTIVEWORLD.SINK_MODEL = 'resources/models/sink.dae';
+INTERACTIVEWORLD.CABINET_MODEL = 'resources/models/cabinet.dae';
+INTERACTIVEWORLD.REFRIGERATOR_MODEL = 'resources/models/refrigerator.dae';
+INTERACTIVEWORLD.OVEN_MODEL = 'resources/models/oven.dae';
+INTERACTIVEWORLD.COUNTER_MODEL = 'resources/models/counter.dae';
+INTERACTIVEWORLD.COUCH_MODEL = 'resources/models/couch.dae';
+INTERACTIVEWORLD.TV_MODEL = 'resources/models/tv.dae';
+INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.dae';
+
+INTERACTIVEWORLD.RUG_TEXTURE = 'resources/textures/rug.jpg';
+
 INTERACTIVEWORLD.Bed = function() {
   var that = this;
   THREE.Object3D.call(this);
 
-  // load the bed
+  // load the model
   var loader = new THREE.ColladaLoader();
   loader.load(INTERACTIVEWORLD.BED_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = -0.04;
+    result.scene.position.y = 2.17;
+    result.scene.rotation.z = -Math.PI / 2.0;
     that.add(result.scene);
   });
 };
 INTERACTIVEWORLD.Bed.prototype.__proto__ = THREE.Object3D.prototype;
 
+INTERACTIVEWORLD.Cabinet = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.CABINET_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.y = 0.1;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Cabinet.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.CoffeeTable = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.COFFEE_TABLE_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.y = 0.75;
+    result.scene.rotation.z = -Math.PI / 2.0;
+    result.scene.scale.x *= 0.11;
+    result.scene.scale.y *= 0.11;
+    result.scene.scale.z *= 0.11;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.CoffeeTable.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Couch = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.COUCH_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = -0.7;
+    result.scene.position.y = 0.55;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Couch.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Counter = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.COUNTER_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = 1.65;
+    result.scene.position.y = 1.95;
+    result.scene.scale.x *= 0.85;
+    result.scene.scale.y *= 0.85;
+    result.scene.scale.z *= 0.85;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Counter.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.DiningTable = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.DINING_TABLE_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = 2.4;
+    result.scene.position.y = 1.75;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.DiningTable.prototype.__proto__ = THREE.Object3D.prototype;
+
 INTERACTIVEWORLD.Dresser = function() {
   var that = this;
   THREE.Object3D.call(this);
 
-  // load the dresser
+  // load the model
   var loader = new THREE.ColladaLoader();
   loader.load(INTERACTIVEWORLD.DRESSER_MODEL, function(result) {
     // fix the offset
-    result.scene.position.x -= 18;
-    result.scene.position.y -= 12;
+    result.scene.position.x = -17.32;
+    result.scene.position.y = -11.55;
     that.add(result.scene);
   });
 };
 INTERACTIVEWORLD.Dresser.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Nightstand = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.NIGHTSTAND_MODEL, function(result) {
+    // fix offset
+    result.scene.position.x = -0.95;
+    result.scene.position.y = -0.69;
+    result.scene.position.z = -0.1;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Nightstand.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Oven = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.OVEN_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = -0.45;
+    result.scene.position.y = -0.2;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Oven.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Refrigerator = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.REFRIGERATOR_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = -0.15;
+    result.scene.position.y = 1.15;
+    result.scene.rotation.z = -Math.PI / 2.0;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Refrigerator.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Sink = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.SINK_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = -0.3;
+    result.scene.position.y = -0.2;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Sink.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.TV = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.TV_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = 1.3;
+    result.scene.position.y = 0.6;
+    result.scene.scale.x *= 0.66;
+    result.scene.scale.y *= 0.66;
+    result.scene.scale.z *= 0.66;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.TV.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.TexturePlane = function(options) {
   options = options || {};
@@ -110,27 +300,86 @@ INTERACTIVEWORLD.Bedroom = function() {
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
-    width : INTERACTIVEWORLD.BEDROOM_WIDTH,
-    height : INTERACTIVEWORLD.BEDROOM_HEIGHT,
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
     floor : INTERACTIVEWORLD.BEDROOM_FLOOR_TEXTURE,
     wall : INTERACTIVEWORLD.BEDROOM_WALL_TEXTURE,
     withDoor : true,
-    doorWall : INTERACTIVEWORLD.WEST_WALL,
+    doorWall : INTERACTIVEWORLD.EAST_WALL,
     doorSide : INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE
   }));
 
+  // load the models we need
   var bed = new INTERACTIVEWORLD.Bed();
-  this.add(bed);
-
+  var nightstandOne = new INTERACTIVEWORLD.Nightstand();
+  var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
   var dresser = new INTERACTIVEWORLD.Dresser();
-  dresser.position.x = INTERACTIVEWORLD.BEDROOM_WIDTH / 2.0 - 0.8;
-  dresser.position.y = INTERACTIVEWORLD.BEDROOM_HEIGHT / 2.0
-      - INTERACTIVEWORLD.WALL_WIDTH;
-  this.add(dresser);
 
-  this.add(new THREE.DirectionalLight(0xffffff, 0.9));
+  // set the positions
+  bed.position.x = -0.8;
+  bed.position.y = -0.2;
+
+  nightstandOne.position.x = 1.25;
+  nightstandOne.position.y = 1.3;
+
+  nightstandTwo.position.x = -2;
+  nightstandTwo.position.y = 1.3;
+
+  dresser.position.x = 0.645;
+  dresser.position.y = -1.45;
+  dresser.rotation.z = Math.PI;
+
+  // add the models
+  this.add(bed);
+  this.add(nightstandOne);
+  this.add(nightstandTwo);
+  this.add(dresser);
 };
 INTERACTIVEWORLD.Bedroom.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.DiningRoom = function() {
+  THREE.Object3D.call(this);
+
+  // add the room structure
+  this.add(new INTERACTIVEWORLD.Room({
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
+    floor : INTERACTIVEWORLD.DINING_ROOM_FLOOR_TEXTURE,
+    wall : INTERACTIVEWORLD.DINING_ROOM_WALL_TEXTURE,
+    withDoor : true,
+    doorWall : INTERACTIVEWORLD.NORTH_WALL,
+    doorSide : INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE
+  }));
+
+  // load the models we need
+  var diningTable = new INTERACTIVEWORLD.DiningTable();
+  var cabinet = new INTERACTIVEWORLD.Cabinet();
+
+  var rug = new INTERACTIVEWORLD.TexturePlane({
+    width : 3.2,
+    height : 2,
+    texture : INTERACTIVEWORLD.RUG_TEXTURE,
+    repeat : 1
+  });
+
+  // set the positions
+  diningTable.position.x = -1.2;
+  diningTable.position.y = -0.3;
+
+  cabinet.position.x = -0.55;
+  cabinet.position.y = -1.4;
+  cabinet.rotation.z = Math.PI;
+
+  rug.position.x = 0.3;
+  rug.position.y = 0.6;
+  rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+
+  // add the models
+  this.add(diningTable);
+  this.add(cabinet);
+  this.add(rug);
+};
+INTERACTIVEWORLD.DiningRoom.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.House = function() {
   THREE.Object3D.call(this);
@@ -138,25 +387,148 @@ INTERACTIVEWORLD.House = function() {
   // add the room structure
   var outside = new INTERACTIVEWORLD.Room({
     width : INTERACTIVEWORLD.HOUSE_WIDTH,
-    height : INTERACTIVEWORLD.HOUSE_WIDTH,
+    height : INTERACTIVEWORLD.HOUSE_HEIGHT,
     floor : INTERACTIVEWORLD.HOUSE_FLOOR_TEXTURE,
     wall : INTERACTIVEWORLD.HOUSE_WALL_TEXTURE,
   });
   outside.position.z = -INTERACTIVEWORLD.Z_INDEX;
   this.add(outside);
 
+  var wallBuffer = (INTERACTIVEWORLD.WALL_WIDTH / 2.0);
+
   // add the rooms
   var bedroom = new INTERACTIVEWORLD.Bedroom();
+  bedroom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
+      - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
+      + wallBuffer;
+  bedroom.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT / 2.0)
+      + ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
+      - wallBuffer;
   this.add(bedroom);
+
+  var kitchen = new INTERACTIVEWORLD.Kitchen();
+  kitchen.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
+      + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
+      - wallBuffer;
+  kitchen.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT / 2.0)
+      + ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
+      - wallBuffer;
+  this.add(kitchen);
+
+  var livingRoom = new INTERACTIVEWORLD.LivingRoom();
+  livingRoom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
+      - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
+      + wallBuffer;
+  livingRoom.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT / 2.0)
+      - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
+      + wallBuffer;
+  this.add(livingRoom);
+
+  var diningRoom = new INTERACTIVEWORLD.DiningRoom();
+  diningRoom.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
+      + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
+      - wallBuffer;
+  diningRoom.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT / 2.0)
+      - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
+      + wallBuffer;
+  this.add(diningRoom);
 };
 INTERACTIVEWORLD.House.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Kitchen = function() {
+  THREE.Object3D.call(this);
+
+  // add the room structure
+  this.add(new INTERACTIVEWORLD.Room({
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
+    floor : INTERACTIVEWORLD.KITCHEN_FLOOR_TEXTURE,
+    wall : INTERACTIVEWORLD.KITCHEN_WALL_TEXTURE,
+    withDoor : true,
+    doorWall : INTERACTIVEWORLD.SOUTH_WALL,
+    doorSide : INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE
+  }));
+
+  // load the models we need
+  var refrigerator = new INTERACTIVEWORLD.Refrigerator();
+  var sink = new INTERACTIVEWORLD.Sink();
+  var oven = new INTERACTIVEWORLD.Oven();
+  var counterOne = new INTERACTIVEWORLD.Counter();
+  var counterTwo = new INTERACTIVEWORLD.Counter();
+
+  // set the positions
+  refrigerator.position.x = 1.2;
+  refrigerator.position.y = 1.1;
+
+  sink.position.x = -2.2;
+  sink.position.y = 1.1;
+
+  oven.position.x = 1;
+  oven.position.y = -1.35;
+  oven.rotation.z = Math.PI;
+
+  counterOne.position.x = 2.1;
+  counterOne.position.y = -1.1;
+  counterOne.rotation.z = Math.PI;
+
+  counterTwo.position.x = -0.3;
+  counterTwo.position.y = -1.1;
+  counterTwo.rotation.z = Math.PI;
+
+  // add the models
+  this.add(refrigerator);
+  this.add(sink);
+  this.add(oven);
+  this.add(counterOne);
+  this.add(counterTwo);
+};
+INTERACTIVEWORLD.Kitchen.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.LivingRoom = function() {
+  THREE.Object3D.call(this);
+
+  // add the room structure
+  this.add(new INTERACTIVEWORLD.Room({
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
+    floor : INTERACTIVEWORLD.LIVING_ROOM_FLOOR_TEXTURE,
+    wall : INTERACTIVEWORLD.LIVING_ROOM_WALL_TEXTURE,
+    withDoor : true,
+    doorWall : INTERACTIVEWORLD.EAST_WALL,
+    doorSide : INTERACTIVEWORLD.POSITIVE_DOOR_SIDE
+  }));
+
+  // load the models we need
+  var couch = new INTERACTIVEWORLD.Couch();
+  var tv = new INTERACTIVEWORLD.TV();
+  var coffeeTable = new INTERACTIVEWORLD.CoffeeTable();
+
+  // set the positions
+  couch.position.x = -0.65;
+  couch.position.y = -1.95;
+  couch.rotation.z = Math.PI / 2.0;
+
+  tv.position.x = 1.7;
+  tv.position.y = 0.5;
+  tv.rotation.z = -Math.PI / 2.0;
+
+  coffeeTable.position.x = -0.15;
+  coffeeTable.position.y = 0.7;
+  coffeeTable.rotation.z = -Math.PI / 2.0;
+
+  // add the models
+  this.add(couch);
+  this.add(tv);
+  this.add(coffeeTable);
+};
+INTERACTIVEWORLD.LivingRoom.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Room = function(options) {
   THREE.Object3D.call(this);
 
   options = options || {};
   var width = options.width;
-  var height = options.width;
+  var height = options.height;
   var withDoor = options.withDoor;
   var doorWall = options.doorWall;
   var doorSide = options.doorSide;
@@ -168,7 +540,7 @@ INTERACTIVEWORLD.Room = function(options) {
     width : width,
     height : height,
     texture : floor,
-    repeat : 5
+    repeat : 4
   }));
 
   // setup the walls
@@ -262,14 +634,14 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.domElement = options.domElement;
   var objects = options.objects;
 
-  var translateObject = new THREE.Object3D();
-  translateObject.add(this.camera);
+  this.camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
 
-  //var rotateObject = new THREE.Object3D();
-  //rotateObject.add(translateObject);
-  var rotateObject = translateObject;
+  var boom = new THREE.Object3D();
+  boom.add(this.camera);
 
-  this.scene.add(rotateObject);
+  this.scene.add(boom);
+
+  boom.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 3;
 
   this.target = new THREE.Vector3();
 
@@ -294,7 +666,7 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.maxDistance = Infinity;
 
   this.lastPosition = new THREE.Vector3();
-  
+
   var projector = new THREE.Projector();
 
   var STATE = {
@@ -333,13 +705,13 @@ INTERACTIVEWORLD.MouseControls = function(options) {
 
     switch (state) {
       case STATE.ROTATE:
-        rotateObject.position.x = translateObject.position.x;
-        rotateObject.position.y = translateObject.position.y;
-        rotateObject.rotation.z -= ((movementX - movementY)) * 0.002;
+        boom.position.x = boom.position.x;
+        boom.position.y = boom.position.y;
+        boom.rotation.z -= ((movementX - movementY)) * 0.002;
         break;
       case STATE.PAN:
-        translateObject.translateX(-movementX * 0.01);
-        translateObject.translateY(movementY * 0.01);
+        boom.translateX(-movementX * 0.01);
+        boom.translateY(movementY * 0.01);
     }
   }
 
@@ -399,7 +771,6 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.domElement.addEventListener('mousewheel', onMouseWheel, false);
   this.domElement.addEventListener('DOMMouseScroll', onMouseWheel, false);
   this.domElement.addEventListener('mousemove', mouseHighlighter, false);
-  
 
   this.rotateUp(-0.75);
 };
@@ -478,12 +849,10 @@ INTERACTIVEWORLD.Viewer = function(options) {
   // create the global camera
   var camera = new THREE.PerspectiveCamera(60, window.innerWidth
       / window.innerHeight, 0.01, 1000);
-  camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
 
   // add lights
   scene.add(new THREE.AmbientLight(0x666666));
-  var directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-  scene.add(directionalLight);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xaaaaaa, 0.8));
 
   // add the world
   scene.add(new INTERACTIVEWORLD.World());
@@ -514,11 +883,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
     // update the controls
     controls.update();
 
-    // put light to the top-left of the camera
-    directionalLight.position = camera
-        .localToWorld(new THREE.Vector3(-1, 1, 0));
-    directionalLight.position.normalize();
-
+    // render the scene
     renderer.render(scene, camera);
 
     // draw the frame
@@ -540,7 +905,7 @@ INTERACTIVEWORLD.World = function() {
     width : INTERACTIVEWORLD.WORLD_WIDTH,
     height : INTERACTIVEWORLD.WORLD_HEIGHT,
     texture : INTERACTIVEWORLD.WORLD_FLOOR_TEXTURE,
-    repeat : 6
+    repeat : 10
   });
   grass.position.z = -INTERACTIVEWORLD.Z_INDEX * 2;
   this.add(grass);

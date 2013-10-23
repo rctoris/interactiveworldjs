@@ -6,7 +6,7 @@ INTERACTIVEWORLD.World = function() {
     width : INTERACTIVEWORLD.WORLD_WIDTH,
     height : INTERACTIVEWORLD.WORLD_HEIGHT,
     texture : INTERACTIVEWORLD.WORLD_FLOOR_TEXTURE,
-    repeat : 6
+    repeat : 10
   });
   grass.position.z = -INTERACTIVEWORLD.Z_INDEX * 2;
   this.add(grass);

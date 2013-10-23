@@ -16,12 +16,10 @@ INTERACTIVEWORLD.Viewer = function(options) {
   // create the global camera
   var camera = new THREE.PerspectiveCamera(60, window.innerWidth
       / window.innerHeight, 0.01, 1000);
-  camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
 
   // add lights
   scene.add(new THREE.AmbientLight(0x666666));
-  var directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-  scene.add(directionalLight);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xaaaaaa, 0.8));
 
   // add the world
   scene.add(new INTERACTIVEWORLD.World());
@@ -52,11 +50,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
     // update the controls
     controls.update();
 
-    // put light to the top-left of the camera
-    directionalLight.position = camera
-        .localToWorld(new THREE.Vector3(-1, 1, 0));
-    directionalLight.position.normalize();
-
+    // render the scene
     renderer.render(scene, camera);
 
     // draw the frame

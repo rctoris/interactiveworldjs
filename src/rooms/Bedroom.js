@@ -3,24 +3,39 @@ INTERACTIVEWORLD.Bedroom = function() {
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
-    width : INTERACTIVEWORLD.BEDROOM_WIDTH,
-    height : INTERACTIVEWORLD.BEDROOM_HEIGHT,
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
     floor : INTERACTIVEWORLD.BEDROOM_FLOOR_TEXTURE,
     wall : INTERACTIVEWORLD.BEDROOM_WALL_TEXTURE,
     withDoor : true,
-    doorWall : INTERACTIVEWORLD.WEST_WALL,
+    doorWall : INTERACTIVEWORLD.EAST_WALL,
     doorSide : INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE
   }));
 
+  // load the models we need
   var bed = new INTERACTIVEWORLD.Bed();
-  this.add(bed);
-
+  var nightstandOne = new INTERACTIVEWORLD.Nightstand();
+  var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
   var dresser = new INTERACTIVEWORLD.Dresser();
-  dresser.position.x = INTERACTIVEWORLD.BEDROOM_WIDTH / 2.0 - 0.8;
-  dresser.position.y = INTERACTIVEWORLD.BEDROOM_HEIGHT / 2.0
-      - INTERACTIVEWORLD.WALL_WIDTH;
-  this.add(dresser);
 
-  this.add(new THREE.DirectionalLight(0xffffff, 0.9));
+  // set the positions
+  bed.position.x = -0.8;
+  bed.position.y = -0.2;
+
+  nightstandOne.position.x = 1.25;
+  nightstandOne.position.y = 1.3;
+
+  nightstandTwo.position.x = -2;
+  nightstandTwo.position.y = 1.3;
+
+  dresser.position.x = 0.645;
+  dresser.position.y = -1.45;
+  dresser.rotation.z = Math.PI;
+
+  // add the models
+  this.add(bed);
+  this.add(nightstandOne);
+  this.add(nightstandTwo);
+  this.add(dresser);
 };
 INTERACTIVEWORLD.Bedroom.prototype.__proto__ = THREE.Object3D.prototype;

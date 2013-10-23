@@ -3,7 +3,7 @@ INTERACTIVEWORLD.Room = function(options) {
 
   options = options || {};
   var width = options.width;
-  var height = options.width;
+  var height = options.height;
   var withDoor = options.withDoor;
   var doorWall = options.doorWall;
   var doorSide = options.doorSide;
@@ -15,7 +15,7 @@ INTERACTIVEWORLD.Room = function(options) {
     width : width,
     height : height,
     texture : floor,
-    repeat : 5
+    repeat : 4
   }));
 
   // setup the walls

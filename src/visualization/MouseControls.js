@@ -6,14 +6,14 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.domElement = options.domElement;
   var objects = options.objects;
 
-  var translateObject = new THREE.Object3D();
-  translateObject.add(this.camera);
+  this.camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
 
-  //var rotateObject = new THREE.Object3D();
-  //rotateObject.add(translateObject);
-  var rotateObject = translateObject;
+  var boom = new THREE.Object3D();
+  boom.add(this.camera);
 
-  this.scene.add(rotateObject);
+  this.scene.add(boom);
+
+  boom.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 3;
 
   this.target = new THREE.Vector3();
 
@@ -38,7 +38,7 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.maxDistance = Infinity;
 
   this.lastPosition = new THREE.Vector3();
-  
+
   var projector = new THREE.Projector();
 
   var STATE = {
@@ -77,13 +77,13 @@ INTERACTIVEWORLD.MouseControls = function(options) {
 
     switch (state) {
       case STATE.ROTATE:
-        rotateObject.position.x = translateObject.position.x;
-        rotateObject.position.y = translateObject.position.y;
-        rotateObject.rotation.z -= ((movementX - movementY)) * 0.002;
+        boom.position.x = boom.position.x;
+        boom.position.y = boom.position.y;
+        boom.rotation.z -= ((movementX - movementY)) * 0.002;
         break;
       case STATE.PAN:
-        translateObject.translateX(-movementX * 0.01);
-        translateObject.translateY(movementY * 0.01);
+        boom.translateX(-movementX * 0.01);
+        boom.translateY(movementY * 0.01);
     }
   }
 
@@ -143,7 +143,6 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.domElement.addEventListener('mousewheel', onMouseWheel, false);
   this.domElement.addEventListener('DOMMouseScroll', onMouseWheel, false);
   this.domElement.addEventListener('mousemove', mouseHighlighter, false);
-  
 
   this.rotateUp(-0.75);
 };
