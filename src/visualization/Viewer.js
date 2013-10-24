@@ -8,7 +8,6 @@ INTERACTIVEWORLD.Viewer = function(options) {
   var renderer = new THREE.WebGLRenderer({
     antialias : antialias
   });
-  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // create the global scene
   var scene = new THREE.Scene();
@@ -32,16 +31,13 @@ INTERACTIVEWORLD.Viewer = function(options) {
     objects : objects
   });
 
-  // setup the reszie
-  window.addEventListener('resize', function() {
-    camera.left = window.innerWidth / -2;
-    camera.right = window.innerWidth / 2;
-    camera.top = window.innerHeight / 2;
-    camera.bottom = window.innerHeight / -2;
-
-    camera.updateProjectionMatrix();
+  function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
-  }, false);
+  }
+
+  // setup the reszie
+  window.addEventListener('resize', resize, false);
+  resize();
 
   /**
    * Renders the associated scene to the viewer.

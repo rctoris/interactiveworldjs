@@ -1,6 +1,7 @@
 INTERACTIVEWORLD.Counter = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Counter';
 
   // load the model
   var loader = new THREE.ColladaLoader();

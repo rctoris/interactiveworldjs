@@ -6,6 +6,44 @@ var INTERACTIVEWORLD = INTERACTIVEWORLD || {
   REVISION : '1-devel'
 };
 
+INTERACTIVEWORLD.BRICKS_TEXTURE = 'resources/textures/bricks.jpg';
+INTERACTIVEWORLD.CARDBOARD_CORRUGATED_TEXTURE = 'resources/textures/cardboard-corrugated.jpg';
+INTERACTIVEWORLD.CARDBOARD_TEXTURE = 'resources/textures/cardboard.jpg';
+INTERACTIVEWORLD.CARPET_GREY_TEXTURE = 'resources/textures/carpet-grey.jpg';
+INTERACTIVEWORLD.CARPET_PATTERN_TEXTURE = 'resources/textures/carpet-pattern.jpg';
+INTERACTIVEWORLD.CARPET_TAN_TEXTURE = 'resources/textures/carpet-tan.jpg';
+INTERACTIVEWORLD.CHINA_TEXTURE = 'resources/textures/china.jpg';
+INTERACTIVEWORLD.COUNTERTOP_BLACK_TEXTURE = 'resources/textures/countertop-black.jpg';
+INTERACTIVEWORLD.COUNTERTOP_RED_TEXTURE = 'resources/textures/countertop-red.jpg';
+INTERACTIVEWORLD.FABRIC_AQUA_TEXTURE = 'resources/textures/fabric-aqua.jpg';
+INTERACTIVEWORLD.FABRIC_RED_TEXTURE = 'resources/textures/fabric-red.jpg';
+INTERACTIVEWORLD.GLASS_TEXTURE = 'resources/textures/glass.jpg';
+INTERACTIVEWORLD.GRASS_TEXTURE = 'resources/textures/grass.jpg';
+INTERACTIVEWORLD.HARDWOOD_DARK_TEXTURE = 'resources/textures/hardwood-dark.jpg';
+INTERACTIVEWORLD.HARDWOOD_LIGHT_TEXTURE = 'resources/textures/hardwood-light.jpg';
+INTERACTIVEWORLD.METAL_VERTICAL_TEXTURE = 'resources/textures/metal-vertical.jpg';
+INTERACTIVEWORLD.NEWSPAPER_TEXTURE = 'resources/textures/newspaper.jpg';
+INTERACTIVEWORLD.NIGHTSTAND_TEXTURE = 'resources/textures/nightstand.jpg';
+INTERACTIVEWORLD.PAINTED_WALL_BLUE_TEXTURE = 'resources/textures/painted-wall-blue.jpg';
+INTERACTIVEWORLD.PAINTED_WALL_RED_TEXTURE = 'resources/textures/painted-wall-red.jpg';
+INTERACTIVEWORLD.PARTICLE_BOARD_TEXTURE = 'resources/textures/particle-board.jpg';
+INTERACTIVEWORLD.PLASTIC_BLACK_TEXTURE = 'resources/textures/plastic-black.jpg';
+INTERACTIVEWORLD.RUG_TEXTURE = 'resources/textures/rug.jpg';
+INTERACTIVEWORLD.TILE_FLOOR_TEXTURE = 'resources/textures/tile-floor.jpg';
+INTERACTIVEWORLD.TILE_WALL_TEXTURE = 'resources/textures/tile-wall.jpg';
+INTERACTIVEWORLD.WALLPAPER_DARK_TEXTURE = 'resources/textures/wallpaper-dark.jpg';
+INTERACTIVEWORLD.WALLPAPER_LIGHT_TEXTURE = 'resources/textures/wallpaper-light.jpg';
+INTERACTIVEWORLD.WALLPAPER_RED_DOTS_TEXTURE = 'resources/textures/wallpaper-red-dots.jpg';
+INTERACTIVEWORLD.WOOD_CHERRY_TEXTURE = 'resources/textures/wood-cherry.jpg';
+INTERACTIVEWORLD.WOOD_MAHOGANY_POLISHED_TEXTURE = 'resources/textures/wood-mahogany-polished.jpg';
+INTERACTIVEWORLD.WOOD_MAHOGANY_TEXTURE = 'resources/textures/wood-mahogany.jpg';
+INTERACTIVEWORLD.WOOD_OAK_HORIZONTAL_TEXTURE = 'resources/textures/wood-oak-horizontal.jpg';
+INTERACTIVEWORLD.WOOD_OACK_VERTICAL_TEXTURE = 'resources/textures/wood-oak-vertical.jpg';
+INTERACTIVEWORLD.WOOD_PINE_TEXTURE = 'resources/textures/wood-pine.jpg';
+
+INTERACTIVEWORLD.NEXT_ARROW = 'resources/images/next.png';
+INTERACTIVEWORLD.PREVIOUS_ARROW = 'resources/images/previous.png';
+
 INTERACTIVEWORLD.Z_INDEX = 0.005;
 
 INTERACTIVEWORLD.NORTH_WALL = 0;
@@ -16,9 +54,13 @@ INTERACTIVEWORLD.WEST_WALL = 3;
 INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE = 0;
 INTERACTIVEWORLD.POSITIVE_DOOR_SIDE = 1;
 
+INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH = 3;
+INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT = 3;
+INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_FLOOR_TEXTURE = INTERACTIVEWORLD.WOOD_MAHOGANY_POLISHED_TEXTURE;
+
 INTERACTIVEWORLD.WORLD_WIDTH = 20;
 INTERACTIVEWORLD.WORLD_HEIGHT = 20;
-INTERACTIVEWORLD.WORLD_FLOOR_TEXTURE = 'resources/textures/grass.jpg';
+INTERACTIVEWORLD.WORLD_FLOOR_TEXTURE = INTERACTIVEWORLD.GRASS_TEXTURE;
 
 INTERACTIVEWORLD.WALL_WIDTH = 0.05;
 INTERACTIVEWORLD.WALL_HEIGHT = 0.75;
@@ -33,20 +75,20 @@ INTERACTIVEWORLD.HOUSE_WIDTH = (INTERACTIVEWORLD.ROOM_WIDTH * 2)
     + INTERACTIVEWORLD.HALLWAY_WIDTH;
 INTERACTIVEWORLD.HOUSE_HEIGHT = (INTERACTIVEWORLD.ROOM_HEIGHT * 2)
     + INTERACTIVEWORLD.HALLWAY_WIDTH;
-INTERACTIVEWORLD.HOUSE_WALL_TEXTURE = 'resources/textures/bricks.jpg';
-INTERACTIVEWORLD.HOUSE_FLOOR_TEXTURE = 'resources/textures/hardwood-light.jpg';
+INTERACTIVEWORLD.HOUSE_WALL_TEXTURE = INTERACTIVEWORLD.BRICKS_TEXTURE;
+INTERACTIVEWORLD.HOUSE_FLOOR_TEXTURE = INTERACTIVEWORLD.HARDWOOD_LIGHT_TEXTURE;
 
-INTERACTIVEWORLD.BEDROOM_WALL_TEXTURE = 'resources/textures/painted-wall-blue.jpg';
-INTERACTIVEWORLD.BEDROOM_FLOOR_TEXTURE = 'resources/textures/carpet-grey.jpg';
+INTERACTIVEWORLD.BEDROOM_WALL_TEXTURE = INTERACTIVEWORLD.PAINTED_WALL_BLUE_TEXTURE;
+INTERACTIVEWORLD.BEDROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.CARPET_GREY_TEXTURE;
 
-INTERACTIVEWORLD.KITCHEN_WALL_TEXTURE = 'resources/textures/tile-wall.jpg';
-INTERACTIVEWORLD.KITCHEN_FLOOR_TEXTURE = 'resources/textures/tile-floor.jpg';
+INTERACTIVEWORLD.KITCHEN_WALL_TEXTURE = INTERACTIVEWORLD.TILE_WALL_TEXTURE;
+INTERACTIVEWORLD.KITCHEN_FLOOR_TEXTURE = INTERACTIVEWORLD.TILE_FLOOR_TEXTURE;
 
-INTERACTIVEWORLD.DINING_ROOM_WALL_TEXTURE = 'resources/textures/wallpaper-light.jpg';
-INTERACTIVEWORLD.DINING_ROOM_FLOOR_TEXTURE = 'resources/textures/hardwood-dark.jpg';
+INTERACTIVEWORLD.DINING_ROOM_WALL_TEXTURE = INTERACTIVEWORLD.WALLPAPER_LIGHT_TEXTURE;
+INTERACTIVEWORLD.DINING_ROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.HARDWOOD_DARK_TEXTURE;
 
-INTERACTIVEWORLD.LIVING_ROOM_WALL_TEXTURE = 'resources/textures/painted-wall-red.jpg';
-INTERACTIVEWORLD.LIVING_ROOM_FLOOR_TEXTURE = 'resources/textures/carpet-tan.jpg';
+INTERACTIVEWORLD.LIVING_ROOM_WALL_TEXTURE = INTERACTIVEWORLD.PAINTED_WALL_RED_TEXTURE;
+INTERACTIVEWORLD.LIVING_ROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.CARPET_TAN_TEXTURE;
 
 INTERACTIVEWORLD.BED_MODEL = 'resources/models/bed.dae';
 INTERACTIVEWORLD.DRESSER_MODEL = 'resources/models/dresser.dae';
@@ -60,12 +102,189 @@ INTERACTIVEWORLD.COUNTER_MODEL = 'resources/models/counter.dae';
 INTERACTIVEWORLD.COUCH_MODEL = 'resources/models/couch.dae';
 INTERACTIVEWORLD.TV_MODEL = 'resources/models/tv.dae';
 INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.dae';
+INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.dae';
+INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.dae';
 
-INTERACTIVEWORLD.RUG_TEXTURE = 'resources/textures/rug.jpg';
+INTERACTIVEWORLD.DIV_ID = 'interactive-world';
+
+window.onload = function() {
+  // start with a fresh page
+  document.body.innerHTML = '';
+
+  // create the main container we need
+  var main = document.createElement('div');
+  main.id = INTERACTIVEWORLD.DIV_ID;
+  document.getElementsByTagName('body')[0].appendChild(main);
+
+  // add the viewer
+  new INTERACTIVEWORLD.Viewer({
+    divID : INTERACTIVEWORLD.DIV_ID,
+    antialias : true
+  });
+
+  // add an object menu
+  new INTERACTIVEWORLD.ObjectMenu({
+    antialias : true,
+    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
+  });
+};
+
+INTERACTIVEWORLD.ObjectMenu = function(options) {
+  var that = this;
+  options = options || {};
+  var antialias = options.antialias;
+  var objects = options.objects;
+  var counter = 0;
+  var displayObject = objects[counter];
+
+  // setup the div
+  var div = document.createElement('div');
+  div.classList.add('object-menu');
+  document.getElementsByTagName('body')[0].appendChild(div);
+
+  // create the heading
+  var title = document.createElement('h1');
+  title.innerHTML = 'Where does this object belong?';
+  div.appendChild(title);
+
+  // create the 3D canvas
+  var renderer = new THREE.WebGLRenderer({
+    antialias : antialias
+  });
+
+  // create the global scene
+  var scene = new THREE.Scene();
+  scene.add(displayObject);
+
+  // create the global camera
+  var camera = new THREE.PerspectiveCamera(60, that.getMenuWidth()
+      / that.getMenuHeight(), 0.01, 1000);
+  camera.position.y = -0.25;
+  camera.position.z = 0.25;
+  camera.lookAt(scene.position);
+
+  var plane = new INTERACTIVEWORLD.TexturePlane({
+    width : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH,
+    height : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT,
+    texture : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_FLOOR_TEXTURE,
+    repeat : 10
+  });
+  scene.add(plane);
+
+  // add lights
+  scene.add(new THREE.AmbientLight(0x666666));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xaaaaaa, 0.8));
+
+  div.appendChild(renderer.domElement);
+
+  // add the navigation bar
+  var nav = document.createElement('div');
+  var previousArrow = document.createElement('img');
+  previousArrow.src = INTERACTIVEWORLD.PREVIOUS_ARROW;
+  previousArrow.onclick = previous;
+  previousArrow.style.cursor = 'pointer';
+  nav.appendChild(previousArrow);
+  var objectName = document.createElement('span');
+  nav.appendChild(objectName);
+  objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+      + '&nbsp;&nbsp;&nbsp;';
+  var nextArrow = document.createElement('img');
+  nextArrow.src = INTERACTIVEWORLD.NEXT_ARROW;
+  nextArrow.onclick = next;
+  nextArrow.style.cursor = 'pointer';
+  nav.appendChild(nextArrow);
+  div.appendChild(nav);
+
+  function previous() {
+    // update the counter
+    counter--;
+    if (counter < 0) {
+      counter = objects.length - 1;
+    }
+
+    // update the display
+    scene.remove(displayObject);
+    displayObject = objects[counter];
+    scene.add(displayObject);
+
+    // change the name
+    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+        + '&nbsp;&nbsp;&nbsp;';
+  }
+
+  function next() {
+    // update the counter
+    counter++;
+    if (counter >= objects.length) {
+      counter = 0;
+    }
+
+    // update the display
+    scene.remove(displayObject);
+    displayObject = objects[counter];
+    scene.add(displayObject);
+
+    // change the name
+    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+        + '&nbsp;&nbsp;&nbsp;';
+  }
+
+  function resize() {
+    // base it on the window size
+    var width = that.getMenuWidth();
+    var height = that.getMenuHeight();
+    div.style.width = width + 'px';
+    div.style.height = height + 'px';
+    div.style.top = (window.innerHeight - height) + 'px';
+
+    // set the font size for the title
+    title.style.fontSize = Math.round(that.getMenuWidth() / 20) + 'px';
+
+    // set the navigation menu
+    previousArrow.style.height = Math.round(that.getMenuWidth() / 12) + 'px';
+    nextArrow.style.height = Math.round(that.getMenuWidth() / 12) + 'px';
+    nav.style.height = Math.round(that.getMenuWidth() / 12) + 'px';
+
+    // set the visualizer
+    renderer.setSize(width, height - title.offsetHeight - nav.offsetHeight);
+    camera.aspect = width / (height - title.offsetHeight - nav.offsetHeight);
+  }
+
+  /**
+   * Renders the associated scene to the viewer.
+   */
+  function draw() {
+    // rotate the object
+    displayObject.rotation.z += 0.005;
+
+    // render the scene
+    renderer.render(scene, camera);
+
+    // draw the frame
+    requestAnimationFrame(draw);
+  }
+
+  // setup the reszie
+  window.addEventListener('resize', resize, false);
+
+  // setup the initial size
+  resize();
+
+  draw();
+};
+
+INTERACTIVEWORLD.ObjectMenu.prototype.getMenuWidth = function() {
+  return window.innerWidth / 4;
+};
+
+INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
+  return this.getMenuWidth() * 0.5;
+};
 
 INTERACTIVEWORLD.Bed = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Bed';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -82,6 +301,7 @@ INTERACTIVEWORLD.Bed.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Cabinet = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Cabinet';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -96,6 +316,7 @@ INTERACTIVEWORLD.Cabinet.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.CoffeeTable = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Coffee Table';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -114,6 +335,7 @@ INTERACTIVEWORLD.CoffeeTable.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Couch = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Couch';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -129,6 +351,7 @@ INTERACTIVEWORLD.Couch.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Counter = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Counter';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -147,6 +370,7 @@ INTERACTIVEWORLD.Counter.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.DiningTable = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Dining Table';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -162,6 +386,7 @@ INTERACTIVEWORLD.DiningTable.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Dresser = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Dresser';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -177,6 +402,7 @@ INTERACTIVEWORLD.Dresser.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Nightstand = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Nightstand';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -193,6 +419,7 @@ INTERACTIVEWORLD.Nightstand.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Oven = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Oven';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -205,9 +432,27 @@ INTERACTIVEWORLD.Oven = function() {
 };
 INTERACTIVEWORLD.Oven.prototype.__proto__ = THREE.Object3D.prototype;
 
+INTERACTIVEWORLD.Plate = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+  this.name = 'Plate';
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.PLATE_MODEL, function(result) {
+    // fix the offset
+    result.scene.scale.x *= 0.04;
+    result.scene.scale.y *= 0.04;
+    result.scene.scale.z *= 0.04;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Plate.prototype.__proto__ = THREE.Object3D.prototype;
+
 INTERACTIVEWORLD.Refrigerator = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Refrigerator';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -224,6 +469,7 @@ INTERACTIVEWORLD.Refrigerator.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Sink = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Sink';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -236,9 +482,23 @@ INTERACTIVEWORLD.Sink = function() {
 };
 INTERACTIVEWORLD.Sink.prototype.__proto__ = THREE.Object3D.prototype;
 
+INTERACTIVEWORLD.Spoon = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+  this.name = 'Spoon';
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.SPOON_MODEL, function(result) {
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Spoon.prototype.__proto__ = THREE.Object3D.prototype;
+
 INTERACTIVEWORLD.TV = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'TV';
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -260,6 +520,7 @@ INTERACTIVEWORLD.TexturePlane = function(options) {
   var height = options.height;
   var texture = options.texture;
   var repeat = options.repeat;
+  this.name = 'Plane';
 
   // load the material
   var planeTexture = new THREE.ImageUtils.loadTexture(texture);
@@ -278,6 +539,7 @@ INTERACTIVEWORLD.Wall = function(options) {
   options = options || {};
   var length = options.length;
   var texture = options.texture;
+  this.name = 'Wall';
 
   // load the material
   var planeTexture = new THREE.ImageUtils.loadTexture(texture);
@@ -841,7 +1103,6 @@ INTERACTIVEWORLD.Viewer = function(options) {
   var renderer = new THREE.WebGLRenderer({
     antialias : antialias
   });
-  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // create the global scene
   var scene = new THREE.Scene();
@@ -865,16 +1126,13 @@ INTERACTIVEWORLD.Viewer = function(options) {
     objects : objects
   });
 
-  // setup the reszie
-  window.addEventListener('resize', function() {
-    camera.left = window.innerWidth / -2;
-    camera.right = window.innerWidth / 2;
-    camera.top = window.innerHeight / 2;
-    camera.bottom = window.innerHeight / -2;
-
-    camera.updateProjectionMatrix();
+  function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
-  }, false);
+  }
+
+  // setup the reszie
+  window.addEventListener('resize', resize, false);
+  resize();
 
   /**
    * Renders the associated scene to the viewer.

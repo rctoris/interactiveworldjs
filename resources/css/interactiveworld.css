@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 700;
+  color: #222;
+  text-shadow: 0 1px 1px #4d4d4d;
+}
+
+img {
+  vertical-align:middle;
+}
+
+.object-menu {
+  text-align: center;
+  background-color: rgb(113,174,232);
+  background: radial-gradient(ellipse at center, rgba(113,174,232,1) 0%,rgba(32,124,229,1) 100%);
+  position: absolute;
+  left: 0;
+  opacity: 0.98;
+  border-top-right-radius: 50px 25px;
+  border-top-style: solid;
+  border-top-color: #333;
+  border-right-style: solid;
+  border-right-color: #333;
+}

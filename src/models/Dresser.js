@@ -1,6 +1,7 @@
 INTERACTIVEWORLD.Dresser = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Dresser';
 
   // load the model
   var loader = new THREE.ColladaLoader();

@@ -40,6 +40,26 @@ module.exports = function(grunt) {
         dest : '../build/threecolladaloader.min.js'
       }
     },
+    csslint : {
+      build : {
+        options : {
+          csslintrc : '.csslintrc'
+        },
+        src : [
+          '../resources/css/interactiveworld.css',
+        ]
+      }
+    },
+    cssmin : {
+      options : {
+        report : 'min'
+      },
+      build : {
+        files : {
+          '../resources/css/interactiveworld.min.css' : ['../resources/css/interactiveworld.css']
+        }
+      }
+    },
     imagemin : {
       build : {
         options : {
@@ -79,7 +99,9 @@ module.exports = function(grunt) {
           '../resources/textures/wood-mahogany.jpg' : '../resources/textures/wood-mahogany.jpg',
           '../resources/textures/wood-oak-horizontal.jpg' : '../resources/textures/wood-oak-horizontal.jpg',
           '../resources/textures/wood-oak-vertical.jpg' : '../resources/textures/wood-oak-vertical.jpg',
-          '../resources/textures/wood-pine.jpg' : '../resources/textures/wood-pine.jpg'
+          '../resources/textures/wood-pine.jpg' : '../resources/textures/wood-pine.jpg',
+          '../resources/images/next.png' : '../resources/images/next.png',
+          '../resources/images/previous.png' : '../resources/images/previous.png'
         }
       }
     },
@@ -111,7 +133,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-csslint');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('build', ['imagemin', 'concat', 'jshint', 'uglify']);
+  grunt.registerTask('build', ['imagemin', 'csslint', 'cssmin', 'concat', 'jshint', 'uglify']);
   grunt.registerTask('doc', ['clean', 'jsdoc']);
 };
-

@@ -1,6 +1,7 @@
 INTERACTIVEWORLD.CoffeeTable = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Coffee Table';
 
   // load the model
   var loader = new THREE.ColladaLoader();

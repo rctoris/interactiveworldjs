@@ -4,6 +4,7 @@ INTERACTIVEWORLD.TexturePlane = function(options) {
   var height = options.height;
   var texture = options.texture;
   var repeat = options.repeat;
+  this.name = 'Plane';
 
   // load the material
   var planeTexture = new THREE.ImageUtils.loadTexture(texture);

@@ -1,6 +1,7 @@
 INTERACTIVEWORLD.Bed = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Bed';
 
   // load the model
   var loader = new THREE.ColladaLoader();

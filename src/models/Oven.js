@@ -1,6 +1,7 @@
 INTERACTIVEWORLD.Oven = function() {
   var that = this;
   THREE.Object3D.call(this);
+  this.name = 'Oven';
 
   // load the model
   var loader = new THREE.ColladaLoader();
