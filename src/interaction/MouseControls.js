@@ -4,7 +4,8 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.camera = options.camera;
   this.scene = options.scene;
   this.domElement = options.domElement;
-  var objects = options.objects;
+  var objectMenu = options.objectMenu;
+  this.surfaces = [];
 
   this.camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
 
@@ -30,12 +31,6 @@ INTERACTIVEWORLD.MouseControls = function(options) {
 
   var rotateStart = new THREE.Vector2();
   var panStart = new THREE.Vector2();
-
-  this.minPolarAngle = 0;
-  this.maxPolarAngle = Math.PI;
-
-  this.minDistance = 0;
-  this.maxDistance = Infinity;
 
   this.lastPosition = new THREE.Vector3();
 
@@ -84,6 +79,13 @@ INTERACTIVEWORLD.MouseControls = function(options) {
       case STATE.PAN:
         boom.translateX(-movementX * 0.01);
         boom.translateY(movementY * 0.01);
+
+        boom.position.x = Math.min(Math.max(boom.position.x,
+            -INTERACTIVEWORLD.HOUSE_WIDTH / 2.0),
+            INTERACTIVEWORLD.HOUSE_WIDTH / 2.0);
+        boom.position.y = Math.min(Math.max(boom.position.y,
+            -INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0),
+            INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0);
     }
   }
 
@@ -113,25 +115,57 @@ INTERACTIVEWORLD.MouseControls = function(options) {
     }
   }
 
-  function mouseHighlighter(event) {
+  function surfaceDetection(event) {
     event.preventDefault();
+
+    // get the vector
     var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
         -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
     projector.unprojectVector(vector, that.camera);
 
+    // get the actual camera position
     that.camera.updateMatrixWorld();
-    var vector2 = new THREE.Vector3();
-    vector2.getPositionFromMatrix(that.camera.matrixWorld);
+    var cameraVector = new THREE.Vector3();
+    cameraVector.getPositionFromMatrix(that.camera.matrixWorld);
 
-    var raycaster = new THREE.Raycaster(vector2, vector.sub(vector2)
+    // ray cast it
+    var raycaster = new THREE.Raycaster(cameraVector, vector.sub(cameraVector)
         .normalize());
 
-    var intersects = raycaster.intersectObjects(objects);
+    // check any intersections
+    var intersects = raycaster.intersectObjects(that.surfaces);
+    for ( var i = 0; i < that.surfaces.length; i++) {
+      if (intersects.length > 0 && intersects[0].object === that.surfaces[i]) {
+        that.surfaces[i].mousemove(objectMenu.getDisplayObjectType(),
+            intersects[0].point);
+      } else {
+        that.surfaces[i].mouseout();
+      }
+    }
+  }
 
+  function surfaceClick(event) {
+    event.preventDefault();
+
+    // get the vector
+    var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+    projector.unprojectVector(vector, that.camera);
+
+    // get the actual camera position
+    that.camera.updateMatrixWorld();
+    var cameraVector = new THREE.Vector3();
+    cameraVector.getPositionFromMatrix(that.camera.matrixWorld);
+
+    // ray cast it
+    var raycaster = new THREE.Raycaster(cameraVector, vector.sub(cameraVector)
+        .normalize());
+
+    // check any intersections
+    var intersects = raycaster.intersectObjects(that.surfaces);
     if (intersects.length > 0) {
-
-      intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
-      console.log('hit');
+      intersects[0].object.dblclick(objectMenu.getDisplayObjectType(),
+          intersects[0].point);
     }
   }
 
@@ -142,7 +176,8 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.domElement.addEventListener('mousedown', onMouseDown, false);
   this.domElement.addEventListener('mousewheel', onMouseWheel, false);
   this.domElement.addEventListener('DOMMouseScroll', onMouseWheel, false);
-  this.domElement.addEventListener('mousemove', mouseHighlighter, false);
+  this.domElement.addEventListener('mousemove', surfaceDetection, false);
+  this.domElement.addEventListener('dblclick', surfaceClick, false);
 
   this.rotateUp(-0.75);
 };
@@ -158,20 +193,17 @@ INTERACTIVEWORLD.MouseControls.prototype.update = function() {
       + this.phiDelta;
 
   // restrict phi to be between desired limits
-  phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, phi));
+  phi = Math.max(0, Math.min(Math.PI, phi));
   phi = Math.max(this.EPS, Math.min(Math.PI - this.EPS, phi));
-
   var radius = offset.length() * this.scale;
 
   // restrict radius to be between desired limits
-  radius = Math.max(this.minDistance, Math.min(this.maxDistance, radius));
-
-  offset.y = radius * Math.cos(phi);
-  offset.z = radius * Math.sin(phi);
-
-  position.copy(this.target).add(offset);
-
-  this.camera.lookAt(this.target);
+  if (radius < 4 && radius > 0.5) {
+    offset.y = radius * Math.cos(phi);
+    offset.z = radius * Math.sin(phi);
+    position.copy(this.target).add(offset);
+    this.camera.lookAt(this.target);
+  }
 
   this.phiDelta = 0;
   this.scale = 1;
@@ -201,4 +233,11 @@ INTERACTIVEWORLD.MouseControls.prototype.dollyOut = function(dollyScale) {
 
   this.scale *= dollyScale;
   this.rotateUp(-0.01);
+};
+
+INTERACTIVEWORLD.MouseControls.prototype.addInteractionSurfaces = function(
+    surfaces) {
+  for ( var i = 0; i < surfaces.length; i++) {
+    this.surfaces.push(surfaces[i]);
+  }
 };

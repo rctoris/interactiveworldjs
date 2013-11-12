@@ -1,8 +1,13 @@
 INTERACTIVEWORLD.Viewer = function(options) {
-  var objects = [];
   options = options || {};
   var divID = options.divID;
   var antialias = options.antialias;
+
+  // add an object menu
+  var menu = new INTERACTIVEWORLD.ObjectMenu({
+    antialias : antialias,
+    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
+  });
 
   // create the canvas to render to
   var renderer = new THREE.WebGLRenderer({
@@ -20,16 +25,18 @@ INTERACTIVEWORLD.Viewer = function(options) {
   scene.add(new THREE.AmbientLight(0x666666));
   scene.add(new THREE.HemisphereLight(0xffffff, 0xaaaaaa, 0.8));
 
-  // add the world
-  scene.add(new INTERACTIVEWORLD.World());
-
   // add the mouse controls
   var controls = new INTERACTIVEWORLD.MouseControls({
     scene : scene,
     camera : camera,
     domElement : renderer.domElement,
-    objects : objects
+    objectMenu : menu
   });
+
+  // add the world
+  scene.add(new INTERACTIVEWORLD.World({
+    controls : controls
+  }));
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);

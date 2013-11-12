@@ -1,5 +1,8 @@
-INTERACTIVEWORLD.DiningRoom = function() {
+INTERACTIVEWORLD.DiningRoom = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -39,5 +42,8 @@ INTERACTIVEWORLD.DiningRoom = function() {
   this.add(diningTable);
   this.add(cabinet);
   this.add(rug);
+
+  // add the interactions
+  controls.addInteractionSurfaces(diningTable.interactions);
 };
 INTERACTIVEWORLD.DiningRoom.prototype.__proto__ = THREE.Object3D.prototype;

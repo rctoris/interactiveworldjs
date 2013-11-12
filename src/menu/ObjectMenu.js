@@ -4,7 +4,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var antialias = options.antialias;
   var objects = options.objects;
   var counter = 0;
-  var displayObject = objects[counter];
+  this.displayObject = objects[counter];
 
   // setup the div
   var div = document.createElement('div');
@@ -23,21 +23,23 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   // create the global scene
   var scene = new THREE.Scene();
-  scene.add(displayObject);
+  scene.add(this.displayObject);
 
   // create the global camera
-  var camera = new THREE.PerspectiveCamera(60, that.getMenuWidth()
-      / that.getMenuHeight(), 0.01, 1000);
+  var camera = new THREE.PerspectiveCamera(60, 2.5, 0.01, 1000);
   camera.position.y = -0.25;
   camera.position.z = 0.25;
   camera.lookAt(scene.position);
 
-  var plane = new INTERACTIVEWORLD.TexturePlane({
-    width : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH,
-    height : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT,
-    texture : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_FLOOR_TEXTURE,
-    repeat : 10
-  });
+  var plane = new THREE.Mesh(new THREE.CubeGeometry(
+      INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH,
+      INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT, 0.01),
+      new THREE.MeshLambertMaterial({
+        transparent : true,
+        color : 0x0000FF
+      }));
+  plane.material.opacity = 0.5;
+  plane.position.z = -0.01;
   scene.add(plane);
 
   // add lights
@@ -55,7 +57,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   nav.appendChild(previousArrow);
   var objectName = document.createElement('span');
   nav.appendChild(objectName);
-  objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+  objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + this.displayObject.name
       + '&nbsp;&nbsp;&nbsp;';
   var nextArrow = document.createElement('img');
   nextArrow.src = INTERACTIVEWORLD.NEXT_ARROW;
@@ -72,12 +74,12 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
     }
 
     // update the display
-    scene.remove(displayObject);
-    displayObject = objects[counter];
-    scene.add(displayObject);
+    scene.remove(that.displayObject);
+    that.displayObject = objects[counter];
+    scene.add(that.displayObject);
 
     // change the name
-    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + that.displayObject.name
         + '&nbsp;&nbsp;&nbsp;';
   }
 
@@ -89,12 +91,12 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
     }
 
     // update the display
-    scene.remove(displayObject);
-    displayObject = objects[counter];
-    scene.add(displayObject);
+    scene.remove(that.displayObject);
+    that.displayObject = objects[counter];
+    scene.add(that.displayObject);
 
     // change the name
-    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + that.displayObject.name
         + '&nbsp;&nbsp;&nbsp;';
   }
 
@@ -124,7 +126,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
    */
   function draw() {
     // rotate the object
-    displayObject.rotation.z += 0.005;
+    that.displayObject.rotation.z += 0.005;
 
     // render the scene
     renderer.render(scene, camera);
@@ -148,4 +150,8 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getMenuWidth = function() {
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
   return this.getMenuWidth() * 0.5;
+};
+
+INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
+  return this.displayObject.constructor;
 };

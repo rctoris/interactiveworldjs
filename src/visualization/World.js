@@ -1,5 +1,8 @@
-INTERACTIVEWORLD.World = function() {
+INTERACTIVEWORLD.World = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the grass
   var grass = new INTERACTIVEWORLD.TexturePlane({
@@ -12,8 +15,10 @@ INTERACTIVEWORLD.World = function() {
   this.add(grass);
 
   // add the skybox
-  var textureCube = THREE.ImageUtils.loadTextureCube([ 'posx.jpg', 'negx.jpg',
-      'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ]);
+  var textureCube = THREE.ImageUtils.loadTextureCube([
+      INTERACTIVEWORLD.SKY_TEXTURE, INTERACTIVEWORLD.SKY_TEXTURE,
+      INTERACTIVEWORLD.SKY_TEXTURE, INTERACTIVEWORLD.SKY_TEXTURE,
+      INTERACTIVEWORLD.SKY_TEXTURE, INTERACTIVEWORLD.SKY_TEXTURE ]);
   textureCube.format = THREE.RGBFormat;
   var shader = THREE.ShaderLib['cube'];
   shader.uniforms['tCube'].value = textureCube;
@@ -27,6 +32,8 @@ INTERACTIVEWORLD.World = function() {
   })));
 
   // add the house
-  this.add(new INTERACTIVEWORLD.House());
+  this.add(new INTERACTIVEWORLD.House({
+    controls : controls
+  }));
 };
 INTERACTIVEWORLD.World.prototype.__proto__ = THREE.Object3D.prototype;

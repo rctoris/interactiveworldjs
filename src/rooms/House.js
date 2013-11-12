@@ -1,5 +1,8 @@
-INTERACTIVEWORLD.House = function() {
+INTERACTIVEWORLD.House = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   var outside = new INTERACTIVEWORLD.Room({
@@ -14,7 +17,9 @@ INTERACTIVEWORLD.House = function() {
   var wallBuffer = (INTERACTIVEWORLD.WALL_WIDTH / 2.0);
 
   // add the rooms
-  var bedroom = new INTERACTIVEWORLD.Bedroom();
+  var bedroom = new INTERACTIVEWORLD.Bedroom({
+    controls : controls
+  });
   bedroom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       + wallBuffer;
@@ -23,7 +28,9 @@ INTERACTIVEWORLD.House = function() {
       - wallBuffer;
   this.add(bedroom);
 
-  var kitchen = new INTERACTIVEWORLD.Kitchen();
+  var kitchen = new INTERACTIVEWORLD.Kitchen({
+    controls : controls
+  });
   kitchen.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;
@@ -32,7 +39,9 @@ INTERACTIVEWORLD.House = function() {
       - wallBuffer;
   this.add(kitchen);
 
-  var livingRoom = new INTERACTIVEWORLD.LivingRoom();
+  var livingRoom = new INTERACTIVEWORLD.LivingRoom({
+    controls : controls
+  });
   livingRoom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       + wallBuffer;
@@ -41,7 +50,9 @@ INTERACTIVEWORLD.House = function() {
       + wallBuffer;
   this.add(livingRoom);
 
-  var diningRoom = new INTERACTIVEWORLD.DiningRoom();
+  var diningRoom = new INTERACTIVEWORLD.DiningRoom({
+    controls : controls
+  });
   diningRoom.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;

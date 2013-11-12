@@ -1,5 +1,8 @@
-INTERACTIVEWORLD.LivingRoom = function() {
+INTERACTIVEWORLD.LivingRoom = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -34,5 +37,8 @@ INTERACTIVEWORLD.LivingRoom = function() {
   this.add(couch);
   this.add(tv);
   this.add(coffeeTable);
+
+  // add the interactions
+  //controls.addInteractionSurfaces(bed.interactions);
 };
 INTERACTIVEWORLD.LivingRoom.prototype.__proto__ = THREE.Object3D.prototype;

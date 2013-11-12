@@ -6,6 +6,10 @@ INTERACTIVEWORLD.Spoon = function() {
   // load the model
   var loader = new THREE.ColladaLoader();
   loader.load(INTERACTIVEWORLD.SPOON_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = 0.019;
+    result.scene.position.y = -0.06;
+    result.scene.rotation.z = Math.PI / 2.0;
     that.add(result.scene);
   });
 };

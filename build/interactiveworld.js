@@ -29,6 +29,7 @@ INTERACTIVEWORLD.PAINTED_WALL_RED_TEXTURE = 'resources/textures/painted-wall-red
 INTERACTIVEWORLD.PARTICLE_BOARD_TEXTURE = 'resources/textures/particle-board.jpg';
 INTERACTIVEWORLD.PLASTIC_BLACK_TEXTURE = 'resources/textures/plastic-black.jpg';
 INTERACTIVEWORLD.RUG_TEXTURE = 'resources/textures/rug.jpg';
+INTERACTIVEWORLD.SKY_TEXTURE = 'resources/textures/sky.jpg';
 INTERACTIVEWORLD.TILE_FLOOR_TEXTURE = 'resources/textures/tile-floor.jpg';
 INTERACTIVEWORLD.TILE_WALL_TEXTURE = 'resources/textures/tile-wall.jpg';
 INTERACTIVEWORLD.WALLPAPER_DARK_TEXTURE = 'resources/textures/wallpaper-dark.jpg';
@@ -53,6 +54,8 @@ INTERACTIVEWORLD.WEST_WALL = 3;
 
 INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE = 0;
 INTERACTIVEWORLD.POSITIVE_DOOR_SIDE = 1;
+
+INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS = 0.05;
 
 INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH = 3;
 INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT = 3;
@@ -121,13 +124,372 @@ window.onload = function() {
     divID : INTERACTIVEWORLD.DIV_ID,
     antialias : true
   });
-
-  // add an object menu
-  new INTERACTIVEWORLD.ObjectMenu({
-    antialias : true,
-    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
-  });
 };
+
+INTERACTIVEWORLD.InteractionSurface = function(options) {
+  options = options || {};
+  this.width = options.width;
+  this.height = options.height;
+  this.displayObject = null;
+
+  // create the surface
+  var geom = new THREE.CubeGeometry(this.width, this.height,
+      INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS);
+  var mat = new THREE.MeshLambertMaterial({
+    transparent : true,
+    color : 0x00FF00
+  });
+  // initially not visible
+  mat.opacity = 0; // TODO
+
+  // create the mesh
+  THREE.Mesh.call(this, geom, mat);
+  this.position.z = INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS;
+};
+INTERACTIVEWORLD.InteractionSurface.prototype.__proto__ = THREE.Mesh.prototype;
+
+INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(ObjectType,
+    vector) {
+  // become visible
+  this.material.opacity = 0.5;
+
+  this.parent.updateMatrixWorld();
+  var local = new THREE.Vector3();
+  local.getPositionFromMatrix(this.matrixWorld);
+
+  if (this.displayObject === null) {
+    // create the object
+    this.displayObject = new ObjectType();
+    this.add(this.displayObject);
+  }
+  // set the location
+  this.setObjectPose(this.displayObject, vector);
+};
+
+INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
+  // become invisible
+  this.material.opacity = 0; // TODO
+
+  if (this.displayObject !== null) {
+    this.remove(this.displayObject);
+    this.displayObject = null;
+  }
+};
+
+INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
+    vector) {
+  // create the object
+  var object = new ObjectType();
+  // set the location and add it
+  this.setObjectPose(object, vector);
+  this.add(object);
+};
+
+INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object,
+    worldPose) {
+  // convert to local coords
+  this.parent.updateMatrixWorld();
+  var local = new THREE.Vector3();
+  local.getPositionFromMatrix(this.matrixWorld);
+
+  // set the pose
+  object.position = worldPose.sub(local);
+
+  // assume 90 degree rotations
+  if (this.parent.rotation.z === Math.PI) {
+    object.position.x *= -1;
+    object.position.y *= -1;
+  } else if (this.parent.rotation.z === Math.PI / 2.0) {
+    var negX = -object.position.x;
+    object.position.x = object.position.y;
+    object.position.y = negX;
+  } else if (this.parent.rotation.z === -Math.PI / 2.0) {
+    var posX = object.position.x;
+    object.position.x = -object.position.y;
+    object.position.y = posX;
+  }
+
+  // now check the rotation
+  if (Math.abs(object.position.x) / this.width > Math.abs(object.position.y)
+      / this.height) {
+    if (object.position.x > 0) {
+      object.rotation.z = Math.PI / 2.0;
+    } else {
+      object.rotation.z = -Math.PI / 2.0;
+    }
+  } else {
+    if (object.position.y > 0) {
+      object.rotation.z = Math.PI;
+    } else {
+      object.rotation.z = 0;
+    }
+  }
+};
+
+INTERACTIVEWORLD.MouseControls = function(options) {
+  var that = this;
+  options = options || {};
+  this.camera = options.camera;
+  this.scene = options.scene;
+  this.domElement = options.domElement;
+  var objectMenu = options.objectMenu;
+  this.surfaces = [];
+
+  this.camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
+
+  var boom = new THREE.Object3D();
+  boom.add(this.camera);
+
+  this.scene.add(boom);
+
+  boom.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 3;
+
+  this.target = new THREE.Vector3();
+
+  this.EPS = 0.000001;
+
+  this.phiDelta = 0;
+  this.thetaDelta = 0;
+  this.scale = 1;
+  this.pan = new THREE.Vector3();
+
+  this.zoomSpeed = 1.0;
+
+  this.autoRotateSpeed = 2.0;
+
+  var rotateStart = new THREE.Vector2();
+  var panStart = new THREE.Vector2();
+
+  this.lastPosition = new THREE.Vector3();
+
+  var projector = new THREE.Projector();
+
+  var STATE = {
+    NONE : -1,
+    ROTATE : 0,
+    DOLLY : 1,
+    PAN : 2
+  };
+  var state = STATE.NONE;
+
+  function onMouseDown(event) {
+    event.preventDefault();
+
+    switch (event.button) {
+      case 0:
+        state = STATE.PAN;
+        panStart.set(event.clientX, event.clientY);
+        break;
+      case 2:
+        state = STATE.ROTATE;
+        rotateStart.set(event.clientX, event.clientY);
+        break;
+    }
+
+    that.domElement.addEventListener('mousemove', onMouseMove, false);
+    that.domElement.addEventListener('mouseup', onMouseUp, false);
+  }
+
+  function onMouseMove(event) {
+    event.preventDefault();
+
+    var movementX = event.movementX || event.mozMovementX
+        || event.webkitMovementX || 0;
+    var movementY = event.movementY || event.mozMovementY
+        || event.webkitMovementY || 0;
+
+    switch (state) {
+      case STATE.ROTATE:
+        boom.position.x = boom.position.x;
+        boom.position.y = boom.position.y;
+        boom.rotation.z -= ((movementX - movementY)) * 0.002;
+        break;
+      case STATE.PAN:
+        boom.translateX(-movementX * 0.01);
+        boom.translateY(movementY * 0.01);
+
+        boom.position.x = Math.min(Math.max(boom.position.x,
+            -INTERACTIVEWORLD.HOUSE_WIDTH / 2.0),
+            INTERACTIVEWORLD.HOUSE_WIDTH / 2.0);
+        boom.position.y = Math.min(Math.max(boom.position.y,
+            -INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0),
+            INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0);
+    }
+  }
+
+  function onMouseUp(event) {
+    event.preventDefault();
+
+    that.domElement.removeEventListener('mousemove', onMouseMove, false);
+    that.domElement.removeEventListener('mouseup', onMouseUp, false);
+
+    state = STATE.NONE;
+  }
+
+  function onMouseWheel(event) {
+    event.preventDefault();
+
+    var delta = 0;
+    if (event.wheelDelta) {
+      delta = event.wheelDelta;
+    } else if (event.detail) {
+      delta = -event.detail;
+    }
+
+    if (delta > 0) {
+      that.dollyOut();
+    } else {
+      that.dollyIn();
+    }
+  }
+
+  function surfaceDetection(event) {
+    event.preventDefault();
+
+    // get the vector
+    var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+    projector.unprojectVector(vector, that.camera);
+
+    // get the actual camera position
+    that.camera.updateMatrixWorld();
+    var cameraVector = new THREE.Vector3();
+    cameraVector.getPositionFromMatrix(that.camera.matrixWorld);
+
+    // ray cast it
+    var raycaster = new THREE.Raycaster(cameraVector, vector.sub(cameraVector)
+        .normalize());
+
+    // check any intersections
+    var intersects = raycaster.intersectObjects(that.surfaces);
+    for ( var i = 0; i < that.surfaces.length; i++) {
+      if (intersects.length > 0 && intersects[0].object === that.surfaces[i]) {
+        that.surfaces[i].mousemove(objectMenu.getDisplayObjectType(),
+            intersects[0].point);
+      } else {
+        that.surfaces[i].mouseout();
+      }
+    }
+  }
+
+  function surfaceClick(event) {
+    event.preventDefault();
+
+    // get the vector
+    var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+    projector.unprojectVector(vector, that.camera);
+
+    // get the actual camera position
+    that.camera.updateMatrixWorld();
+    var cameraVector = new THREE.Vector3();
+    cameraVector.getPositionFromMatrix(that.camera.matrixWorld);
+
+    // ray cast it
+    var raycaster = new THREE.Raycaster(cameraVector, vector.sub(cameraVector)
+        .normalize());
+
+    // check any intersections
+    var intersects = raycaster.intersectObjects(that.surfaces);
+    if (intersects.length > 0) {
+      intersects[0].object.dblclick(objectMenu.getDisplayObjectType(),
+          intersects[0].point);
+    }
+  }
+
+  // add event listeners
+  this.domElement.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+  }, false);
+  this.domElement.addEventListener('mousedown', onMouseDown, false);
+  this.domElement.addEventListener('mousewheel', onMouseWheel, false);
+  this.domElement.addEventListener('DOMMouseScroll', onMouseWheel, false);
+  this.domElement.addEventListener('mousemove', surfaceDetection, false);
+  this.domElement.addEventListener('dblclick', surfaceClick, false);
+
+  this.rotateUp(-0.75);
+};
+INTERACTIVEWORLD.MouseControls.prototype.__proto__ = THREE.EventDispatcher.prototype;
+
+INTERACTIVEWORLD.MouseControls.prototype.update = function() {
+  var position = this.camera.position;
+  var offset = position.clone().sub(this.target);
+
+  // angle from y-axis
+  var phi = Math.atan2(Math.sqrt(offset.x * offset.x + offset.z * offset.z),
+      offset.y)
+      + this.phiDelta;
+
+  // restrict phi to be between desired limits
+  phi = Math.max(0, Math.min(Math.PI, phi));
+  phi = Math.max(this.EPS, Math.min(Math.PI - this.EPS, phi));
+  var radius = offset.length() * this.scale;
+
+  // restrict radius to be between desired limits
+  if (radius < 4 && radius > 0.5) {
+    offset.y = radius * Math.cos(phi);
+    offset.z = radius * Math.sin(phi);
+    position.copy(this.target).add(offset);
+    this.camera.lookAt(this.target);
+  }
+
+  this.phiDelta = 0;
+  this.scale = 1;
+};
+
+INTERACTIVEWORLD.MouseControls.prototype.rotateUp = function(angle) {
+  if (angle === undefined) {
+    angle = 2 * Math.PI / 60 / 60 * this.autoRotateSpeed;
+  }
+
+  this.phiDelta -= angle;
+};
+
+INTERACTIVEWORLD.MouseControls.prototype.dollyIn = function(dollyScale) {
+  if (dollyScale === undefined) {
+    dollyScale = Math.pow(0.95, this.zoomSpeed);
+  }
+
+  this.scale /= dollyScale;
+  this.rotateUp(0.01);
+};
+
+INTERACTIVEWORLD.MouseControls.prototype.dollyOut = function(dollyScale) {
+  if (dollyScale === undefined) {
+    dollyScale = Math.pow(0.95, this.zoomSpeed);
+  }
+
+  this.scale *= dollyScale;
+  this.rotateUp(-0.01);
+};
+
+INTERACTIVEWORLD.MouseControls.prototype.addInteractionSurfaces = function(
+    surfaces) {
+  for ( var i = 0; i < surfaces.length; i++) {
+    this.surfaces.push(surfaces[i]);
+  }
+};
+
+INTERACTIVEWORLD.TexturePlane = function(options) {
+  options = options || {};
+  var width = options.width;
+  var height = options.height;
+  var texture = options.texture;
+  var repeat = options.repeat;
+  this.name = 'Plane';
+
+  // load the material
+  var planeTexture = new THREE.ImageUtils.loadTexture(texture);
+  planeTexture.wrapS = planeTexture.wrapT = THREE.RepeatWrapping;
+  planeTexture.repeat.set(repeat, repeat);
+
+  // create the mesh
+  THREE.Mesh.call(this, new THREE.PlaneGeometry(width, height),
+      new THREE.MeshLambertMaterial({
+        map : planeTexture
+      }));
+};
+INTERACTIVEWORLD.TexturePlane.prototype.__proto__ = THREE.Mesh.prototype;
 
 INTERACTIVEWORLD.ObjectMenu = function(options) {
   var that = this;
@@ -135,7 +497,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var antialias = options.antialias;
   var objects = options.objects;
   var counter = 0;
-  var displayObject = objects[counter];
+  this.displayObject = objects[counter];
 
   // setup the div
   var div = document.createElement('div');
@@ -154,21 +516,23 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   // create the global scene
   var scene = new THREE.Scene();
-  scene.add(displayObject);
+  scene.add(this.displayObject);
 
   // create the global camera
-  var camera = new THREE.PerspectiveCamera(60, that.getMenuWidth()
-      / that.getMenuHeight(), 0.01, 1000);
+  var camera = new THREE.PerspectiveCamera(60, 2.5, 0.01, 1000);
   camera.position.y = -0.25;
   camera.position.z = 0.25;
   camera.lookAt(scene.position);
 
-  var plane = new INTERACTIVEWORLD.TexturePlane({
-    width : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH,
-    height : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT,
-    texture : INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_FLOOR_TEXTURE,
-    repeat : 10
-  });
+  var plane = new THREE.Mesh(new THREE.CubeGeometry(
+      INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH,
+      INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT, 0.01),
+      new THREE.MeshLambertMaterial({
+        transparent : true,
+        color : 0x0000FF
+      }));
+  plane.material.opacity = 0.5;
+  plane.position.z = -0.01;
   scene.add(plane);
 
   // add lights
@@ -186,7 +550,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   nav.appendChild(previousArrow);
   var objectName = document.createElement('span');
   nav.appendChild(objectName);
-  objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+  objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + this.displayObject.name
       + '&nbsp;&nbsp;&nbsp;';
   var nextArrow = document.createElement('img');
   nextArrow.src = INTERACTIVEWORLD.NEXT_ARROW;
@@ -203,12 +567,12 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
     }
 
     // update the display
-    scene.remove(displayObject);
-    displayObject = objects[counter];
-    scene.add(displayObject);
+    scene.remove(that.displayObject);
+    that.displayObject = objects[counter];
+    scene.add(that.displayObject);
 
     // change the name
-    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + that.displayObject.name
         + '&nbsp;&nbsp;&nbsp;';
   }
 
@@ -220,12 +584,12 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
     }
 
     // update the display
-    scene.remove(displayObject);
-    displayObject = objects[counter];
-    scene.add(displayObject);
+    scene.remove(that.displayObject);
+    that.displayObject = objects[counter];
+    scene.add(that.displayObject);
 
     // change the name
-    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + displayObject.name
+    objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + that.displayObject.name
         + '&nbsp;&nbsp;&nbsp;';
   }
 
@@ -255,7 +619,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
    */
   function draw() {
     // rotate the object
-    displayObject.rotation.z += 0.005;
+    that.displayObject.rotation.z += 0.005;
 
     // render the scene
     renderer.render(scene, camera);
@@ -281,10 +645,16 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
   return this.getMenuWidth() * 0.5;
 };
 
+INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
+  return this.displayObject.constructor;
+};
+
 INTERACTIVEWORLD.Bed = function() {
   var that = this;
   THREE.Object3D.call(this);
+
   this.name = 'Bed';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -295,6 +665,17 @@ INTERACTIVEWORLD.Bed = function() {
     result.scene.rotation.z = -Math.PI / 2.0;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1.65,
+    height : 2.05
+  });
+  interaction.position.x = 0.825;
+  interaction.position.y = 1.025;
+  interaction.position.z = 0.64;
+  this.add(interaction);
+  this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Bed.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -370,7 +751,9 @@ INTERACTIVEWORLD.Counter.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.DiningTable = function() {
   var that = this;
   THREE.Object3D.call(this);
+
   this.name = 'Dining Table';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -380,13 +763,26 @@ INTERACTIVEWORLD.DiningTable = function() {
     result.scene.position.y = 1.75;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction = new INTERACTIVEWORLD.InteractionSurface({
+    width : 2.4,
+    height : 1.2
+  });
+  interaction.position.x = 1.425;
+  interaction.position.y = 0.85;
+  interaction.position.z = 0.7;
+  this.add(interaction);
+  this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.DiningTable.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Dresser = function() {
   var that = this;
   THREE.Object3D.call(this);
+
   this.name = 'Dresser';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -396,13 +792,26 @@ INTERACTIVEWORLD.Dresser = function() {
     result.scene.position.y = -11.55;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1.36,
+    height : 0.48
+  });
+  interaction.position.x = 0.66;
+  interaction.position.y = 0.23;
+  interaction.position.z = 0.8;
+  this.add(interaction);
+  this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Dresser.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Nightstand = function() {
   var that = this;
   THREE.Object3D.call(this);
+
   this.name = 'Nightstand';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -413,6 +822,17 @@ INTERACTIVEWORLD.Nightstand = function() {
     result.scene.position.z = -0.1;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction = new INTERACTIVEWORLD.InteractionSurface({
+    width : 0.88,
+    height : 0.6
+  });
+  interaction.position.x = 0.42;
+  interaction.position.y = 0.3;
+  interaction.position.z = 0.75;
+  this.add(interaction);
+  this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Nightstand.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -441,6 +861,8 @@ INTERACTIVEWORLD.Plate = function() {
   var loader = new THREE.ColladaLoader();
   loader.load(INTERACTIVEWORLD.PLATE_MODEL, function(result) {
     // fix the offset
+    result.scene.position.x = -0.1;
+    result.scene.position.y = -0.07;
     result.scene.scale.x *= 0.04;
     result.scene.scale.y *= 0.04;
     result.scene.scale.z *= 0.04;
@@ -490,6 +912,10 @@ INTERACTIVEWORLD.Spoon = function() {
   // load the model
   var loader = new THREE.ColladaLoader();
   loader.load(INTERACTIVEWORLD.SPOON_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = 0.019;
+    result.scene.position.y = -0.06;
+    result.scene.rotation.z = Math.PI / 2.0;
     that.add(result.scene);
   });
 };
@@ -557,8 +983,11 @@ INTERACTIVEWORLD.Wall = function(options) {
 };
 INTERACTIVEWORLD.Wall.prototype.__proto__ = THREE.Mesh.prototype;
 
-INTERACTIVEWORLD.Bedroom = function() {
+INTERACTIVEWORLD.Bedroom = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -596,11 +1025,20 @@ INTERACTIVEWORLD.Bedroom = function() {
   this.add(nightstandOne);
   this.add(nightstandTwo);
   this.add(dresser);
+
+  // add the interactions
+  controls.addInteractionSurfaces(bed.interactions);
+  controls.addInteractionSurfaces(nightstandOne.interactions);
+  controls.addInteractionSurfaces(nightstandTwo.interactions);
+  controls.addInteractionSurfaces(dresser.interactions);
 };
 INTERACTIVEWORLD.Bedroom.prototype.__proto__ = THREE.Object3D.prototype;
 
-INTERACTIVEWORLD.DiningRoom = function() {
+INTERACTIVEWORLD.DiningRoom = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -640,11 +1078,17 @@ INTERACTIVEWORLD.DiningRoom = function() {
   this.add(diningTable);
   this.add(cabinet);
   this.add(rug);
+
+  // add the interactions
+  controls.addInteractionSurfaces(diningTable.interactions);
 };
 INTERACTIVEWORLD.DiningRoom.prototype.__proto__ = THREE.Object3D.prototype;
 
-INTERACTIVEWORLD.House = function() {
+INTERACTIVEWORLD.House = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   var outside = new INTERACTIVEWORLD.Room({
@@ -659,7 +1103,9 @@ INTERACTIVEWORLD.House = function() {
   var wallBuffer = (INTERACTIVEWORLD.WALL_WIDTH / 2.0);
 
   // add the rooms
-  var bedroom = new INTERACTIVEWORLD.Bedroom();
+  var bedroom = new INTERACTIVEWORLD.Bedroom({
+    controls : controls
+  });
   bedroom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       + wallBuffer;
@@ -668,7 +1114,9 @@ INTERACTIVEWORLD.House = function() {
       - wallBuffer;
   this.add(bedroom);
 
-  var kitchen = new INTERACTIVEWORLD.Kitchen();
+  var kitchen = new INTERACTIVEWORLD.Kitchen({
+    controls : controls
+  });
   kitchen.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;
@@ -677,7 +1125,9 @@ INTERACTIVEWORLD.House = function() {
       - wallBuffer;
   this.add(kitchen);
 
-  var livingRoom = new INTERACTIVEWORLD.LivingRoom();
+  var livingRoom = new INTERACTIVEWORLD.LivingRoom({
+    controls : controls
+  });
   livingRoom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       + wallBuffer;
@@ -686,7 +1136,9 @@ INTERACTIVEWORLD.House = function() {
       + wallBuffer;
   this.add(livingRoom);
 
-  var diningRoom = new INTERACTIVEWORLD.DiningRoom();
+  var diningRoom = new INTERACTIVEWORLD.DiningRoom({
+    controls : controls
+  });
   diningRoom.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;
@@ -746,8 +1198,11 @@ INTERACTIVEWORLD.Kitchen = function() {
 };
 INTERACTIVEWORLD.Kitchen.prototype.__proto__ = THREE.Object3D.prototype;
 
-INTERACTIVEWORLD.LivingRoom = function() {
+INTERACTIVEWORLD.LivingRoom = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -782,6 +1237,9 @@ INTERACTIVEWORLD.LivingRoom = function() {
   this.add(couch);
   this.add(tv);
   this.add(coffeeTable);
+
+  // add the interactions
+  //controls.addInteractionSurfaces(bed.interactions);
 };
 INTERACTIVEWORLD.LivingRoom.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -888,216 +1346,16 @@ INTERACTIVEWORLD.Room = function(options) {
 };
 INTERACTIVEWORLD.Room.prototype.__proto__ = THREE.Object3D.prototype;
 
-INTERACTIVEWORLD.MouseControls = function(options) {
-  var that = this;
-  options = options || {};
-  this.camera = options.camera;
-  this.scene = options.scene;
-  this.domElement = options.domElement;
-  var objects = options.objects;
-
-  this.camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
-
-  var boom = new THREE.Object3D();
-  boom.add(this.camera);
-
-  this.scene.add(boom);
-
-  boom.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 3;
-
-  this.target = new THREE.Vector3();
-
-  this.EPS = 0.000001;
-
-  this.phiDelta = 0;
-  this.thetaDelta = 0;
-  this.scale = 1;
-  this.pan = new THREE.Vector3();
-
-  this.zoomSpeed = 1.0;
-
-  this.autoRotateSpeed = 2.0;
-
-  var rotateStart = new THREE.Vector2();
-  var panStart = new THREE.Vector2();
-
-  this.minPolarAngle = 0;
-  this.maxPolarAngle = Math.PI;
-
-  this.minDistance = 0;
-  this.maxDistance = Infinity;
-
-  this.lastPosition = new THREE.Vector3();
-
-  var projector = new THREE.Projector();
-
-  var STATE = {
-    NONE : -1,
-    ROTATE : 0,
-    DOLLY : 1,
-    PAN : 2
-  };
-  var state = STATE.NONE;
-
-  function onMouseDown(event) {
-    event.preventDefault();
-
-    switch (event.button) {
-      case 0:
-        state = STATE.PAN;
-        panStart.set(event.clientX, event.clientY);
-        break;
-      case 2:
-        state = STATE.ROTATE;
-        rotateStart.set(event.clientX, event.clientY);
-        break;
-    }
-
-    that.domElement.addEventListener('mousemove', onMouseMove, false);
-    that.domElement.addEventListener('mouseup', onMouseUp, false);
-  }
-
-  function onMouseMove(event) {
-    event.preventDefault();
-
-    var movementX = event.movementX || event.mozMovementX
-        || event.webkitMovementX || 0;
-    var movementY = event.movementY || event.mozMovementY
-        || event.webkitMovementY || 0;
-
-    switch (state) {
-      case STATE.ROTATE:
-        boom.position.x = boom.position.x;
-        boom.position.y = boom.position.y;
-        boom.rotation.z -= ((movementX - movementY)) * 0.002;
-        break;
-      case STATE.PAN:
-        boom.translateX(-movementX * 0.01);
-        boom.translateY(movementY * 0.01);
-    }
-  }
-
-  function onMouseUp(event) {
-    event.preventDefault();
-
-    that.domElement.removeEventListener('mousemove', onMouseMove, false);
-    that.domElement.removeEventListener('mouseup', onMouseUp, false);
-
-    state = STATE.NONE;
-  }
-
-  function onMouseWheel(event) {
-    event.preventDefault();
-
-    var delta = 0;
-    if (event.wheelDelta) {
-      delta = event.wheelDelta;
-    } else if (event.detail) {
-      delta = -event.detail;
-    }
-
-    if (delta > 0) {
-      that.dollyOut();
-    } else {
-      that.dollyIn();
-    }
-  }
-
-  function mouseHighlighter(event) {
-    event.preventDefault();
-    var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
-        -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-    projector.unprojectVector(vector, that.camera);
-
-    that.camera.updateMatrixWorld();
-    var vector2 = new THREE.Vector3();
-    vector2.getPositionFromMatrix(that.camera.matrixWorld);
-
-    var raycaster = new THREE.Raycaster(vector2, vector.sub(vector2)
-        .normalize());
-
-    var intersects = raycaster.intersectObjects(objects);
-
-    if (intersects.length > 0) {
-
-      intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
-      console.log('hit');
-    }
-  }
-
-  // add event listeners
-  this.domElement.addEventListener('contextmenu', function(event) {
-    event.preventDefault();
-  }, false);
-  this.domElement.addEventListener('mousedown', onMouseDown, false);
-  this.domElement.addEventListener('mousewheel', onMouseWheel, false);
-  this.domElement.addEventListener('DOMMouseScroll', onMouseWheel, false);
-  this.domElement.addEventListener('mousemove', mouseHighlighter, false);
-
-  this.rotateUp(-0.75);
-};
-INTERACTIVEWORLD.MouseControls.prototype.__proto__ = THREE.EventDispatcher.prototype;
-
-INTERACTIVEWORLD.MouseControls.prototype.update = function() {
-  var position = this.camera.position;
-  var offset = position.clone().sub(this.target);
-
-  // angle from y-axis
-  var phi = Math.atan2(Math.sqrt(offset.x * offset.x + offset.z * offset.z),
-      offset.y)
-      + this.phiDelta;
-
-  // restrict phi to be between desired limits
-  phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, phi));
-  phi = Math.max(this.EPS, Math.min(Math.PI - this.EPS, phi));
-
-  var radius = offset.length() * this.scale;
-
-  // restrict radius to be between desired limits
-  radius = Math.max(this.minDistance, Math.min(this.maxDistance, radius));
-
-  offset.y = radius * Math.cos(phi);
-  offset.z = radius * Math.sin(phi);
-
-  position.copy(this.target).add(offset);
-
-  this.camera.lookAt(this.target);
-
-  this.phiDelta = 0;
-  this.scale = 1;
-};
-
-INTERACTIVEWORLD.MouseControls.prototype.rotateUp = function(angle) {
-  if (angle === undefined) {
-    angle = 2 * Math.PI / 60 / 60 * this.autoRotateSpeed;
-  }
-
-  this.phiDelta -= angle;
-};
-
-INTERACTIVEWORLD.MouseControls.prototype.dollyIn = function(dollyScale) {
-  if (dollyScale === undefined) {
-    dollyScale = Math.pow(0.95, this.zoomSpeed);
-  }
-
-  this.scale /= dollyScale;
-  this.rotateUp(0.01);
-};
-
-INTERACTIVEWORLD.MouseControls.prototype.dollyOut = function(dollyScale) {
-  if (dollyScale === undefined) {
-    dollyScale = Math.pow(0.95, this.zoomSpeed);
-  }
-
-  this.scale *= dollyScale;
-  this.rotateUp(-0.01);
-};
-
 INTERACTIVEWORLD.Viewer = function(options) {
-  var objects = [];
   options = options || {};
   var divID = options.divID;
   var antialias = options.antialias;
+
+  // add an object menu
+  var menu = new INTERACTIVEWORLD.ObjectMenu({
+    antialias : antialias,
+    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
+  });
 
   // create the canvas to render to
   var renderer = new THREE.WebGLRenderer({
@@ -1115,16 +1373,18 @@ INTERACTIVEWORLD.Viewer = function(options) {
   scene.add(new THREE.AmbientLight(0x666666));
   scene.add(new THREE.HemisphereLight(0xffffff, 0xaaaaaa, 0.8));
 
-  // add the world
-  scene.add(new INTERACTIVEWORLD.World());
-
   // add the mouse controls
   var controls = new INTERACTIVEWORLD.MouseControls({
     scene : scene,
     camera : camera,
     domElement : renderer.domElement,
-    objects : objects
+    objectMenu : menu
   });
+
+  // add the world
+  scene.add(new INTERACTIVEWORLD.World({
+    controls : controls
+  }));
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1155,8 +1415,11 @@ INTERACTIVEWORLD.Viewer = function(options) {
   draw();
 };
 
-INTERACTIVEWORLD.World = function() {
+INTERACTIVEWORLD.World = function(options) {
+  options = options || [];
   THREE.Object3D.call(this);
+
+  var controls = options.controls;
 
   // add the grass
   var grass = new INTERACTIVEWORLD.TexturePlane({
@@ -1169,8 +1432,10 @@ INTERACTIVEWORLD.World = function() {
   this.add(grass);
 
   // add the skybox
-  var textureCube = THREE.ImageUtils.loadTextureCube([ 'posx.jpg', 'negx.jpg',
-      'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ]);
+  var textureCube = THREE.ImageUtils.loadTextureCube([
+      INTERACTIVEWORLD.SKY_TEXTURE, INTERACTIVEWORLD.SKY_TEXTURE,
+      INTERACTIVEWORLD.SKY_TEXTURE, INTERACTIVEWORLD.SKY_TEXTURE,
+      INTERACTIVEWORLD.SKY_TEXTURE, INTERACTIVEWORLD.SKY_TEXTURE ]);
   textureCube.format = THREE.RGBFormat;
   var shader = THREE.ShaderLib['cube'];
   shader.uniforms['tCube'].value = textureCube;
@@ -1184,6 +1449,8 @@ INTERACTIVEWORLD.World = function() {
   })));
 
   // add the house
-  this.add(new INTERACTIVEWORLD.House());
+  this.add(new INTERACTIVEWORLD.House({
+    controls : controls
+  }));
 };
 INTERACTIVEWORLD.World.prototype.__proto__ = THREE.Object3D.prototype;

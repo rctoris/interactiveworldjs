@@ -29,6 +29,7 @@ INTERACTIVEWORLD.PAINTED_WALL_RED_TEXTURE = 'resources/textures/painted-wall-red
 INTERACTIVEWORLD.PARTICLE_BOARD_TEXTURE = 'resources/textures/particle-board.jpg';
 INTERACTIVEWORLD.PLASTIC_BLACK_TEXTURE = 'resources/textures/plastic-black.jpg';
 INTERACTIVEWORLD.RUG_TEXTURE = 'resources/textures/rug.jpg';
+INTERACTIVEWORLD.SKY_TEXTURE = 'resources/textures/sky.jpg';
 INTERACTIVEWORLD.TILE_FLOOR_TEXTURE = 'resources/textures/tile-floor.jpg';
 INTERACTIVEWORLD.TILE_WALL_TEXTURE = 'resources/textures/tile-wall.jpg';
 INTERACTIVEWORLD.WALLPAPER_DARK_TEXTURE = 'resources/textures/wallpaper-dark.jpg';
@@ -53,6 +54,8 @@ INTERACTIVEWORLD.WEST_WALL = 3;
 
 INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE = 0;
 INTERACTIVEWORLD.POSITIVE_DOOR_SIDE = 1;
+
+INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS = 0.05;
 
 INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH = 3;
 INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT = 3;
@@ -120,11 +123,5 @@ window.onload = function() {
   new INTERACTIVEWORLD.Viewer({
     divID : INTERACTIVEWORLD.DIV_ID,
     antialias : true
-  });
-
-  // add an object menu
-  new INTERACTIVEWORLD.ObjectMenu({
-    antialias : true,
-    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
   });
 };
