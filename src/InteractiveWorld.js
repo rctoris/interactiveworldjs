@@ -110,7 +110,7 @@ INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 
-window.onload = function() {
+INTERACTIVEWORLD.init = function() {
   // start with a fresh page
   document.body.innerHTML = '';
 
@@ -120,8 +120,10 @@ window.onload = function() {
   document.getElementsByTagName('body')[0].appendChild(main);
 
   // add the viewer
-  new INTERACTIVEWORLD.Viewer({
+  var viewer = new INTERACTIVEWORLD.Viewer({
     divID : INTERACTIVEWORLD.DIV_ID,
     antialias : true
   });
+  
+  return viewer;
 };

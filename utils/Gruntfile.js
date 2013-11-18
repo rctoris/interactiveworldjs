@@ -10,6 +10,12 @@ module.exports = function(grunt) {
         ],
         dest : '../build/interactiveworld.js'
       },
+      eventemitter2 : {
+        src : [
+          '../include/EventEmitter2/eventemitter2.js'
+        ],
+        dest : '../build/eventemitter2.js'
+      },
       three : {
         src : [
           '../include/threejs/three.js',
@@ -34,6 +40,10 @@ module.exports = function(grunt) {
       main : {
         src : '../build/interactiveworld.js',
         dest : '../build/interactiveworld.min.js'
+      },
+      eventemitter2 : {
+        src : '../build/eventemitter2.js',
+        dest : '../build/eventemitter2.min.js'
       },
       three : {
         src : '../build/threecolladaloader.js',

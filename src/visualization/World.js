@@ -32,8 +32,10 @@ INTERACTIVEWORLD.World = function(options) {
   })));
 
   // add the house
-  this.add(new INTERACTIVEWORLD.House({
+  var house = new INTERACTIVEWORLD.House({
     controls : controls
-  }));
+  });
+  this.add(house);
+  this.interactionHandler = house.eventHandler;
 };
 INTERACTIVEWORLD.World.prototype.__proto__ = THREE.Object3D.prototype;

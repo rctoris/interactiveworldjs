@@ -3,6 +3,7 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
   this.width = options.width;
   this.height = options.height;
   this.displayObject = null;
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
 
   // create the surface
   var geom = new THREE.CubeGeometry(this.width, this.height,
@@ -54,6 +55,11 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
   var object = new ObjectType();
   // set the location and add it
   this.setObjectPose(object, vector);
+  this.eventHandler.emit('addition', {
+    name : object.name,
+    position : object.position,
+    rotation : object.rotation
+  });
   this.add(object);
 };
 

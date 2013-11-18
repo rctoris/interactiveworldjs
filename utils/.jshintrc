@@ -2,6 +2,7 @@
   "globals" : {
     "module" : true,
     "THREE" : true,
+    "EventEmitter2" : true,
     "requestAnimationFrame" : true
   },
   "curly" : true,

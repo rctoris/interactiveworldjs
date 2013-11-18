@@ -1,4 +1,5 @@
 INTERACTIVEWORLD.Viewer = function(options) {
+  var that = this;
   options = options || {};
   var divID = options.divID;
   var antialias = options.antialias;
@@ -34,9 +35,13 @@ INTERACTIVEWORLD.Viewer = function(options) {
   });
 
   // add the world
-  scene.add(new INTERACTIVEWORLD.World({
+  var world = new INTERACTIVEWORLD.World({
     controls : controls
-  }));
+  });
+  scene.add(world);
+  world.interactionHandler.on('addition', function(event) {
+    that.emit('addition', event);
+  });
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -66,3 +71,4 @@ INTERACTIVEWORLD.Viewer = function(options) {
   // begin the animation
   draw();
 };
+INTERACTIVEWORLD.Viewer.prototype.__proto__ = EventEmitter2.prototype;

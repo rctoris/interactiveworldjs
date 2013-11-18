@@ -10,7 +10,8 @@ Pre-built files can be found in either [interactiveworld.js](build/interactivewo
 ### Dependencies
 interactiveworldjs depends on:
 
-[three.js](https://github.com/mrdoob/three.js/). The current supported version is r61. The current supported version can be found [in this project](include/threejs/three.js).
+[EventEmitter2](https://github.com/hij1nx/EventEmitter2). The current supported version is r61. The current supported version can be found [in this project](include/EventEmitter2/eventemitter.js).
+[three.js](https://github.com/mrdoob/three.js/). The current supported version is 0.4.11. The current supported version can be found [in this project](include/threejs/three.js).
 
 ### Build
 Checkout [utils/README.md](utils/README.md) for details on building.

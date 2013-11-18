@@ -1,7 +1,10 @@
 INTERACTIVEWORLD.Bedroom = function(options) {
+  var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-
+  
+  this.name = 'Bedroom';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
 
   // add the room structure
@@ -17,6 +20,14 @@ INTERACTIVEWORLD.Bedroom = function(options) {
 
   // load the models we need
   var bed = new INTERACTIVEWORLD.Bed();
+  bed.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : that.position,
+      rotation : that.rotation,
+      furniture : furn
+    });
+  });
   var nightstandOne = new INTERACTIVEWORLD.Nightstand();
   var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
   var dresser = new INTERACTIVEWORLD.Dresser();

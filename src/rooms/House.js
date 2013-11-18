@@ -1,8 +1,10 @@
 INTERACTIVEWORLD.House = function(options) {
+  var that = this;
   options = options || [];
   THREE.Object3D.call(this);
 
   var controls = options.controls;
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
 
   // add the room structure
   var outside = new INTERACTIVEWORLD.Room({
@@ -26,6 +28,9 @@ INTERACTIVEWORLD.House = function(options) {
   bedroom.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       - wallBuffer;
+  bedroom.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
+  });
   this.add(bedroom);
 
   var kitchen = new INTERACTIVEWORLD.Kitchen({
