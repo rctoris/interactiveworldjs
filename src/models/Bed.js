@@ -24,12 +24,20 @@ INTERACTIVEWORLD.Bed = function() {
   interaction.position.x = 0.825;
   interaction.position.y = 1.025;
   interaction.position.z = 0.64;
-  interaction.eventHandler.on('addition', function(obj) {
+  interaction.eventHandler.on('addition', function(surf) {
     that.eventHandler.emit('addition', {
       name : that.name,
-      position : that.position,
-      rotation : that.rotation,
-      object : obj
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      surface : surf
     });
   });
   this.add(interaction);

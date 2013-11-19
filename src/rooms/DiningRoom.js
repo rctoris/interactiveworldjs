@@ -1,7 +1,10 @@
 INTERACTIVEWORLD.DiningRoom = function(options) {
+  var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-
+  
+  this.name = 'Dining Room';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
 
   // add the room structure
@@ -17,6 +20,22 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
 
   // load the models we need
   var diningTable = new INTERACTIVEWORLD.DiningTable();
+  diningTable.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var cabinet = new INTERACTIVEWORLD.Cabinet();
 
   var rug = new INTERACTIVEWORLD.TexturePlane({

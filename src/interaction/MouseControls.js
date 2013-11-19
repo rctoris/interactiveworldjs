@@ -166,6 +166,7 @@ INTERACTIVEWORLD.MouseControls = function(options) {
     if (intersects.length > 0) {
       intersects[0].object.dblclick(objectMenu.getDisplayObjectType(),
           intersects[0].point);
+      objectMenu.markPlacedItem();
     }
   }
 

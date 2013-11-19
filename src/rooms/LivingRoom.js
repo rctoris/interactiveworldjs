@@ -1,7 +1,10 @@
 INTERACTIVEWORLD.LivingRoom = function(options) {
+  var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-
+  
+  this.name = 'Living Room';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
 
   // add the room structure
@@ -17,8 +20,40 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
 
   // load the models we need
   var couch = new INTERACTIVEWORLD.Couch();
+  couch.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var tv = new INTERACTIVEWORLD.TV();
   var coffeeTable = new INTERACTIVEWORLD.CoffeeTable();
+  coffeeTable.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
 
   // set the positions
   couch.position.x = -0.65;
@@ -39,6 +74,7 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
   this.add(coffeeTable);
 
   // add the interactions
-  //controls.addInteractionSurfaces(bed.interactions);
+  controls.addInteractionSurfaces(coffeeTable.interactions);
+  controls.addInteractionSurfaces(couch.interactions);
 };
 INTERACTIVEWORLD.LivingRoom.prototype.__proto__ = THREE.Object3D.prototype;

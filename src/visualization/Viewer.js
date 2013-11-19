@@ -7,7 +7,11 @@ INTERACTIVEWORLD.Viewer = function(options) {
   // add an object menu
   var menu = new INTERACTIVEWORLD.ObjectMenu({
     antialias : antialias,
-    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
+    objects : [ new INTERACTIVEWORLD.Magazines(), new INTERACTIVEWORLD.Plate(),
+        new INTERACTIVEWORLD.Spoon() ]
+  });
+  menu.on('completion', function() {
+    that.emit('completion');
   });
 
   // create the canvas to render to

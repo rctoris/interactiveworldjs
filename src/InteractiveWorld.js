@@ -93,20 +93,21 @@ INTERACTIVEWORLD.DINING_ROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.HARDWOOD_DARK_TEXT
 INTERACTIVEWORLD.LIVING_ROOM_WALL_TEXTURE = INTERACTIVEWORLD.PAINTED_WALL_RED_TEXTURE;
 INTERACTIVEWORLD.LIVING_ROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.CARPET_TAN_TEXTURE;
 
-INTERACTIVEWORLD.BED_MODEL = 'resources/models/bed.dae';
-INTERACTIVEWORLD.DRESSER_MODEL = 'resources/models/dresser.dae';
-INTERACTIVEWORLD.NIGHTSTAND_MODEL = 'resources/models/nightstand.dae';
-INTERACTIVEWORLD.DINING_TABLE_MODEL = 'resources/models/dining-table.dae';
-INTERACTIVEWORLD.SINK_MODEL = 'resources/models/sink.dae';
-INTERACTIVEWORLD.CABINET_MODEL = 'resources/models/cabinet.dae';
-INTERACTIVEWORLD.REFRIGERATOR_MODEL = 'resources/models/refrigerator.dae';
-INTERACTIVEWORLD.OVEN_MODEL = 'resources/models/oven.dae';
-INTERACTIVEWORLD.COUNTER_MODEL = 'resources/models/counter.dae';
-INTERACTIVEWORLD.COUCH_MODEL = 'resources/models/couch.dae';
-INTERACTIVEWORLD.TV_MODEL = 'resources/models/tv.dae';
-INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.dae';
-INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.dae';
-INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.dae';
+INTERACTIVEWORLD.BED_MODEL = 'resources/models/bed.min.dae';
+INTERACTIVEWORLD.DRESSER_MODEL = 'resources/models/dresser.min.dae';
+INTERACTIVEWORLD.NIGHTSTAND_MODEL = 'resources/models/nightstand.min.dae';
+INTERACTIVEWORLD.DINING_TABLE_MODEL = 'resources/models/dining-table.min.dae';
+INTERACTIVEWORLD.SINK_MODEL = 'resources/models/sink.min.dae';
+INTERACTIVEWORLD.CABINET_MODEL = 'resources/models/cabinet.min.dae';
+INTERACTIVEWORLD.REFRIGERATOR_MODEL = 'resources/models/refrigerator.min.dae';
+INTERACTIVEWORLD.OVEN_MODEL = 'resources/models/oven.min.dae';
+INTERACTIVEWORLD.COUNTER_MODEL = 'resources/models/counter.min.dae';
+INTERACTIVEWORLD.COUCH_MODEL = 'resources/models/couch.min.dae';
+INTERACTIVEWORLD.TV_MODEL = 'resources/models/tv.min.dae';
+INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.min.dae';
+INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.min.dae';
+INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.min.dae';
+INTERACTIVEWORLD.MAGAZINES_MODEL = 'resources/models/magazines.min.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 

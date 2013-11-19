@@ -5,6 +5,9 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var objects = options.objects;
   var counter = 0;
   this.displayObject = objects[counter];
+  this.placedObjects = [];
+  this.numObjects = objects.length;
+  this.allObjects = objects;
 
   // setup the div
   var div = document.createElement('div');
@@ -143,6 +146,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   draw();
 };
+INTERACTIVEWORLD.ObjectMenu.prototype.__proto__ = EventEmitter2.prototype;
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getMenuWidth = function() {
   return window.innerWidth / 4;
@@ -154,4 +158,16 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
   return this.displayObject.constructor;
+};
+
+INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
+  var index = this.allObjects.indexOf(this.displayObject);
+
+  if (this.placedObjects.indexOf(index) === -1) {
+    this.placedObjects.push(index);
+  }
+
+  if (this.placedObjects.length === this.numObjects) {
+    this.emit('completion');
+  }
 };

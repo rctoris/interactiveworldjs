@@ -23,14 +23,70 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   bed.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
       name : that.name,
-      position : that.position,
-      rotation : that.rotation,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
       furniture : furn
     });
   });
   var nightstandOne = new INTERACTIVEWORLD.Nightstand();
+  nightstandOne.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
+  nightstandTwo.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var dresser = new INTERACTIVEWORLD.Dresser();
+  dresser.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
 
   // set the positions
   bed.position.x = -0.8;

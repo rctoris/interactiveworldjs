@@ -36,6 +36,9 @@ INTERACTIVEWORLD.House = function(options) {
   var kitchen = new INTERACTIVEWORLD.Kitchen({
     controls : controls
   });
+  kitchen.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
+  });
   kitchen.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;
@@ -47,6 +50,9 @@ INTERACTIVEWORLD.House = function(options) {
   var livingRoom = new INTERACTIVEWORLD.LivingRoom({
     controls : controls
   });
+  livingRoom.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
+  });
   livingRoom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       + wallBuffer;
@@ -57,6 +63,9 @@ INTERACTIVEWORLD.House = function(options) {
 
   var diningRoom = new INTERACTIVEWORLD.DiningRoom({
     controls : controls
+  });
+  diningRoom.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
   });
   diningRoom.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)

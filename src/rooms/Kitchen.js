@@ -1,5 +1,11 @@
-INTERACTIVEWORLD.Kitchen = function() {
+INTERACTIVEWORLD.Kitchen = function(options) {
+  var that = this;
+  options = options || [];
   THREE.Object3D.call(this);
+
+  this.name = 'Kitchen';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -15,9 +21,57 @@ INTERACTIVEWORLD.Kitchen = function() {
   // load the models we need
   var refrigerator = new INTERACTIVEWORLD.Refrigerator();
   var sink = new INTERACTIVEWORLD.Sink();
+  sink.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var oven = new INTERACTIVEWORLD.Oven();
   var counterOne = new INTERACTIVEWORLD.Counter();
+  counterOne.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var counterTwo = new INTERACTIVEWORLD.Counter();
+  counterTwo.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
 
   // set the positions
   refrigerator.position.x = 1.2;
@@ -44,5 +98,10 @@ INTERACTIVEWORLD.Kitchen = function() {
   this.add(oven);
   this.add(counterOne);
   this.add(counterTwo);
+
+  // add the interactions
+  controls.addInteractionSurfaces(sink.interactions);
+  controls.addInteractionSurfaces(counterOne.interactions);
+  controls.addInteractionSurfaces(counterTwo.interactions);
 };
 INTERACTIVEWORLD.Kitchen.prototype.__proto__ = THREE.Object3D.prototype;

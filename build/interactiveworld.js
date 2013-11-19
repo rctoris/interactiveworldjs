@@ -93,20 +93,21 @@ INTERACTIVEWORLD.DINING_ROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.HARDWOOD_DARK_TEXT
 INTERACTIVEWORLD.LIVING_ROOM_WALL_TEXTURE = INTERACTIVEWORLD.PAINTED_WALL_RED_TEXTURE;
 INTERACTIVEWORLD.LIVING_ROOM_FLOOR_TEXTURE = INTERACTIVEWORLD.CARPET_TAN_TEXTURE;
 
-INTERACTIVEWORLD.BED_MODEL = 'resources/models/bed.dae';
-INTERACTIVEWORLD.DRESSER_MODEL = 'resources/models/dresser.dae';
-INTERACTIVEWORLD.NIGHTSTAND_MODEL = 'resources/models/nightstand.dae';
-INTERACTIVEWORLD.DINING_TABLE_MODEL = 'resources/models/dining-table.dae';
-INTERACTIVEWORLD.SINK_MODEL = 'resources/models/sink.dae';
-INTERACTIVEWORLD.CABINET_MODEL = 'resources/models/cabinet.dae';
-INTERACTIVEWORLD.REFRIGERATOR_MODEL = 'resources/models/refrigerator.dae';
-INTERACTIVEWORLD.OVEN_MODEL = 'resources/models/oven.dae';
-INTERACTIVEWORLD.COUNTER_MODEL = 'resources/models/counter.dae';
-INTERACTIVEWORLD.COUCH_MODEL = 'resources/models/couch.dae';
-INTERACTIVEWORLD.TV_MODEL = 'resources/models/tv.dae';
-INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.dae';
-INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.dae';
-INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.dae';
+INTERACTIVEWORLD.BED_MODEL = 'resources/models/bed.min.dae';
+INTERACTIVEWORLD.DRESSER_MODEL = 'resources/models/dresser.min.dae';
+INTERACTIVEWORLD.NIGHTSTAND_MODEL = 'resources/models/nightstand.min.dae';
+INTERACTIVEWORLD.DINING_TABLE_MODEL = 'resources/models/dining-table.min.dae';
+INTERACTIVEWORLD.SINK_MODEL = 'resources/models/sink.min.dae';
+INTERACTIVEWORLD.CABINET_MODEL = 'resources/models/cabinet.min.dae';
+INTERACTIVEWORLD.REFRIGERATOR_MODEL = 'resources/models/refrigerator.min.dae';
+INTERACTIVEWORLD.OVEN_MODEL = 'resources/models/oven.min.dae';
+INTERACTIVEWORLD.COUNTER_MODEL = 'resources/models/counter.min.dae';
+INTERACTIVEWORLD.COUCH_MODEL = 'resources/models/couch.min.dae';
+INTERACTIVEWORLD.TV_MODEL = 'resources/models/tv.min.dae';
+INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.min.dae';
+INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.min.dae';
+INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.min.dae';
+INTERACTIVEWORLD.MAGAZINES_MODEL = 'resources/models/magazines.min.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 
@@ -147,7 +148,7 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
     color : 0x00FF00
   });
   // initially not visible
-  mat.opacity = 0; // TODO
+  mat.opacity = 0;
 
   // create the mesh
   THREE.Mesh.call(this, geom, mat);
@@ -175,7 +176,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(ObjectType,
 
 INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
   // become invisible
-  this.material.opacity = 0; // TODO
+  this.material.opacity = 0;
 
   if (this.displayObject !== null) {
     this.remove(this.displayObject);
@@ -185,14 +186,36 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
 
 INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
     vector) {
+  var that = this;
   // create the object
   var object = new ObjectType();
   // set the location and add it
   this.setObjectPose(object, vector);
   this.eventHandler.emit('addition', {
-    name : object.name,
-    position : object.position,
-    rotation : object.rotation
+    name : 'surface',
+    position : {
+      x : that.position.x,
+      y : that.position.y,
+      z : that.position.z,
+    },
+    rotation : {
+      x : that.rotation.x,
+      y : that.rotation.y,
+      z : that.rotation.z,
+    },
+    object : {
+      name : object.name,
+      position : {
+        x : object.position.x,
+        y : object.position.y,
+        z : object.position.z,
+      },
+      rotation : {
+        x : object.rotation.x,
+        y : object.rotation.y,
+        z : object.rotation.z,
+      }
+    }
   });
   this.add(object);
 };
@@ -406,6 +429,7 @@ INTERACTIVEWORLD.MouseControls = function(options) {
     if (intersects.length > 0) {
       intersects[0].object.dblclick(objectMenu.getDisplayObjectType(),
           intersects[0].point);
+      objectMenu.markPlacedItem();
     }
   }
 
@@ -482,27 +506,6 @@ INTERACTIVEWORLD.MouseControls.prototype.addInteractionSurfaces = function(
   }
 };
 
-INTERACTIVEWORLD.TexturePlane = function(options) {
-  options = options || {};
-  var width = options.width;
-  var height = options.height;
-  var texture = options.texture;
-  var repeat = options.repeat;
-  this.name = 'Plane';
-
-  // load the material
-  var planeTexture = new THREE.ImageUtils.loadTexture(texture);
-  planeTexture.wrapS = planeTexture.wrapT = THREE.RepeatWrapping;
-  planeTexture.repeat.set(repeat, repeat);
-
-  // create the mesh
-  THREE.Mesh.call(this, new THREE.PlaneGeometry(width, height),
-      new THREE.MeshLambertMaterial({
-        map : planeTexture
-      }));
-};
-INTERACTIVEWORLD.TexturePlane.prototype.__proto__ = THREE.Mesh.prototype;
-
 INTERACTIVEWORLD.ObjectMenu = function(options) {
   var that = this;
   options = options || {};
@@ -510,6 +513,9 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var objects = options.objects;
   var counter = 0;
   this.displayObject = objects[counter];
+  this.placedObjects = [];
+  this.numObjects = objects.length;
+  this.allObjects = objects;
 
   // setup the div
   var div = document.createElement('div');
@@ -648,6 +654,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   draw();
 };
+INTERACTIVEWORLD.ObjectMenu.prototype.__proto__ = EventEmitter2.prototype;
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getMenuWidth = function() {
   return window.innerWidth / 4;
@@ -659,6 +666,18 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
   return this.displayObject.constructor;
+};
+
+INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
+  var index = this.allObjects.indexOf(this.displayObject);
+
+  if (this.placedObjects.indexOf(index) === -1) {
+    this.placedObjects.push(index);
+  }
+
+  if (this.placedObjects.length === this.numObjects) {
+    this.emit('completion');
+  }
 };
 
 INTERACTIVEWORLD.Bed = function() {
@@ -687,12 +706,20 @@ INTERACTIVEWORLD.Bed = function() {
   interaction.position.x = 0.825;
   interaction.position.y = 1.025;
   interaction.position.z = 0.64;
-  interaction.eventHandler.on('addition', function(obj) {
+  interaction.eventHandler.on('addition', function(surf) {
     that.eventHandler.emit('addition', {
       name : that.name,
-      position : that.position,
-      rotation : that.rotation,
-      object : obj
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      surface : surf
     });
   });
   this.add(interaction);
@@ -718,7 +745,10 @@ INTERACTIVEWORLD.Cabinet.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.CoffeeTable = function() {
   var that = this;
   THREE.Object3D.call(this);
+
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Coffee Table';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -731,13 +761,43 @@ INTERACTIVEWORLD.CoffeeTable = function() {
     result.scene.scale.z *= 0.11;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1.5,
+    height : 0.81
+  });
+  interaction.position.x = 0.78;
+  interaction.position.y = 0.4;
+  interaction.position.z = 0.4;
+  interaction.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
+  this.add(interaction);
+  this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.CoffeeTable.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Couch = function() {
   var that = this;
   THREE.Object3D.call(this);
+
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Couch';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -747,13 +807,68 @@ INTERACTIVEWORLD.Couch = function() {
     result.scene.position.y = 0.55;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction1 = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1,
+    height : 1.5
+  });
+  interaction1.position.x = 0.5;
+  interaction1.position.y = 0.8;
+  interaction1.position.z = 0.35;
+  interaction1.eventHandler.on('addition', function(surf) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      surface : surf
+    });
+  });
+  this.add(interaction1);
+  this.interactions.push(interaction1);
+  var interaction2 = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1.85,
+    height : 0.9
+  });
+  interaction2.position.x = 1.85;
+  interaction2.position.y = 1.2;
+  interaction2.position.z = 0.35;
+  interaction2.eventHandler.on('addition', function(surf) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      surface : surf
+    });
+  });
+  this.add(interaction2);
+  this.interactions.push(interaction2);
 };
 INTERACTIVEWORLD.Couch.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Counter = function() {
   var that = this;
   THREE.Object3D.call(this);
+
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Counter';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -766,13 +881,41 @@ INTERACTIVEWORLD.Counter = function() {
     result.scene.scale.z *= 0.85;
     that.add(result.scene);
   });
+
+  //create the interaction surface
+  var interaction = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1.1,
+    height : 0.8
+  });
+  interaction.position.x = 0.53;
+  interaction.position.y = 0.43;
+  interaction.position.z = 0.78;
+  interaction.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
+  this.add(interaction);
+  this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Counter.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.DiningTable = function() {
   var that = this;
   THREE.Object3D.call(this);
-
+  
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Dining Table';
   this.interactions = [];
 
@@ -793,6 +936,22 @@ INTERACTIVEWORLD.DiningTable = function() {
   interaction.position.x = 1.425;
   interaction.position.y = 0.85;
   interaction.position.z = 0.7;
+  interaction.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
   this.add(interaction);
   this.interactions.push(interaction);
 };
@@ -801,7 +960,8 @@ INTERACTIVEWORLD.DiningTable.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Dresser = function() {
   var that = this;
   THREE.Object3D.call(this);
-
+  
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Dresser';
   this.interactions = [];
 
@@ -822,15 +982,51 @@ INTERACTIVEWORLD.Dresser = function() {
   interaction.position.x = 0.66;
   interaction.position.y = 0.23;
   interaction.position.z = 0.8;
+  interaction.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
   this.add(interaction);
   this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Dresser.prototype.__proto__ = THREE.Object3D.prototype;
 
+INTERACTIVEWORLD.Magazines = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+  this.name = 'Magazines';
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.MAGAZINES_MODEL, function(result) {
+    // fix the offset
+    result.scene.position.x = -0.1;
+    result.scene.position.y = -0.1;
+    result.scene.scale.x *= 0.4;
+    result.scene.scale.y *= 0.4;
+    result.scene.scale.z *= 0.4;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Magazines.prototype.__proto__ = THREE.Object3D.prototype;
+
 INTERACTIVEWORLD.Nightstand = function() {
   var that = this;
   THREE.Object3D.call(this);
 
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Nightstand';
   this.interactions = [];
 
@@ -852,6 +1048,22 @@ INTERACTIVEWORLD.Nightstand = function() {
   interaction.position.x = 0.42;
   interaction.position.y = 0.3;
   interaction.position.z = 0.75;
+  interaction.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
   this.add(interaction);
   this.interactions.push(interaction);
 };
@@ -912,7 +1124,10 @@ INTERACTIVEWORLD.Refrigerator.prototype.__proto__ = THREE.Object3D.prototype;
 INTERACTIVEWORLD.Sink = function() {
   var that = this;
   THREE.Object3D.call(this);
+
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   this.name = 'Sink';
+  this.interactions = [];
 
   // load the model
   var loader = new THREE.ColladaLoader();
@@ -922,6 +1137,83 @@ INTERACTIVEWORLD.Sink = function() {
     result.scene.position.y = -0.2;
     that.add(result.scene);
   });
+
+  // create the interaction surface
+  var interaction1 = new INTERACTIVEWORLD.InteractionSurface({
+    width : 0.8,
+    height : 0.46
+  });
+  interaction1.position.x = 1.95;
+  interaction1.position.y = 0.33;
+  interaction1.position.z = 0.6;
+  interaction1.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
+  this.add(interaction1);
+  this.interactions.push(interaction1);
+  var interaction2 = new INTERACTIVEWORLD.InteractionSurface({
+    width : 1.5,
+    height : 0.8
+  });
+  interaction2.position.x = 0.75;
+  interaction2.position.y = 0.45;
+  interaction2.position.z = 0.9;
+  interaction2.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
+  this.add(interaction2);
+  this.interactions.push(interaction2);
+  var interaction3 = new INTERACTIVEWORLD.InteractionSurface({
+    width : 0.5,
+    height : 0.8
+  });
+  interaction3.position.x = 2.65;
+  interaction3.position.y = 0.45;
+  interaction3.position.z = 0.9;
+  interaction3.eventHandler.on('addition', function(obj) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      object : obj
+    });
+  });
+  this.add(interaction3);
+  this.interactions.push(interaction3);
 };
 INTERACTIVEWORLD.Sink.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -1029,14 +1321,70 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   bed.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
       name : that.name,
-      position : that.position,
-      rotation : that.rotation,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
       furniture : furn
     });
   });
   var nightstandOne = new INTERACTIVEWORLD.Nightstand();
+  nightstandOne.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
+  nightstandTwo.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var dresser = new INTERACTIVEWORLD.Dresser();
+  dresser.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
 
   // set the positions
   bed.position.x = -0.8;
@@ -1067,9 +1415,12 @@ INTERACTIVEWORLD.Bedroom = function(options) {
 INTERACTIVEWORLD.Bedroom.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.DiningRoom = function(options) {
+  var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-
+  
+  this.name = 'Dining Room';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
 
   // add the room structure
@@ -1085,6 +1436,22 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
 
   // load the models we need
   var diningTable = new INTERACTIVEWORLD.DiningTable();
+  diningTable.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var cabinet = new INTERACTIVEWORLD.Cabinet();
 
   var rug = new INTERACTIVEWORLD.TexturePlane({
@@ -1154,6 +1521,9 @@ INTERACTIVEWORLD.House = function(options) {
   var kitchen = new INTERACTIVEWORLD.Kitchen({
     controls : controls
   });
+  kitchen.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
+  });
   kitchen.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;
@@ -1164,6 +1534,9 @@ INTERACTIVEWORLD.House = function(options) {
 
   var livingRoom = new INTERACTIVEWORLD.LivingRoom({
     controls : controls
+  });
+  livingRoom.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
   });
   livingRoom.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       - ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
@@ -1176,6 +1549,9 @@ INTERACTIVEWORLD.House = function(options) {
   var diningRoom = new INTERACTIVEWORLD.DiningRoom({
     controls : controls
   });
+  diningRoom.eventHandler.on('addition', function(event) {
+    that.eventHandler.emit('addition', event);
+  });
   diningRoom.position.x = (INTERACTIVEWORLD.ROOM_WIDTH / 2.0)
       + ((INTERACTIVEWORLD.HOUSE_WIDTH / 2.0) - INTERACTIVEWORLD.ROOM_WIDTH)
       - wallBuffer;
@@ -1186,8 +1562,14 @@ INTERACTIVEWORLD.House = function(options) {
 };
 INTERACTIVEWORLD.House.prototype.__proto__ = THREE.Object3D.prototype;
 
-INTERACTIVEWORLD.Kitchen = function() {
+INTERACTIVEWORLD.Kitchen = function(options) {
+  var that = this;
+  options = options || [];
   THREE.Object3D.call(this);
+
+  this.name = 'Kitchen';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
+  var controls = options.controls;
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -1203,9 +1585,57 @@ INTERACTIVEWORLD.Kitchen = function() {
   // load the models we need
   var refrigerator = new INTERACTIVEWORLD.Refrigerator();
   var sink = new INTERACTIVEWORLD.Sink();
+  sink.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var oven = new INTERACTIVEWORLD.Oven();
   var counterOne = new INTERACTIVEWORLD.Counter();
+  counterOne.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var counterTwo = new INTERACTIVEWORLD.Counter();
+  counterTwo.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
 
   // set the positions
   refrigerator.position.x = 1.2;
@@ -1232,13 +1662,21 @@ INTERACTIVEWORLD.Kitchen = function() {
   this.add(oven);
   this.add(counterOne);
   this.add(counterTwo);
+
+  // add the interactions
+  controls.addInteractionSurfaces(sink.interactions);
+  controls.addInteractionSurfaces(counterOne.interactions);
+  controls.addInteractionSurfaces(counterTwo.interactions);
 };
 INTERACTIVEWORLD.Kitchen.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.LivingRoom = function(options) {
+  var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-
+  
+  this.name = 'Living Room';
+  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
 
   // add the room structure
@@ -1254,8 +1692,40 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
 
   // load the models we need
   var couch = new INTERACTIVEWORLD.Couch();
+  couch.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
   var tv = new INTERACTIVEWORLD.TV();
   var coffeeTable = new INTERACTIVEWORLD.CoffeeTable();
+  coffeeTable.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : {
+        x : that.rotation.x,
+        y : that.rotation.y,
+        z : that.rotation.z,
+      },
+      furniture : furn
+    });
+  });
 
   // set the positions
   couch.position.x = -0.65;
@@ -1276,7 +1746,8 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
   this.add(coffeeTable);
 
   // add the interactions
-  //controls.addInteractionSurfaces(bed.interactions);
+  controls.addInteractionSurfaces(coffeeTable.interactions);
+  controls.addInteractionSurfaces(couch.interactions);
 };
 INTERACTIVEWORLD.LivingRoom.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -1392,7 +1863,11 @@ INTERACTIVEWORLD.Viewer = function(options) {
   // add an object menu
   var menu = new INTERACTIVEWORLD.ObjectMenu({
     antialias : antialias,
-    objects : [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Spoon() ]
+    objects : [ new INTERACTIVEWORLD.Magazines(), new INTERACTIVEWORLD.Plate(),
+        new INTERACTIVEWORLD.Spoon() ]
+  });
+  menu.on('completion', function() {
+    that.emit('completion');
   });
 
   // create the canvas to render to

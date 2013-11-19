@@ -13,7 +13,7 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
     color : 0x00FF00
   });
   // initially not visible
-  mat.opacity = 0; // TODO
+  mat.opacity = 0;
 
   // create the mesh
   THREE.Mesh.call(this, geom, mat);
@@ -41,7 +41,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(ObjectType,
 
 INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
   // become invisible
-  this.material.opacity = 0; // TODO
+  this.material.opacity = 0;
 
   if (this.displayObject !== null) {
     this.remove(this.displayObject);
@@ -51,14 +51,36 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
 
 INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
     vector) {
+  var that = this;
   // create the object
   var object = new ObjectType();
   // set the location and add it
   this.setObjectPose(object, vector);
   this.eventHandler.emit('addition', {
-    name : object.name,
-    position : object.position,
-    rotation : object.rotation
+    name : 'surface',
+    position : {
+      x : that.position.x,
+      y : that.position.y,
+      z : that.position.z,
+    },
+    rotation : {
+      x : that.rotation.x,
+      y : that.rotation.y,
+      z : that.rotation.z,
+    },
+    object : {
+      name : object.name,
+      position : {
+        x : object.position.x,
+        y : object.position.y,
+        z : object.position.z,
+      },
+      rotation : {
+        x : object.rotation.x,
+        y : object.rotation.y,
+        z : object.rotation.z,
+      }
+    }
   });
   this.add(object);
 };
