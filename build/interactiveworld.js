@@ -2052,35 +2052,34 @@ INTERACTIVEWORLD.Viewer = function(options) {
     controls : controls
   });
   scene.add(world);
-  world.interactionHandler.on('addition',
-      function(event) {
-        that.emit('addition', event);
-        var cube = new THREE.Mesh(new THREE.CubeGeometry(0.5, 0.5, 0.5),
-            new THREE.MeshNormalMaterial());
-
-        cube.position.x = event.position.x;
-        cube.position.y = event.position.y;
-        cube.position.z = event.position.z;
-
-        cube.position.x += event.furniture.position.x;
-        cube.position.y += event.furniture.position.y;
-        cube.position.z += event.furniture.position.z;
-
-        var surfRot = rotate(event.furniture.rotation.z,
-            event.furniture.surface.position.x,
-            event.furniture.surface.position.y);
-        cube.position.x += surfRot.x;
-        cube.position.y += surfRot.y;
-        cube.position.z += event.furniture.surface.position.z;
-
-        var objectRot = rotate(event.furniture.rotation.z,
-            event.furniture.surface.object.position.x,
-            event.furniture.surface.object.position.y);
-        cube.position.x += objectRot.x;
-        cube.position.y += objectRot.y;
-        cube.position.z += event.furniture.surface.object.position.z;
-        // scene.add(cube);
-      });
+  world.interactionHandler.on('addition', function(event) {
+    that.emit('addition', event);
+    // var cube = new THREE.Mesh(new THREE.CubeGeometry(0.5, 0.5, 0.5),
+    // new THREE.MeshNormalMaterial());
+    //
+    // cube.position.x = event.position.x;
+    // cube.position.y = event.position.y;
+    // cube.position.z = event.position.z;
+    //
+    // cube.position.x += event.furniture.position.x;
+    // cube.position.y += event.furniture.position.y;
+    // cube.position.z += event.furniture.position.z;
+    //
+    // var surfRot = rotate(event.furniture.rotation.z,
+    // event.furniture.surface.position.x,
+    // event.furniture.surface.position.y);
+    // cube.position.x += surfRot.x;
+    // cube.position.y += surfRot.y;
+    // cube.position.z += event.furniture.surface.position.z;
+    //
+    // var objectRot = rotate(event.furniture.rotation.z,
+    // event.furniture.surface.object.position.x,
+    // event.furniture.surface.object.position.y);
+    // cube.position.x += objectRot.x;
+    // cube.position.y += objectRot.y;
+    // cube.position.z += event.furniture.surface.object.position.z;
+    // scene.add(cube);
+  });
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
