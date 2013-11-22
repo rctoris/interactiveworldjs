@@ -39,7 +39,7 @@ INTERACTIVEWORLD.CoffeeTable = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction);

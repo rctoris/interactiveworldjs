@@ -2,10 +2,11 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-  
+
   this.name = 'Bedroom';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random() * 2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -89,18 +90,36 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   });
 
   // set the positions
-  bed.position.x = -0.8;
-  bed.position.y = -0.2;
+  if (setup === 0) {
+    bed.position.x = -0.8;
+    bed.position.y = -0.2;
 
-  nightstandOne.position.x = 1.25;
-  nightstandOne.position.y = 1.3;
+    nightstandOne.position.x = 1.25;
+    nightstandOne.position.y = 1.3;
 
-  nightstandTwo.position.x = -2;
-  nightstandTwo.position.y = 1.3;
+    nightstandTwo.position.x = -2;
+    nightstandTwo.position.y = 1.3;
 
-  dresser.position.x = 0.645;
-  dresser.position.y = -1.45;
-  dresser.rotation.z = Math.PI;
+    dresser.position.x = 0.645;
+    dresser.position.y = -1.45;
+    dresser.rotation.z = Math.PI;
+  } else if (setup === 1) {
+    bed.position.x = -0.2;
+    bed.position.y = 0;
+    bed.rotation.z = Math.PI / 2.0;
+
+    nightstandOne.position.x = 1;
+    nightstandOne.position.y = -1.3;
+    nightstandOne.rotation.z = Math.PI;
+
+    nightstandTwo.position.x = 1.75;
+    nightstandTwo.position.y = 0.9;
+    nightstandTwo.rotation.z = -Math.PI/2.0;
+
+    dresser.position.x = -1.95;
+    dresser.position.y = -1.55;
+    dresser.rotation.z = Math.PI / 2.0;
+  }
 
   // add the models
   this.add(bed);

@@ -36,7 +36,7 @@ INTERACTIVEWORLD.Sink = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction1);
@@ -61,7 +61,7 @@ INTERACTIVEWORLD.Sink = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction2);
@@ -86,7 +86,7 @@ INTERACTIVEWORLD.Sink = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction3);

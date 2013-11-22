@@ -140,7 +140,9 @@ module.exports = function(grunt) {
           '../resources/models/refrigerator.min.dae': '../resources/models/refrigerator.dae',
           '../resources/models/sink.min.dae': '../resources/models/sink.dae',
           '../resources/models/spoon.min.dae': '../resources/models/spoon.dae',
-          '../resources/models/tv.min.dae': '../resources/models/tv.dae'
+          '../resources/models/tv.min.dae': '../resources/models/tv.dae',
+          '../resources/models/cup.min.dae': '../resources/models/cup.dae',
+          '../resources/models/fork.min.dae': '../resources/models/fork.dae'
         }
       }
     },

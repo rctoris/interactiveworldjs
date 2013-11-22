@@ -2,10 +2,11 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
   var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-  
+
   this.name = 'Dining Room';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random() * 2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -46,16 +47,30 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
   });
 
   // set the positions
-  diningTable.position.x = -1.2;
-  diningTable.position.y = -0.3;
+  if (setup === 0) {
+    diningTable.position.x = -1.2;
+    diningTable.position.y = -0.3;
 
-  cabinet.position.x = -0.55;
-  cabinet.position.y = -1.4;
-  cabinet.rotation.z = Math.PI;
+    cabinet.position.x = -0.55;
+    cabinet.position.y = -1.4;
+    cabinet.rotation.z = Math.PI;
 
-  rug.position.x = 0.3;
-  rug.position.y = 0.6;
-  rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+    rug.position.x = 0.3;
+    rug.position.y = 0.6;
+    rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+  } else if (setup === 1) {
+    diningTable.position.x = -0.1;
+    diningTable.position.y = -1.6;
+    diningTable.rotation.z = Math.PI / 2.0;
+
+    cabinet.position.x = 0.55;
+    cabinet.position.y = 1.4;
+
+     rug.position.x = -0.9;
+     rug.position.y = -0.2;
+    rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+    rug.rotation.z = Math.PI / 2.0;
+  }
 
   // add the models
   this.add(diningTable);

@@ -96,7 +96,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object,
   object.position = worldPose.sub(local);
 
   // assume 90 degree rotations
-  if (this.parent.rotation.z === Math.PI) {
+  if (this.parent.rotation.z === Math.PI || this.parent.rotation.z === -Math.PI) {
     object.position.x *= -1;
     object.position.y *= -1;
   } else if (this.parent.rotation.z === Math.PI / 2.0) {

@@ -6,6 +6,7 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   this.name = 'Kitchen';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random()*2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -74,23 +75,43 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   });
 
   // set the positions
-  refrigerator.position.x = 1.2;
-  refrigerator.position.y = 1.1;
+  if (setup === 0) {
+    refrigerator.position.x = 1.2;
+    refrigerator.position.y = 1.1;
 
-  sink.position.x = -2.2;
-  sink.position.y = 1.1;
+    sink.position.x = -2.2;
+    sink.position.y = 1.1;
 
-  oven.position.x = 1;
-  oven.position.y = -1.35;
-  oven.rotation.z = Math.PI;
+    oven.position.x = 1;
+    oven.position.y = -1.35;
+    oven.rotation.z = Math.PI;
 
-  counterOne.position.x = 2.1;
-  counterOne.position.y = -1.1;
-  counterOne.rotation.z = Math.PI;
+    counterOne.position.x = 2.1;
+    counterOne.position.y = -1.1;
+    counterOne.rotation.z = Math.PI;
 
-  counterTwo.position.x = -0.3;
-  counterTwo.position.y = -1.1;
-  counterTwo.rotation.z = Math.PI;
+    counterTwo.position.x = -0.3;
+    counterTwo.position.y = -1.1;
+    counterTwo.rotation.z = Math.PI;
+  } else if (setup === 1) {
+    refrigerator.position.x = 2.3;
+    refrigerator.position.y = -1.2;
+    refrigerator.rotation.z = Math.PI;
+
+    sink.position.x = -1.6;
+    sink.position.y = -0.95;
+    sink.rotation.z = Math.PI/2.0;
+
+    oven.position.x = 1;
+    oven.position.y = -1.35;
+    oven.rotation.z = Math.PI;
+
+    counterOne.position.x = 1.3;
+    counterOne.position.y = 1.1;
+
+    counterTwo.position.x = 0.25;
+    counterTwo.position.y = 1.1;
+  }
 
   // add the models
   this.add(refrigerator);

@@ -6,8 +6,11 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var counter = 0;
   this.displayObject = objects[counter];
   this.placedObjects = [];
+  this.placedObjectCount = [];
   this.numObjects = objects.length;
   this.allObjects = objects;
+  var text = options.title || '';
+  this.completion = options.completion || 1;
 
   // setup the div
   var div = document.createElement('div');
@@ -16,7 +19,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   // create the heading
   var title = document.createElement('h1');
-  title.innerHTML = 'Where does this object belong?';
+  title.innerHTML = text;
   div.appendChild(title);
 
   // create the 3D canvas
@@ -165,9 +168,17 @@ INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
 
   if (this.placedObjects.indexOf(index) === -1) {
     this.placedObjects.push(index);
+    this.placedObjectCount.push(1);
+  } else {
+    this.placedObjectCount[this.placedObjects.indexOf(index)]++;
   }
 
   if (this.placedObjects.length === this.numObjects) {
+    for(var i=0; i<this.numObjects; i++) {
+      if(this.placedObjectCount[i] < this.completion) {
+        return;
+      }
+    }
     this.emit('completion');
   }
 };

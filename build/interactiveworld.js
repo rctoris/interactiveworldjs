@@ -108,6 +108,8 @@ INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.min.dae';
 INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.min.dae';
 INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.min.dae';
 INTERACTIVEWORLD.MAGAZINES_MODEL = 'resources/models/magazines.min.dae';
+INTERACTIVEWORLD.CUP_MODEL = 'resources/models/cup.min.dae';
+INTERACTIVEWORLD.FORK_MODEL = 'resources/models/fork.min.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 
@@ -231,7 +233,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object,
   object.position = worldPose.sub(local);
 
   // assume 90 degree rotations
-  if (this.parent.rotation.z === Math.PI) {
+  if (this.parent.rotation.z === Math.PI || this.parent.rotation.z === -Math.PI) {
     object.position.x *= -1;
     object.position.y *= -1;
   } else if (this.parent.rotation.z === Math.PI / 2.0) {
@@ -514,8 +516,11 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var counter = 0;
   this.displayObject = objects[counter];
   this.placedObjects = [];
+  this.placedObjectCount = [];
   this.numObjects = objects.length;
   this.allObjects = objects;
+  var text = options.title || '';
+  this.completion = options.completion || 1;
 
   // setup the div
   var div = document.createElement('div');
@@ -524,7 +529,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   // create the heading
   var title = document.createElement('h1');
-  title.innerHTML = 'Where does this object belong?';
+  title.innerHTML = text;
   div.appendChild(title);
 
   // create the 3D canvas
@@ -673,9 +678,17 @@ INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
 
   if (this.placedObjects.indexOf(index) === -1) {
     this.placedObjects.push(index);
+    this.placedObjectCount.push(1);
+  } else {
+    this.placedObjectCount[this.placedObjects.indexOf(index)]++;
   }
 
   if (this.placedObjects.length === this.numObjects) {
+    for(var i=0; i<this.numObjects; i++) {
+      if(this.placedObjectCount[i] < this.completion) {
+        return;
+      }
+    }
     this.emit('completion');
   }
 };
@@ -783,7 +796,7 @@ INTERACTIVEWORLD.CoffeeTable = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction);
@@ -903,13 +916,30 @@ INTERACTIVEWORLD.Counter = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction);
   this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Counter.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Cup = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+  this.name = 'Cup';
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.CUP_MODEL, function(result) {
+    // fix the offset
+    result.scene.scale.x *= 0.04;
+    result.scene.scale.y *= 0.04;
+    result.scene.scale.z *= 0.04;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Cup.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.DiningTable = function() {
   var that = this;
@@ -949,7 +979,7 @@ INTERACTIVEWORLD.DiningTable = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction);
@@ -995,13 +1025,33 @@ INTERACTIVEWORLD.Dresser = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction);
   this.interactions.push(interaction);
 };
 INTERACTIVEWORLD.Dresser.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Fork = function() {
+  var that = this;
+  THREE.Object3D.call(this);
+  this.name = 'Fork';
+
+  // load the model
+  var loader = new THREE.ColladaLoader();
+  loader.load(INTERACTIVEWORLD.FORK_MODEL, function(result) {
+    // fix the offset
+    result.scene.scale.x *= 0.95;
+    result.scene.scale.y *= 0.95;
+    result.scene.scale.z *= 0.95;
+    result.scene.position.x = -0.01;
+    result.scene.position.y = 0.05;
+    result.scene.rotation.z = Math.PI / 2.0;
+    that.add(result.scene);
+  });
+};
+INTERACTIVEWORLD.Fork.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Magazines = function() {
   var that = this;
@@ -1061,7 +1111,7 @@ INTERACTIVEWORLD.Nightstand = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction);
@@ -1159,7 +1209,7 @@ INTERACTIVEWORLD.Sink = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction1);
@@ -1184,7 +1234,7 @@ INTERACTIVEWORLD.Sink = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction2);
@@ -1209,7 +1259,7 @@ INTERACTIVEWORLD.Sink = function() {
         y : that.rotation.y,
         z : that.rotation.z,
       },
-      object : obj
+      surface : obj
     });
   });
   this.add(interaction3);
@@ -1300,10 +1350,11 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-  
+
   this.name = 'Bedroom';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random() * 2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -1387,18 +1438,36 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   });
 
   // set the positions
-  bed.position.x = -0.8;
-  bed.position.y = -0.2;
+  if (setup === 0) {
+    bed.position.x = -0.8;
+    bed.position.y = -0.2;
 
-  nightstandOne.position.x = 1.25;
-  nightstandOne.position.y = 1.3;
+    nightstandOne.position.x = 1.25;
+    nightstandOne.position.y = 1.3;
 
-  nightstandTwo.position.x = -2;
-  nightstandTwo.position.y = 1.3;
+    nightstandTwo.position.x = -2;
+    nightstandTwo.position.y = 1.3;
 
-  dresser.position.x = 0.645;
-  dresser.position.y = -1.45;
-  dresser.rotation.z = Math.PI;
+    dresser.position.x = 0.645;
+    dresser.position.y = -1.45;
+    dresser.rotation.z = Math.PI;
+  } else if (setup === 1) {
+    bed.position.x = -0.2;
+    bed.position.y = 0;
+    bed.rotation.z = Math.PI / 2.0;
+
+    nightstandOne.position.x = 1;
+    nightstandOne.position.y = -1.3;
+    nightstandOne.rotation.z = Math.PI;
+
+    nightstandTwo.position.x = 1.75;
+    nightstandTwo.position.y = 0.9;
+    nightstandTwo.rotation.z = -Math.PI/2.0;
+
+    dresser.position.x = -1.95;
+    dresser.position.y = -1.55;
+    dresser.rotation.z = Math.PI / 2.0;
+  }
 
   // add the models
   this.add(bed);
@@ -1418,10 +1487,11 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
   var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-  
+
   this.name = 'Dining Room';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random() * 2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -1462,16 +1532,30 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
   });
 
   // set the positions
-  diningTable.position.x = -1.2;
-  diningTable.position.y = -0.3;
+  if (setup === 0) {
+    diningTable.position.x = -1.2;
+    diningTable.position.y = -0.3;
 
-  cabinet.position.x = -0.55;
-  cabinet.position.y = -1.4;
-  cabinet.rotation.z = Math.PI;
+    cabinet.position.x = -0.55;
+    cabinet.position.y = -1.4;
+    cabinet.rotation.z = Math.PI;
 
-  rug.position.x = 0.3;
-  rug.position.y = 0.6;
-  rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+    rug.position.x = 0.3;
+    rug.position.y = 0.6;
+    rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+  } else if (setup === 1) {
+    diningTable.position.x = -0.1;
+    diningTable.position.y = -1.6;
+    diningTable.rotation.z = Math.PI / 2.0;
+
+    cabinet.position.x = 0.55;
+    cabinet.position.y = 1.4;
+
+     rug.position.x = -0.9;
+     rug.position.y = -0.2;
+    rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+    rug.rotation.z = Math.PI / 2.0;
+  }
 
   // add the models
   this.add(diningTable);
@@ -1570,6 +1654,7 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   this.name = 'Kitchen';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random()*2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -1638,23 +1723,43 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   });
 
   // set the positions
-  refrigerator.position.x = 1.2;
-  refrigerator.position.y = 1.1;
+  if (setup === 0) {
+    refrigerator.position.x = 1.2;
+    refrigerator.position.y = 1.1;
 
-  sink.position.x = -2.2;
-  sink.position.y = 1.1;
+    sink.position.x = -2.2;
+    sink.position.y = 1.1;
 
-  oven.position.x = 1;
-  oven.position.y = -1.35;
-  oven.rotation.z = Math.PI;
+    oven.position.x = 1;
+    oven.position.y = -1.35;
+    oven.rotation.z = Math.PI;
 
-  counterOne.position.x = 2.1;
-  counterOne.position.y = -1.1;
-  counterOne.rotation.z = Math.PI;
+    counterOne.position.x = 2.1;
+    counterOne.position.y = -1.1;
+    counterOne.rotation.z = Math.PI;
 
-  counterTwo.position.x = -0.3;
-  counterTwo.position.y = -1.1;
-  counterTwo.rotation.z = Math.PI;
+    counterTwo.position.x = -0.3;
+    counterTwo.position.y = -1.1;
+    counterTwo.rotation.z = Math.PI;
+  } else if (setup === 1) {
+    refrigerator.position.x = 2.3;
+    refrigerator.position.y = -1.2;
+    refrigerator.rotation.z = Math.PI;
+
+    sink.position.x = -1.6;
+    sink.position.y = -0.95;
+    sink.rotation.z = Math.PI/2.0;
+
+    oven.position.x = 1;
+    oven.position.y = -1.35;
+    oven.rotation.z = Math.PI;
+
+    counterOne.position.x = 1.3;
+    counterOne.position.y = 1.1;
+
+    counterTwo.position.x = 0.25;
+    counterTwo.position.y = 1.1;
+  }
 
   // add the models
   this.add(refrigerator);
@@ -1674,10 +1779,11 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
   var that = this;
   options = options || [];
   THREE.Object3D.call(this);
-  
+
   this.name = 'Living Room';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
+  var setup = options.setup || Math.floor((Math.random() * 2));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -1727,18 +1833,30 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
     });
   });
 
-  // set the positions
-  couch.position.x = -0.65;
-  couch.position.y = -1.95;
-  couch.rotation.z = Math.PI / 2.0;
+  //set the positions
+  if (setup === 0) {
+    couch.position.x = -0.65;
+    couch.position.y = -1.95;
+    couch.rotation.z = Math.PI / 2.0;
 
-  tv.position.x = 1.7;
-  tv.position.y = 0.5;
-  tv.rotation.z = -Math.PI / 2.0;
+    tv.position.x = 1.7;
+    tv.position.y = 0.5;
+    tv.rotation.z = -Math.PI / 2.0;
 
-  coffeeTable.position.x = -0.15;
-  coffeeTable.position.y = 0.7;
-  coffeeTable.rotation.z = -Math.PI / 2.0;
+    coffeeTable.position.x = -0.15;
+    coffeeTable.position.y = 0.7;
+    coffeeTable.rotation.z = -Math.PI / 2.0;
+  } else if (setup === 1) {
+    couch.position.x = 2.35;
+    couch.position.y = -0.2;
+    couch.rotation.z = Math.PI;
+
+    tv.position.x = -0.5;
+    tv.position.y = 1.3;
+
+    coffeeTable.position.x = -0.5;
+    coffeeTable.position.y = 0;
+  }
 
   // add the models
   this.add(couch);
@@ -1859,12 +1977,26 @@ INTERACTIVEWORLD.Viewer = function(options) {
   options = options || {};
   var divID = options.divID;
   var antialias = options.antialias;
+  var task = options.task || 0;
+
+  // determine the task
+  var objs = [];
+  var count = 0;
+  var text = '';
+  if (task === 0) {
+    // table setting
+    objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
+        new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
+    count = 3;
+    text = 'Set the table with these objects.';
+  }
 
   // add an object menu
   var menu = new INTERACTIVEWORLD.ObjectMenu({
     antialias : antialias,
-    objects : [ new INTERACTIVEWORLD.Magazines(), new INTERACTIVEWORLD.Plate(),
-        new INTERACTIVEWORLD.Spoon() ]
+    objects : objs,
+    completion : count,
+    title : text
   });
   menu.on('completion', function() {
     that.emit('completion');
@@ -1894,14 +2026,61 @@ INTERACTIVEWORLD.Viewer = function(options) {
     objectMenu : menu
   });
 
+  function rotate(rot, x, y) {
+    // assume 90 degree rotations
+    var newX = x;
+    var newY = y;
+    var tmpX = newX;
+    if (rot === Math.PI || rot === -Math.PI) {
+      newX *= -1;
+      newY *= -1;
+    } else if (rot === Math.PI / 2.0) {
+      newX = -newY;
+      newY = tmpX;
+    } else if (rot === -Math.PI / 2.0) {
+      newX = newY;
+      newY = -tmpX;
+    }
+    return {
+      x : newX,
+      y : newY
+    };
+  }
+
   // add the world
   var world = new INTERACTIVEWORLD.World({
     controls : controls
   });
   scene.add(world);
-  world.interactionHandler.on('addition', function(event) {
-    that.emit('addition', event);
-  });
+  world.interactionHandler.on('addition',
+      function(event) {
+        that.emit('addition', event);
+        var cube = new THREE.Mesh(new THREE.CubeGeometry(0.5, 0.5, 0.5),
+            new THREE.MeshNormalMaterial());
+
+        cube.position.x = event.position.x;
+        cube.position.y = event.position.y;
+        cube.position.z = event.position.z;
+
+        cube.position.x += event.furniture.position.x;
+        cube.position.y += event.furniture.position.y;
+        cube.position.z += event.furniture.position.z;
+
+        var surfRot = rotate(event.furniture.rotation.z,
+            event.furniture.surface.position.x,
+            event.furniture.surface.position.y);
+        cube.position.x += surfRot.x;
+        cube.position.y += surfRot.y;
+        cube.position.z += event.furniture.surface.position.z;
+
+        var objectRot = rotate(event.furniture.rotation.z,
+            event.furniture.surface.object.position.x,
+            event.furniture.surface.object.position.y);
+        cube.position.x += objectRot.x;
+        cube.position.y += objectRot.y;
+        cube.position.z += event.furniture.surface.object.position.z;
+        // scene.add(cube);
+      });
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);

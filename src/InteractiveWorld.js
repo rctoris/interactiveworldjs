@@ -108,6 +108,8 @@ INTERACTIVEWORLD.COFFEE_TABLE_MODEL = 'resources/models/coffee-table.min.dae';
 INTERACTIVEWORLD.PLATE_MODEL = 'resources/models/plate.min.dae';
 INTERACTIVEWORLD.SPOON_MODEL = 'resources/models/spoon.min.dae';
 INTERACTIVEWORLD.MAGAZINES_MODEL = 'resources/models/magazines.min.dae';
+INTERACTIVEWORLD.CUP_MODEL = 'resources/models/cup.min.dae';
+INTERACTIVEWORLD.FORK_MODEL = 'resources/models/fork.min.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 
