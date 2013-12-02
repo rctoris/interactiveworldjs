@@ -8,6 +8,7 @@ INTERACTIVEWORLD.Model = function(options) {
   this.width = options.width;
   this.depth = options.depth;
   this.interactions = [];
+  this.pois = [];
 
   var model = options.model;
   var offsetX = options.offsetX || 0;
@@ -58,4 +59,18 @@ INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
   });
   this.add(interaction);
   this.interactions.push(interaction);
+};
+
+INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
+    offsetZ, offsetX, offsetY) {
+  this.pois.push({
+    name : name,
+    width : width,
+    height : height,
+    position : {
+      x : offsetX,
+      y : offsetY,
+      z : offsetZ
+    }
+  });
 };

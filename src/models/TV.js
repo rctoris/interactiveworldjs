@@ -10,6 +10,15 @@ INTERACTIVEWORLD.TV = function() {
   });
 
   // add the interaction surface
-  this.addInteractionSurface(this.width, this.depth, 0.63);
+  var height = 0.63;
+  this.addInteractionSurface(this.width, this.depth, height);
+
+  var name = 'speaker';
+  var spakerWidth = 0.19;
+  var spaekerX = 0.89;
+  this.addPOI(name, spakerWidth, spakerWidth, height, spaekerX);
+  this.addPOI(name, spakerWidth, spakerWidth, height, -spaekerX);
+
+  this.addPOI('tv', 1.4, 0.45, height, 0, -0.03);
 };
 INTERACTIVEWORLD.TV.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

@@ -148,6 +148,7 @@ INTERACTIVEWORLD.Model = function(options) {
   this.width = options.width;
   this.depth = options.depth;
   this.interactions = [];
+  this.pois = [];
 
   var model = options.model;
   var offsetX = options.offsetX || 0;
@@ -198,6 +199,20 @@ INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
   });
   this.add(interaction);
   this.interactions.push(interaction);
+};
+
+INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
+    offsetZ, offsetX, offsetY) {
+  this.pois.push({
+    name : name,
+    width : width,
+    height : height,
+    position : {
+      x : offsetX,
+      y : offsetY,
+      z : offsetZ
+    }
+  });
 };
 
 INTERACTIVEWORLD.InteractionHandler = function() {
@@ -772,6 +787,15 @@ INTERACTIVEWORLD.Bed = function() {
 
   // create the interaction surface
   this.addInteractionSurface(this.width - 0.1, this.depth, 0.658);
+
+  var name = 'pillow';
+  var pillowWidth = 0.64;
+  var pillowDepth = 0.35;
+  var pillowHeight = 0.84;
+  var pillowX = 0.35;
+  var pillowY = 0.76;
+  this.addPOI(name, pillowWidth, pillowDepth, pillowHeight, pillowX, pillowY);
+  this.addPOI(name, pillowWidth, pillowDepth, pillowHeight, -pillowX, pillowY);
 };
 INTERACTIVEWORLD.Bed.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
 
@@ -862,7 +886,30 @@ INTERACTIVEWORLD.DiningTable = function() {
 
   // add the interaction surface
   this.addInteractionSurface(this.width, this.depth, 0.7);
-  // TODO: chairs?
+
+  var name = 'chair';
+  var chairWidth = 0.29;
+  var chairHeight = 0.44;
+  var endChairX = 1.27;
+  var endChairY = 0.03;
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, endChairX, endChairY);
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, -endChairX,
+      endChairY * 2);
+  var outerChairX = 0.8;
+  var outerChairY = 0.68;
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, outerChairX,
+      outerChairY);
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, outerChairX,
+      -outerChairY);
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, -outerChairX,
+      outerChairY);
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, -outerChairX,
+      -outerChairY);
+  var midChairX = 0.03;
+  this
+      .addPOI(name, chairWidth, chairWidth, chairHeight, midChairX, outerChairY);
+  this.addPOI(name, chairWidth, chairWidth, chairHeight, midChairX,
+      -outerChairY);
 };
 INTERACTIVEWORLD.DiningTable.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
 
@@ -935,7 +982,25 @@ INTERACTIVEWORLD.Oven = function() {
   });
 
   // add the interaction surface
-  this.addInteractionSurface(this.width, this.depth, 0.95);
+  var height = 0.95;
+  this.addInteractionSurface(this.width, this.depth, height);
+
+  var name = 'burner';
+  var burnerWidth = 0.25;
+  var backBurnerY = 0.135;
+  var frontBurnerY = -0.175;
+  var outerBurnerX = 0.443;
+  this
+      .addPOI(name, burnerWidth, burnerWidth, height, outerBurnerX, backBurnerY);
+  this.addPOI(name, burnerWidth, burnerWidth, height, outerBurnerX,
+      frontBurnerY);
+  var midBurnerX = 0.15;
+  this.addPOI(name, burnerWidth, burnerWidth, height, midBurnerX, backBurnerY);
+  this.addPOI(name, burnerWidth, burnerWidth, height, midBurnerX, frontBurnerY);
+  this.addPOI(name, burnerWidth, burnerWidth, height, -outerBurnerX,
+      backBurnerY);
+  this.addPOI(name, burnerWidth, burnerWidth, height, -outerBurnerX,
+      frontBurnerY);
 };
 INTERACTIVEWORLD.Oven.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
 
@@ -979,7 +1044,13 @@ INTERACTIVEWORLD.Sink = function() {
   var counterHeight = 0.91;
   this.addInteractionSurface(1.51, this.depth, counterHeight, -0.7);
   this.addInteractionSurface(0.54, this.depth, counterHeight, 1.19);
-  this.addInteractionSurface(0.82, 0.5, 0.61, 0.51, -0.1);
+  var sinkWidth = 0.82;
+  var sinkDepth = 0.46;
+  var sinkX = 0.49;
+  var sinkY = -0.12;
+  this.addInteractionSurface(sinkWidth, sinkDepth, 0.61, sinkX, sinkY);
+
+  this.addPOI('sink', sinkWidth, sinkDepth, counterHeight, sinkX, sinkY);
 };
 INTERACTIVEWORLD.Sink.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
 
@@ -1008,7 +1079,16 @@ INTERACTIVEWORLD.TV = function() {
   });
 
   // add the interaction surface
-  this.addInteractionSurface(this.width, this.depth, 0.63);
+  var height = 0.63;
+  this.addInteractionSurface(this.width, this.depth, height);
+
+  var name = 'speaker';
+  var spakerWidth = 0.19;
+  var spaekerX = 0.89;
+  this.addPOI(name, spakerWidth, spakerWidth, height, spaekerX);
+  this.addPOI(name, spakerWidth, spakerWidth, height, -spaekerX);
+
+  this.addPOI('tv', 1.4, 0.45, height, 0, -0.03);
 };
 INTERACTIVEWORLD.TV.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
 

@@ -12,6 +12,12 @@ INTERACTIVEWORLD.Sink = function() {
   var counterHeight = 0.91;
   this.addInteractionSurface(1.51, this.depth, counterHeight, -0.7);
   this.addInteractionSurface(0.54, this.depth, counterHeight, 1.19);
-  this.addInteractionSurface(0.82, 0.5, 0.61, 0.51, -0.1);
+  var sinkWidth = 0.82;
+  var sinkDepth = 0.46;
+  var sinkX = 0.49;
+  var sinkY = -0.12;
+  this.addInteractionSurface(sinkWidth, sinkDepth, 0.61, sinkX, sinkY);
+
+  this.addPOI('sink', sinkWidth, sinkDepth, counterHeight, sinkX, sinkY);
 };
 INTERACTIVEWORLD.Sink.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
