@@ -1,16 +1,12 @@
 INTERACTIVEWORLD.Refrigerator = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  this.name = 'Refrigerator';
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.REFRIGERATOR_MODEL, function(result) {
-    // fix the offset
-    result.scene.position.x = -0.15;
-    result.scene.position.y = 1.15;
-    result.scene.rotation.z = -Math.PI / 2.0;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'Refrigerator',
+    width : 0.883,
+    depth : 0.8,
+    model : INTERACTIVEWORLD.REFRIGERATOR_MODEL,
+    offsetX : -0.592,
+    offsetY : 0.8,
+    rotation : -Math.PI / 2.0
   });
 };
-INTERACTIVEWORLD.Refrigerator.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.Refrigerator.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

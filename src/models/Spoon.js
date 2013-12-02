@@ -1,16 +1,12 @@
 INTERACTIVEWORLD.Spoon = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  this.name = 'Spoon';
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.SPOON_MODEL, function(result) {
-    // fix the offset
-    result.scene.position.x = 0.019;
-    result.scene.position.y = -0.06;
-    result.scene.rotation.z = Math.PI / 2.0;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'Spoon',
+    width : 0.032,
+    depth : 0.15,
+    model : INTERACTIVEWORLD.SPOON_MODEL,
+    offsetX : 0.0165,
+    offsetY : -0.075,
+    rotation : Math.PI / 2.0
   });
 };
-INTERACTIVEWORLD.Spoon.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.Spoon.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

@@ -6,7 +6,7 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   this.name = 'Kitchen';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
-  var setup = options.setup || Math.floor((Math.random()*2));
+  var setup = options.setup || Math.floor((Math.random() * 3));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -30,15 +30,23 @@ INTERACTIVEWORLD.Kitchen = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
   var oven = new INTERACTIVEWORLD.Oven();
+  oven.eventHandler.on('addition', function(furn) {
+    that.eventHandler.emit('addition', {
+      name : that.name,
+      position : {
+        x : that.position.x,
+        y : that.position.y,
+        z : that.position.z,
+      },
+      rotation : that.rotation.z,
+      furniture : furn
+    });
+  });
   var counterOne = new INTERACTIVEWORLD.Counter();
   counterOne.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -48,11 +56,7 @@ INTERACTIVEWORLD.Kitchen = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
@@ -65,52 +69,89 @@ INTERACTIVEWORLD.Kitchen = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
 
   // set the positions
+  var buffer = INTERACTIVEWORLD.WALL_WIDTH;
   if (setup === 0) {
-    refrigerator.position.x = 1.2;
-    refrigerator.position.y = 1.1;
+    refrigerator.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - refrigerator.width)
+        / 2.0 - buffer;
+    refrigerator.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - refrigerator.depth)
+        / 2.0 - buffer;
 
-    sink.position.x = -2.2;
-    sink.position.y = 1.1;
+    sink.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - sink.width) / 2.0
+        + buffer;
+    sink.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - sink.depth) / 2.0
+        - buffer;
 
-    oven.position.x = 1;
-    oven.position.y = -1.35;
-    oven.rotation.z = Math.PI;
-
-    counterOne.position.x = 2.1;
-    counterOne.position.y = -1.1;
+    counterOne.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - counterOne.width)
+        / 2.0 - buffer;
+    counterOne.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - counterOne.depth)
+        / 2.0 + buffer;
     counterOne.rotation.z = Math.PI;
 
-    counterTwo.position.x = -0.3;
-    counterTwo.position.y = -1.1;
-    counterTwo.rotation.z = Math.PI;
-  } else if (setup === 1) {
-    refrigerator.position.x = 2.3;
-    refrigerator.position.y = -1.2;
-    refrigerator.rotation.z = Math.PI;
-
-    sink.position.x = -1.6;
-    sink.position.y = -0.95;
-    sink.rotation.z = Math.PI/2.0;
-
-    oven.position.x = 1;
-    oven.position.y = -1.35;
+    oven.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - oven.width) / 2.0 - 2
+        * buffer - counterOne.width;
+    oven.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - oven.depth) / 2.0
+        + buffer;
     oven.rotation.z = Math.PI;
 
-    counterOne.position.x = 1.3;
-    counterOne.position.y = 1.1;
+    counterTwo.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - counterTwo.width)
+        / 2.0 - 3 * buffer - counterOne.width - oven.width;
+    counterTwo.position.y = counterOne.position.y;
+    counterTwo.rotation.z = counterOne.rotation.z;
+  } else if (setup === 1) {
+    refrigerator.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - refrigerator.width)
+        / 2.0 - buffer;
+    refrigerator.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - refrigerator.depth)
+        / 2.0 + buffer;
+    refrigerator.rotation.z = Math.PI;
 
-    counterTwo.position.x = 0.25;
-    counterTwo.position.y = 1.1;
+    oven.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - oven.depth) / 2.0
+        + buffer;
+    oven.rotation.z = Math.PI;
+
+    sink.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - sink.depth) / 2.0
+        + buffer;
+    sink.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - sink.width) / 2.0
+        - buffer;
+    sink.rotation.z = Math.PI / 2.0;
+
+    counterOne.position.x = 1.3;
+    counterOne.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - counterOne.depth)
+        / 2.0 - buffer;
+
+    counterTwo.position.x = counterOne.position.x - counterOne.width;
+    counterTwo.position.y = counterOne.position.y;
+  } else {
+    sink.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - sink.depth) / 2.0 - buffer;
+    sink.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - sink.width) / 2.0
+        + buffer;
+    sink.rotation.z = -Math.PI / 2.0;
+
+    refrigerator.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - refrigerator.depth)
+        / 2.0 - buffer;
+    refrigerator.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - refrigerator.width)
+        / 2.0 - buffer;
+    refrigerator.rotation.z = -Math.PI / 2.0;
+
+    counterOne.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - counterOne.depth)
+        / 2.0 + buffer;
+    counterOne.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - counterOne.width)
+        / 2.0 - buffer;
+    counterOne.rotation.z = Math.PI / 2.0;
+
+    counterTwo.position.x = counterOne.position.x;
+    counterTwo.position.y = counterOne.position.y - counterOne.width;
+    counterTwo.rotation.z = counterOne.rotation.z;
+
+    oven.position.x = -0.5;
+    oven.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - oven.depth) / 2.0
+        + buffer;
+    oven.rotation.z = Math.PI;
   }
 
   // add the models
@@ -124,5 +165,6 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   controls.addInteractionSurfaces(sink.interactions);
   controls.addInteractionSurfaces(counterOne.interactions);
   controls.addInteractionSurfaces(counterTwo.interactions);
+  controls.addInteractionSurfaces(oven.interactions);
 };
 INTERACTIVEWORLD.Kitchen.prototype.__proto__ = THREE.Object3D.prototype;

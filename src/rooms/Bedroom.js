@@ -6,7 +6,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
   this.name = 'Bedroom';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
-  var setup = options.setup || Math.floor((Math.random() * 2));
+  var setup = options.setup || Math.floor((Math.random() * 3));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -29,11 +29,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
@@ -46,11 +42,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
@@ -63,11 +55,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
@@ -80,45 +68,65 @@ INTERACTIVEWORLD.Bedroom = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
 
   // set the positions
+  var buffer = INTERACTIVEWORLD.WALL_WIDTH;
   if (setup === 0) {
-    bed.position.x = -0.8;
-    bed.position.y = -0.2;
+    bed.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - bed.depth) / 2.0 - buffer;
 
-    nightstandOne.position.x = 1.25;
-    nightstandOne.position.y = 1.3;
+    nightstandOne.position.x = INTERACTIVEWORLD.ROOM_WIDTH / 4.0
+        + (nightstandOne.width / 2.0) - buffer;
+    nightstandOne.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - nightstandOne.depth)
+        / 2.0 - buffer;
 
-    nightstandTwo.position.x = -2;
-    nightstandTwo.position.y = 1.3;
+    nightstandTwo.position.x = -nightstandOne.position.x;
+    nightstandTwo.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - nightstandTwo.depth)
+        / 2.0 - buffer;
 
-    dresser.position.x = 0.645;
-    dresser.position.y = -1.45;
+    dresser.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - dresser.depth) / 2.0
+        + buffer;
     dresser.rotation.z = Math.PI;
   } else if (setup === 1) {
-    bed.position.x = -0.2;
-    bed.position.y = 0;
+    bed.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - bed.depth) / 2.0 + buffer;
+    bed.position.y = 0.5;
     bed.rotation.z = Math.PI / 2.0;
 
     nightstandOne.position.x = 1;
-    nightstandOne.position.y = -1.3;
+    nightstandOne.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - nightstandOne.depth)
+        / 2.0 + buffer;
     nightstandOne.rotation.z = Math.PI;
 
-    nightstandTwo.position.x = 1.75;
-    nightstandTwo.position.y = 0.9;
-    nightstandTwo.rotation.z = -Math.PI/2.0;
+    nightstandTwo.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - nightstandTwo.depth)
+        / 2.0 - buffer;
+    nightstandTwo.position.y = 0.5;
+    nightstandTwo.rotation.z = -Math.PI / 2.0;
 
-    dresser.position.x = -1.95;
-    dresser.position.y = -1.55;
+    dresser.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - dresser.depth) / 2.0
+        + buffer;
+    dresser.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - dresser.width) / 2.0
+        + buffer;
     dresser.rotation.z = Math.PI / 2.0;
+  } else {
+    bed.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - bed.width) / 2.0 + buffer;
+    bed.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - bed.depth) / 2.0 + buffer;
+    bed.rotation.z = -Math.PI;
+
+    nightstandOne.position.x = 1;
+    nightstandOne.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - nightstandOne.depth)
+        / 2.0 + buffer;
+    nightstandOne.rotation.z = Math.PI;
+
+    nightstandTwo.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - nightstandTwo.depth)
+        / 2.0 - buffer;
+    nightstandTwo.position.y = 0.5;
+    nightstandTwo.rotation.z = -Math.PI / 2.0;
+
+    dresser.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - dresser.depth) / 2.0
+        - buffer;
   }
 
   // add the models

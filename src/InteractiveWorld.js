@@ -6,9 +6,12 @@ var INTERACTIVEWORLD = INTERACTIVEWORLD || {
   REVISION : '1-devel'
 };
 
+INTERACTIVEWORLD.BOOK_PAGE_1_TEXTURE = 'resources/textures/book-page-1.jpg';
+INTERACTIVEWORLD.BOOK_PAGE_2_TEXTURE = 'resources/textures/book-page-2.jpg';
 INTERACTIVEWORLD.BRICKS_TEXTURE = 'resources/textures/bricks.jpg';
 INTERACTIVEWORLD.CARDBOARD_CORRUGATED_TEXTURE = 'resources/textures/cardboard-corrugated.jpg';
 INTERACTIVEWORLD.CARDBOARD_TEXTURE = 'resources/textures/cardboard.jpg';
+INTERACTIVEWORLD.CARPET_BLUE_TEXTURE = 'resources/textures/carpet-blue.jpg';
 INTERACTIVEWORLD.CARPET_GREY_TEXTURE = 'resources/textures/carpet-grey.jpg';
 INTERACTIVEWORLD.CARPET_PATTERN_TEXTURE = 'resources/textures/carpet-pattern.jpg';
 INTERACTIVEWORLD.CARPET_TAN_TEXTURE = 'resources/textures/carpet-tan.jpg';
@@ -21,6 +24,9 @@ INTERACTIVEWORLD.GLASS_TEXTURE = 'resources/textures/glass.jpg';
 INTERACTIVEWORLD.GRASS_TEXTURE = 'resources/textures/grass.jpg';
 INTERACTIVEWORLD.HARDWOOD_DARK_TEXTURE = 'resources/textures/hardwood-dark.jpg';
 INTERACTIVEWORLD.HARDWOOD_LIGHT_TEXTURE = 'resources/textures/hardwood-light.jpg';
+INTERACTIVEWORLD.MAGAZINE_1_TEXTURE = 'resources/textures/magazine-1.jpg';
+INTERACTIVEWORLD.MAGAZINE_2_TEXTURE = 'resources/textures/magazine-2.jpg';
+INTERACTIVEWORLD.MAGAZINE_3_TEXTURE = 'resources/textures/magazine-3.jpg';
 INTERACTIVEWORLD.METAL_VERTICAL_TEXTURE = 'resources/textures/metal-vertical.jpg';
 INTERACTIVEWORLD.NEWSPAPER_TEXTURE = 'resources/textures/newspaper.jpg';
 INTERACTIVEWORLD.NIGHTSTAND_TEXTURE = 'resources/textures/nightstand.jpg';
@@ -30,6 +36,7 @@ INTERACTIVEWORLD.PARTICLE_BOARD_TEXTURE = 'resources/textures/particle-board.jpg
 INTERACTIVEWORLD.PLASTIC_BLACK_TEXTURE = 'resources/textures/plastic-black.jpg';
 INTERACTIVEWORLD.RUG_TEXTURE = 'resources/textures/rug.jpg';
 INTERACTIVEWORLD.SKY_TEXTURE = 'resources/textures/sky.jpg';
+INTERACTIVEWORLD.STONE_WALL_TEXTURE = 'resources/textures/stone-wall.jpg';
 INTERACTIVEWORLD.TILE_FLOOR_TEXTURE = 'resources/textures/tile-floor.jpg';
 INTERACTIVEWORLD.TILE_WALL_TEXTURE = 'resources/textures/tile-wall.jpg';
 INTERACTIVEWORLD.WALLPAPER_DARK_TEXTURE = 'resources/textures/wallpaper-dark.jpg';
@@ -55,7 +62,7 @@ INTERACTIVEWORLD.WEST_WALL = 3;
 INTERACTIVEWORLD.NEGATIVE_DOOR_SIDE = 0;
 INTERACTIVEWORLD.POSITIVE_DOOR_SIDE = 1;
 
-INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS = 0.05;
+INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS = 0.005;
 
 INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_WIDTH = 3;
 INTERACTIVEWORLD.OBJECT_MENU_DISPLAY_HEIGHT = 3;
@@ -127,6 +134,6 @@ INTERACTIVEWORLD.init = function() {
     divID : INTERACTIVEWORLD.DIV_ID,
     antialias : true
   });
-  
+
   return viewer;
 };

@@ -1,15 +1,14 @@
 INTERACTIVEWORLD.Oven = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  this.name = 'Oven';
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.OVEN_MODEL, function(result) {
-    // fix the offset
-    result.scene.position.x = -0.45;
-    result.scene.position.y = -0.2;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'Oven',
+    width : 1.215,
+    depth : 0.66,
+    model : INTERACTIVEWORLD.OVEN_MODEL,
+    offsetX : -1.066,
+    offsetY : -0.49
   });
+
+  // add the interaction surface
+  this.addInteractionSurface(this.width, this.depth, 0.95);
 };
-INTERACTIVEWORLD.Oven.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.Oven.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

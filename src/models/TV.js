@@ -1,18 +1,15 @@
 INTERACTIVEWORLD.TV = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  this.name = 'TV';
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.TV_MODEL, function(result) {
-    // fix the offset
-    result.scene.position.x = 1.3;
-    result.scene.position.y = 0.6;
-    result.scene.scale.x *= 0.66;
-    result.scene.scale.y *= 0.66;
-    result.scene.scale.z *= 0.66;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'TV',
+    width : 2.14,
+    depth : 0.64,
+    model : INTERACTIVEWORLD.TV_MODEL,
+    offsetX : 0.295,
+    offsetY : 0.27,
+    scale : 0.66
   });
+
+  // add the interaction surface
+  this.addInteractionSurface(this.width, this.depth, 0.63);
 };
-INTERACTIVEWORLD.TV.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.TV.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

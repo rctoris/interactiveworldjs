@@ -6,6 +6,7 @@ module.exports = function(grunt) {
       main : {
         src : [
           '../src/*.js',
+          '../src/models/Model.js',
           '../src/**/*.js'
         ],
         dest : '../build/interactiveworld.js'

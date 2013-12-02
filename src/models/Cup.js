@@ -1,16 +1,11 @@
 INTERACTIVEWORLD.Cup = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  this.name = 'Cup';
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.CUP_MODEL, function(result) {
-    // fix the offset
-    result.scene.scale.x *= 0.04;
-    result.scene.scale.y *= 0.04;
-    result.scene.scale.z *= 0.04;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'Cup',
+    width : 0.061,
+    depth : 0.061,
+    model : INTERACTIVEWORLD.CUP_MODEL,
+    rotation : Math.PI,
+    scale : 0.04
   });
 };
-INTERACTIVEWORLD.Cup.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.Cup.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

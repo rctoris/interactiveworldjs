@@ -1,14 +1,11 @@
 INTERACTIVEWORLD.Cabinet = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  this.name = 'Cabinet';
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.CABINET_MODEL, function(result) {
-    // fix the offset
-    result.scene.position.y = 0.1;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'Cabinet',
+    width : 1.91,
+    depth : 0.557,
+    model : INTERACTIVEWORLD.CABINET_MODEL,
+    offsetX : -0.916,
+    offsetY : -0.126
   });
 };
-INTERACTIVEWORLD.Cabinet.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.Cabinet.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

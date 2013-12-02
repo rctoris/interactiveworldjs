@@ -2,6 +2,9 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
   options = options || {};
   this.width = options.width;
   this.height = options.height;
+  var offsetX = options.offsetX || 0;
+  var offsetY = options.offsetY || 0;
+  var offsetZ = options.offsetZ || 0;
   this.displayObject = null;
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
 
@@ -17,7 +20,9 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
 
   // create the mesh
   THREE.Mesh.call(this, geom, mat);
-  this.position.z = INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS;
+  this.position.x = offsetX;
+  this.position.y = offsetY;
+  this.position.z = INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS + offsetZ;
 };
 INTERACTIVEWORLD.InteractionSurface.prototype.__proto__ = THREE.Mesh.prototype;
 
@@ -63,11 +68,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
       y : that.position.y,
       z : that.position.z,
     },
-    rotation : {
-      x : that.rotation.x,
-      y : that.rotation.y,
-      z : that.rotation.z,
-    },
+    rotation : that.rotation.z,
     object : {
       name : object.name,
       position : {
@@ -75,11 +76,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
         y : object.position.y,
         z : object.position.z,
       },
-      rotation : {
-        x : object.rotation.x,
-        y : object.rotation.y,
-        z : object.rotation.z,
-      }
+      rotation : object.rotation.z
     }
   });
   this.add(object);

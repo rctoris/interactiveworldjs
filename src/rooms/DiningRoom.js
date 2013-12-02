@@ -6,7 +6,7 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
   this.name = 'Dining Room';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
-  var setup = options.setup || Math.floor((Math.random() * 2));
+  var setup = options.setup || Math.floor((Math.random() * 3));
 
   // add the room structure
   this.add(new INTERACTIVEWORLD.Room({
@@ -29,48 +29,48 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
         y : that.position.y,
         z : that.position.z,
       },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
+      rotation : that.rotation.z,
       furniture : furn
     });
   });
   var cabinet = new INTERACTIVEWORLD.Cabinet();
 
   var rug = new INTERACTIVEWORLD.TexturePlane({
-    width : 3.2,
-    height : 2,
+    width : diningTable.width + 1,
+    height : diningTable.depth + 1,
     texture : INTERACTIVEWORLD.RUG_TEXTURE,
     repeat : 1
   });
 
   // set the positions
+  var buffer = INTERACTIVEWORLD.WALL_WIDTH;
   if (setup === 0) {
-    diningTable.position.x = -1.2;
-    diningTable.position.y = -0.3;
-
-    cabinet.position.x = -0.55;
-    cabinet.position.y = -1.4;
+    cabinet.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - cabinet.width) / 2.0
+        + buffer;
+    cabinet.position.y = -(INTERACTIVEWORLD.ROOM_HEIGHT - cabinet.depth) / 2.0
+        + buffer;
     cabinet.rotation.z = Math.PI;
-
-    rug.position.x = 0.3;
-    rug.position.y = 0.6;
-    rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
   } else if (setup === 1) {
-    diningTable.position.x = -0.1;
-    diningTable.position.y = -1.6;
+    diningTable.position.x = -0.75;
     diningTable.rotation.z = Math.PI / 2.0;
 
-    cabinet.position.x = 0.55;
-    cabinet.position.y = 1.4;
+    cabinet.position.x = (INTERACTIVEWORLD.ROOM_WIDTH - cabinet.width) / 2.0
+        - buffer;
+    cabinet.position.y = (INTERACTIVEWORLD.ROOM_HEIGHT - cabinet.depth) / 2.0
+        - buffer;
+  } else {
+    diningTable.position.x = 0.75;
+    diningTable.rotation.z = -Math.PI / 2.0;
 
-     rug.position.x = -0.9;
-     rug.position.y = -0.2;
-    rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
-    rug.rotation.z = Math.PI / 2.0;
+    cabinet.position.x = -(INTERACTIVEWORLD.ROOM_WIDTH - cabinet.depth) / 2.0
+        + buffer;
+    cabinet.rotation.z = Math.PI / 2.0;
   }
+
+  rug.position.x = diningTable.position.x;
+  rug.position.y = diningTable.position.y;
+  rug.position.z = INTERACTIVEWORLD.Z_INDEX * 3;
+  rug.rotation.z = diningTable.rotation.z;
 
   // add the models
   this.add(diningTable);

@@ -1,45 +1,14 @@
 INTERACTIVEWORLD.Dresser = function() {
-  var that = this;
-  THREE.Object3D.call(this);
-  
-  this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
-  this.name = 'Dresser';
-  this.interactions = [];
-
-  // load the model
-  var loader = new THREE.ColladaLoader();
-  loader.load(INTERACTIVEWORLD.DRESSER_MODEL, function(result) {
-    // fix the offset
-    result.scene.position.x = -17.32;
-    result.scene.position.y = -11.55;
-    that.add(result.scene);
+  INTERACTIVEWORLD.Model.call(this, {
+    name : 'Dresser',
+    width : 1.353,
+    depth : 0.48,
+    model : INTERACTIVEWORLD.DRESSER_MODEL,
+    offsetX : -17.985,
+    offsetY : -11.785
   });
 
-  // create the interaction surface
-  var interaction = new INTERACTIVEWORLD.InteractionSurface({
-    width : 1.36,
-    height : 0.48
-  });
-  interaction.position.x = 0.66;
-  interaction.position.y = 0.23;
-  interaction.position.z = 0.8;
-  interaction.eventHandler.on('addition', function(obj) {
-    that.eventHandler.emit('addition', {
-      name : that.name,
-      position : {
-        x : that.position.x,
-        y : that.position.y,
-        z : that.position.z,
-      },
-      rotation : {
-        x : that.rotation.x,
-        y : that.rotation.y,
-        z : that.rotation.z,
-      },
-      surface : obj
-    });
-  });
-  this.add(interaction);
-  this.interactions.push(interaction);
+  // add the interaction surface
+  this.addInteractionSurface(this.width, this.depth, 0.8);
 };
-INTERACTIVEWORLD.Dresser.prototype.__proto__ = THREE.Object3D.prototype;
+INTERACTIVEWORLD.Dresser.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
