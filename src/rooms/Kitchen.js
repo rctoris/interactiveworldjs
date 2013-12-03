@@ -3,6 +3,7 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   options = options || [];
   THREE.Object3D.call(this);
 
+  this.furniture = [];
   this.name = 'Kitchen';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
@@ -156,10 +157,15 @@ INTERACTIVEWORLD.Kitchen = function(options) {
 
   // add the models
   this.add(refrigerator);
+  this.furniture.push(refrigerator);
   this.add(sink);
+  this.furniture.push(sink);
   this.add(oven);
+  this.furniture.push(oven);
   this.add(counterOne);
+  this.furniture.push(counterOne);
   this.add(counterTwo);
+  this.furniture.push(counterTwo);
 
   // add the interactions
   controls.addInteractionSurfaces(sink.interactions);
@@ -168,3 +174,23 @@ INTERACTIVEWORLD.Kitchen = function(options) {
   controls.addInteractionSurfaces(oven.interactions);
 };
 INTERACTIVEWORLD.Kitchen.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.Kitchen.prototype.getConfig = function() {
+  var furnConfig = [];
+  for ( var i = 0; i < this.furniture.length; i++) {
+    furnConfig.push(this.furniture[i].getConfig());
+  }
+
+  return {
+    name : this.name,
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
+    position : {
+      x : this.position.x,
+      y : this.position.y,
+      z : this.position.z
+    },
+    rotation : this.rotation.z,
+    furniture : furnConfig
+  };
+};

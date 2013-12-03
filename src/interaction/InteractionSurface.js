@@ -26,7 +26,7 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
 };
 INTERACTIVEWORLD.InteractionSurface.prototype.__proto__ = THREE.Mesh.prototype;
 
-INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(ObjectType,
+INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(object,
     vector) {
   // become visible
   this.material.opacity = 0.5;
@@ -37,7 +37,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(ObjectType,
 
   if (this.displayObject === null) {
     // create the object
-    this.displayObject = new ObjectType();
+    this.displayObject = object;
     this.add(this.displayObject);
   }
   // set the location

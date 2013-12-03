@@ -78,6 +78,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
     controls : controls
   });
   scene.add(world);
+  this.config = world.config;
   world.interactionHandler.on('addition',
       function(event) {
         that.emit('addition', event);

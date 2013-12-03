@@ -3,6 +3,7 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
   options = options || [];
   THREE.Object3D.call(this);
 
+  this.furniture = [];
   this.name = 'Dining Room';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
@@ -74,10 +75,32 @@ INTERACTIVEWORLD.DiningRoom = function(options) {
 
   // add the models
   this.add(diningTable);
+  this.furniture.push(diningTable);
   this.add(cabinet);
+  this.furniture.push(cabinet);
   this.add(rug);
 
   // add the interactions
   controls.addInteractionSurfaces(diningTable.interactions);
 };
 INTERACTIVEWORLD.DiningRoom.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.DiningRoom.prototype.getConfig = function() {
+  var furnConfig = [];
+  for ( var i = 0; i < this.furniture.length; i++) {
+    furnConfig.push(this.furniture[i].getConfig());
+  }
+
+  return {
+    name : this.name,
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
+    position : {
+      x : this.position.x,
+      y : this.position.y,
+      z : this.position.z
+    },
+    rotation : this.rotation.z,
+    furniture : furnConfig
+  };
+};

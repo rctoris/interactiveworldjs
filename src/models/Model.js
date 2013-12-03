@@ -74,3 +74,18 @@ INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
     }
   });
 };
+
+INTERACTIVEWORLD.Model.prototype.getConfig = function() {
+  return {
+    name : this.name,
+    width : this.width,
+    height : this.depth,
+    position : {
+      x : this.position.x,
+      y : this.position.y,
+      z : this.position.z
+    },
+    rotation : this.rotation.z,
+    poi : this.pois
+  };
+};

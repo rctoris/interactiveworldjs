@@ -37,5 +37,6 @@ INTERACTIVEWORLD.World = function(options) {
   });
   this.add(house);
   this.interactionHandler = house.eventHandler;
+  this.config = house.config;
 };
 INTERACTIVEWORLD.World.prototype.__proto__ = THREE.Object3D.prototype;

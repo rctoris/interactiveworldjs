@@ -5,8 +5,10 @@
 <script src="build/eventemitter2.min.js"></script>
 <script src="build/threecolladaloader.min.js"></script>
 <script src="build/interactiveworld.js"></script>
-<link rel="stylesheet" type="text/css" href="resources/css/interactiveworld.min.css" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:700" />
+<link rel="stylesheet" type="text/css"
+  href="resources/css/interactiveworld.min.css" />
+<link rel="stylesheet" type="text/css"
+  href="https://fonts.googleapis.com/css?family=Ubuntu:700" />
 
 <script>
   function start() {
@@ -17,6 +19,7 @@
     viewer.on('completion', function(event) {
       alert('Completion!');
     });
+    console.log(viewer.config);
   }
 </script>
 </head>

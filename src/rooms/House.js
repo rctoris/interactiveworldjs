@@ -74,5 +74,11 @@ INTERACTIVEWORLD.House = function(options) {
       - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       + wallBuffer;
   this.add(diningRoom);
+
+  // create a config JSON object for logging
+  this.config = {
+    rooms : [ bedroom.getConfig(), kitchen.getConfig(), livingRoom.getConfig(),
+        diningRoom.getConfig() ]
+  };
 };
 INTERACTIVEWORLD.House.prototype.__proto__ = THREE.Object3D.prototype;

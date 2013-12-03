@@ -6,6 +6,12 @@ INTERACTIVEWORLD.MouseControls = function(options) {
   this.domElement = options.domElement;
   var objectMenu = options.objectMenu;
   this.surfaces = [];
+  var cachedObjects = [];
+
+  // create caches
+  for ( var i = 0; i < objectMenu.objects.length; i++) {
+    cachedObjects.push(new objectMenu.objects[i].constructor());
+  }
 
   this.camera.position.z = INTERACTIVEWORLD.WALL_HEIGHT * 4;
 
@@ -136,7 +142,7 @@ INTERACTIVEWORLD.MouseControls = function(options) {
     var intersects = raycaster.intersectObjects(that.surfaces);
     for ( var i = 0; i < that.surfaces.length; i++) {
       if (intersects.length > 0 && intersects[0].object === that.surfaces[i]) {
-        that.surfaces[i].mousemove(objectMenu.getDisplayObjectType(),
+        that.surfaces[i].mousemove(cachedObjects[objectMenu.counter],
             intersects[0].point);
       } else {
         that.surfaces[i].mouseout();

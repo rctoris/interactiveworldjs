@@ -2,13 +2,11 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   var that = this;
   options = options || {};
   var antialias = options.antialias;
-  var objects = options.objects;
-  var counter = 0;
-  this.displayObject = objects[counter];
+  this.objects = options.objects;
+  this.counter = 0;
+  this.displayObject = this.objects[this.counter];
   this.placedObjects = [];
   this.placedObjectCount = [];
-  this.numObjects = objects.length;
-  this.allObjects = objects;
   var text = options.title || '';
   this.completion = options.completion || 1;
 
@@ -74,14 +72,14 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   function previous() {
     // update the counter
-    counter--;
-    if (counter < 0) {
-      counter = objects.length - 1;
+    that.counter--;
+    if (that.counter < 0) {
+      that.counter = that.objects.length - 1;
     }
 
     // update the display
     scene.remove(that.displayObject);
-    that.displayObject = objects[counter];
+    that.displayObject = that.objects[that.counter];
     scene.add(that.displayObject);
 
     // change the name
@@ -91,14 +89,14 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
 
   function next() {
     // update the counter
-    counter++;
-    if (counter >= objects.length) {
-      counter = 0;
+    that.counter++;
+    if (that.counter >= that.objects.length) {
+      that.counter = 0;
     }
 
     // update the display
     scene.remove(that.displayObject);
-    that.displayObject = objects[counter];
+    that.displayObject = that.objects[that.counter];
     scene.add(that.displayObject);
 
     // change the name
@@ -164,7 +162,7 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
 };
 
 INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
-  var index = this.allObjects.indexOf(this.displayObject);
+  var index = this.objects.indexOf(this.displayObject);
 
   if (this.placedObjects.indexOf(index) === -1) {
     this.placedObjects.push(index);
@@ -173,9 +171,9 @@ INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
     this.placedObjectCount[this.placedObjects.indexOf(index)]++;
   }
 
-  if (this.placedObjects.length === this.numObjects) {
-    for(var i=0; i<this.numObjects; i++) {
-      if(this.placedObjectCount[i] < this.completion) {
+  if (this.placedObjects.length === this.objects.length) {
+    for ( var i = 0; i < this.objects.length; i++) {
+      if (this.placedObjectCount[i] < this.completion) {
         return;
       }
     }

@@ -3,6 +3,7 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
   options = options || [];
   THREE.Object3D.call(this);
 
+  this.furniture = [];
   this.name = 'Living Room';
   this.eventHandler = new INTERACTIVEWORLD.InteractionHandler();
   var controls = options.controls;
@@ -99,8 +100,11 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
 
   // add the models
   this.add(couch);
+  this.furniture.push(couch);
   this.add(tv);
+  this.furniture.push(tv);
   this.add(coffeeTable);
+  this.furniture.push(coffeeTable);
 
   // add the interactions
   controls.addInteractionSurfaces(coffeeTable.interactions);
@@ -108,3 +112,23 @@ INTERACTIVEWORLD.LivingRoom = function(options) {
   controls.addInteractionSurfaces(tv.interactions);
 };
 INTERACTIVEWORLD.LivingRoom.prototype.__proto__ = THREE.Object3D.prototype;
+
+INTERACTIVEWORLD.LivingRoom.prototype.getConfig = function() {
+  var furnConfig = [];
+  for ( var i = 0; i < this.furniture.length; i++) {
+    furnConfig.push(this.furniture[i].getConfig());
+  }
+
+  return {
+    name : this.name,
+    width : INTERACTIVEWORLD.ROOM_WIDTH,
+    height : INTERACTIVEWORLD.ROOM_HEIGHT,
+    position : {
+      x : this.position.x,
+      y : this.position.y,
+      z : this.position.z
+    },
+    rotation : this.rotation.z,
+    furniture : furnConfig
+  };
+};
