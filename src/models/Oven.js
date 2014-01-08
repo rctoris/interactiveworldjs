@@ -17,16 +17,17 @@ INTERACTIVEWORLD.Oven = function() {
   var backBurnerY = 0.135;
   var frontBurnerY = -0.175;
   var outerBurnerX = 0.443;
+  var rotation = 0;
   this
-      .addPOI(name, burnerWidth, burnerWidth, height, outerBurnerX, backBurnerY);
+      .addPOI(name, burnerWidth, burnerWidth, height, outerBurnerX, backBurnerY, rotation);
   this.addPOI(name, burnerWidth, burnerWidth, height, outerBurnerX,
-      frontBurnerY);
+      frontBurnerY, rotation);
   var midBurnerX = 0.15;
-  this.addPOI(name, burnerWidth, burnerWidth, height, midBurnerX, backBurnerY);
-  this.addPOI(name, burnerWidth, burnerWidth, height, midBurnerX, frontBurnerY);
+  this.addPOI(name, burnerWidth, burnerWidth, height, midBurnerX, backBurnerY, rotation);
+  this.addPOI(name, burnerWidth, burnerWidth, height, midBurnerX, frontBurnerY, rotation);
   this.addPOI(name, burnerWidth, burnerWidth, height, -outerBurnerX,
-      backBurnerY);
+      backBurnerY, rotation);
   this.addPOI(name, burnerWidth, burnerWidth, height, -outerBurnerX,
-      frontBurnerY);
+      frontBurnerY, rotation);
 };
 INTERACTIVEWORLD.Oven.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

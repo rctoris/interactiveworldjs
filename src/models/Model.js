@@ -62,7 +62,7 @@ INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
 };
 
 INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
-    offsetZ, offsetX, offsetY) {
+    offsetZ, offsetX, offsetY, rotation) {
   this.pois.push({
     name : name,
     width : width,
@@ -71,7 +71,8 @@ INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
       x : offsetX,
       y : offsetY,
       z : offsetZ
-    }
+    },
+    rotation : rotation
   });
 };
 

@@ -10,7 +10,7 @@ INTERACTIVEWORLD.Bed = function() {
   });
 
   // create the interaction surface
-  this.addInteractionSurface(this.width - 0.1, this.depth, 0.658);
+  this.addInteractionSurface(this.width - 0.1, this.depth, 0.658, 0, 0);
 
   var name = 'pillow';
   var pillowWidth = 0.64;
@@ -18,7 +18,8 @@ INTERACTIVEWORLD.Bed = function() {
   var pillowHeight = 0.84;
   var pillowX = 0.35;
   var pillowY = 0.76;
-  this.addPOI(name, pillowWidth, pillowDepth, pillowHeight, pillowX, pillowY);
-  this.addPOI(name, pillowWidth, pillowDepth, pillowHeight, -pillowX, pillowY);
+  var rotation = 0;
+  this.addPOI(name, pillowWidth, pillowDepth, pillowHeight, pillowX, pillowY, rotation);
+  this.addPOI(name, pillowWidth, pillowDepth, pillowHeight, -pillowX, pillowY, rotation);
 };
 INTERACTIVEWORLD.Bed.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

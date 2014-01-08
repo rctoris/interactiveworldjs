@@ -10,6 +10,6 @@ INTERACTIVEWORLD.Nightstand = function() {
   });
 
   // add the interaction surface
-  this.addInteractionSurface(this.width, this.depth, 0.72);
+  this.addInteractionSurface(this.width, this.depth, 0.72, 0, 0);
 };
 INTERACTIVEWORLD.Nightstand.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

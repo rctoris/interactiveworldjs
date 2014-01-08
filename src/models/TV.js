@@ -11,14 +11,15 @@ INTERACTIVEWORLD.TV = function() {
 
   // add the interaction surface
   var height = 0.63;
-  this.addInteractionSurface(this.width, this.depth, height);
+  this.addInteractionSurface(this.width, this.depth, height, 0, 0);
 
   var name = 'speaker';
   var spakerWidth = 0.19;
   var spaekerX = 0.89;
-  this.addPOI(name, spakerWidth, spakerWidth, height, spaekerX);
-  this.addPOI(name, spakerWidth, spakerWidth, height, -spaekerX);
+  var rotation = 0;
+  this.addPOI(name, spakerWidth, spakerWidth, height, spaekerX, rotation);
+  this.addPOI(name, spakerWidth, spakerWidth, height, -spaekerX, rotation);
 
-  this.addPOI('tv', 1.4, 0.45, height, 0, -0.03);
+  this.addPOI('tv', 1.4, 0.45, height, 0, -0.03, rotation);
 };
 INTERACTIVEWORLD.TV.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

@@ -10,6 +10,6 @@ INTERACTIVEWORLD.Counter = function() {
   });
 
   // add the interaction surface
-  this.addInteractionSurface(this.width, this.depth, 0.77);
+  this.addInteractionSurface(this.width, this.depth, 0.77, 0, 0);
 };
 INTERACTIVEWORLD.Counter.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

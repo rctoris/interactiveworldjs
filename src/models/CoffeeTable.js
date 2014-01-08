@@ -11,6 +11,6 @@ INTERACTIVEWORLD.CoffeeTable = function() {
   });
 
   // create the interaction surface
-  this.addInteractionSurface(this.width - 0.08, this.depth, 0.408);
+  this.addInteractionSurface(this.width - 0.08, this.depth, 0.408, 0, 0);
 };
 INTERACTIVEWORLD.CoffeeTable.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;

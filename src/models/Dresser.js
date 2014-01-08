@@ -9,6 +9,6 @@ INTERACTIVEWORLD.Dresser = function() {
   });
 
   // add the interaction surface
-  this.addInteractionSurface(this.width, this.depth, 0.8);
+  this.addInteractionSurface(this.width, this.depth, 0.8, 0, 0);
 };
 INTERACTIVEWORLD.Dresser.prototype.__proto__ = INTERACTIVEWORLD.Model.prototype;
