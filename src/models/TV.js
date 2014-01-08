@@ -17,8 +17,8 @@ INTERACTIVEWORLD.TV = function() {
   var spakerWidth = 0.19;
   var spaekerX = 0.89;
   var rotation = 0;
-  this.addPOI(name, spakerWidth, spakerWidth, height, spaekerX, rotation);
-  this.addPOI(name, spakerWidth, spakerWidth, height, -spaekerX, rotation);
+  this.addPOI(name, spakerWidth, spakerWidth, height, spaekerX, 0, rotation);
+  this.addPOI(name, spakerWidth, spakerWidth, height, -spaekerX, 0, rotation);
 
   this.addPOI('tv', 1.4, 0.45, height, 0, -0.03, rotation);
 };
