@@ -120,7 +120,7 @@ INTERACTIVEWORLD.FORK_MODEL = 'resources/models/fork.min.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 
-INTERACTIVEWORLD.init = function() {
+INTERACTIVEWORLD.init = function(task) {
   // start with a fresh page
   document.body.innerHTML = '';
 
@@ -132,7 +132,8 @@ INTERACTIVEWORLD.init = function() {
   // add the viewer
   var viewer = new INTERACTIVEWORLD.Viewer({
     divID : INTERACTIVEWORLD.DIV_ID,
-    antialias : true
+    antialias : true,
+    task : task
   });
 
   return viewer;
