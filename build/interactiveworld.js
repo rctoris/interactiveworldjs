@@ -1055,7 +1055,7 @@ INTERACTIVEWORLD.Refrigerator.prototype.__proto__ = INTERACTIVEWORLD.Model.proto
 
 INTERACTIVEWORLD.Sink = function() {
   INTERACTIVEWORLD.Model.call(this, {
-    name : 'Sink',
+    name : 'Sink Unit',
     width : 2.91,
     depth : 0.775,
     model : INTERACTIVEWORLD.SINK_MODEL,
@@ -1071,7 +1071,7 @@ INTERACTIVEWORLD.Sink = function() {
   var sinkDepth = 0.46;
   var sinkX = 0.49;
   var sinkY = -0.12;
-  this.addInteractionSurface(sinkWidth, sinkDepth, 0.61, sinkX, sinkY);
+  this.addInteractionSurface(sinkWidth, sinkDepth, 0.81, sinkX, sinkY);
   var rotation = 0;
   this.addPOI('sink', sinkWidth, sinkDepth, counterHeight, sinkX, sinkY, rotation);
 };
@@ -1978,6 +1978,12 @@ INTERACTIVEWORLD.Viewer = function(options) {
     objs = [ new INTERACTIVEWORLD.Magazines()];
     count = 3;
     text = 'Place the object where it belongs.';
+  } else if (task === 2) {
+    // table setting
+    objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
+        new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
+    count = 3;
+    text = 'Place the dirty dishes where they belong.';
   }
 
   // add an object menu

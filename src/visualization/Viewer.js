@@ -20,6 +20,12 @@ INTERACTIVEWORLD.Viewer = function(options) {
     objs = [ new INTERACTIVEWORLD.Magazines()];
     count = 3;
     text = 'Place the object where it belongs.';
+  } else if (task === 2) {
+    // table setting
+    objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
+        new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
+    count = 3;
+    text = 'Place the dirty dishes where they belong.';
   }
 
   // add an object menu
