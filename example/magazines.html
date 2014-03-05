@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script src="build/eventemitter2.min.js"></script>
+<script src="build/threecolladaloader.min.js"></script>
+<script src="build/interactiveworld.js"></script>
+<link rel="stylesheet" type="text/css"
+  href="resources/css/interactiveworld.min.css" />
+<link rel="stylesheet" type="text/css"
+  href="https://fonts.googleapis.com/css?family=Ubuntu:700" />
+
+<script>
+  function start() {
+    var viewer = INTERACTIVEWORLD.init(-1);
+    
+    var magazinesOne = new INTERACTIVEWORLD.Magazines();
+    magazinesOne.position.x = -0.008161851520911343;
+    magazinesOne.position.y = -0.0379664917336993;
+    magazinesOne.position.z = 0.75;
+    magazinesOne.rotation.z = -1.0070291772181504E-4;
+    var magazinesTwo = new INTERACTIVEWORLD.Magazines();
+    magazinesTwo.position.x = magazinesOne.position.x;
+    magazinesTwo.position.y = magazinesOne.position.y;
+    magazinesTwo.position.z = magazinesOne.position.z;
+    magazinesTwo.rotation.z = magazinesOne.rotation.z;
+
+    viewer.world.house.bedroom.nightstandOne.add(magazinesOne);
+    viewer.world.house.bedroom.nightstandTwo.add(magazinesTwo);
+  }
+</script>
+</head>
+
+<body onload="start();"></body>
+</html>

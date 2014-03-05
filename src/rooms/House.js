@@ -32,6 +32,7 @@ INTERACTIVEWORLD.House = function(options) {
     that.eventHandler.emit('addition', event);
   });
   this.add(bedroom);
+  this.bedroom = bedroom;
 
   var kitchen = new INTERACTIVEWORLD.Kitchen({
     controls : controls
@@ -46,6 +47,7 @@ INTERACTIVEWORLD.House = function(options) {
       + ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       - wallBuffer;
   this.add(kitchen);
+  this.kitchen = kitchen;
 
   var livingRoom = new INTERACTIVEWORLD.LivingRoom({
     controls : controls
@@ -60,6 +62,7 @@ INTERACTIVEWORLD.House = function(options) {
       - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       + wallBuffer;
   this.add(livingRoom);
+  this.livingRoom = livingRoom;
 
   var diningRoom = new INTERACTIVEWORLD.DiningRoom({
     controls : controls
@@ -74,6 +77,7 @@ INTERACTIVEWORLD.House = function(options) {
       - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       + wallBuffer;
   this.add(diningRoom);
+  this.diningRoom = diningRoom;
 
   // create a config JSON object for logging
   this.config = {

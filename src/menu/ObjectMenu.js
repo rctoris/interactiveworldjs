@@ -11,6 +11,9 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   this.completion = options.completion || 1;
 
   // setup the div
+  if(this.objects.length === 0) {
+    return;
+  }
   var div = document.createElement('div');
   div.classList.add('object-menu');
   document.getElementsByTagName('body')[0].appendChild(div);

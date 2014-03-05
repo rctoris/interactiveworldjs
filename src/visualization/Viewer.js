@@ -9,18 +9,18 @@ INTERACTIVEWORLD.Viewer = function(options) {
   var objs = [];
   var count = 0;
   var text = '';
-  if (task === 0) {
+  if (task === INTERACTIVEWORLD.TASK_TABLE_SETTING) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
         new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
     count = 3;
     text = 'Set the table with these objects.';
-  } else if (task === 1) {
+  } else if (task === INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Magazines()];
     count = 3;
     text = 'Place the object where it belongs.';
-  } else if (task === 2) {
+  } else if (task === INTERACTIVEWORLD.TASK_DIRTY_DISHES) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
         new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
@@ -72,6 +72,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
   world.interactionHandler.on('addition', function(event) {
     that.emit('addition', event);
   });
+  this.world = world;
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);

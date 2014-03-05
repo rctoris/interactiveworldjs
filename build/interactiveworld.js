@@ -6,6 +6,11 @@ var INTERACTIVEWORLD = INTERACTIVEWORLD || {
   REVISION : '1-devel'
 };
 
+INTERACTIVEWORLD.TASK_NONE = -1;
+INTERACTIVEWORLD.TASK_TABLE_SETTING = 0;
+INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT = 1;
+INTERACTIVEWORLD.TASK_DIRTY_DISHES = 2;
+
 INTERACTIVEWORLD.BOOK_PAGE_1_TEXTURE = 'resources/textures/book-page-1.jpg';
 INTERACTIVEWORLD.BOOK_PAGE_2_TEXTURE = 'resources/textures/book-page-2.jpg';
 INTERACTIVEWORLD.BRICKS_TEXTURE = 'resources/textures/bricks.jpg';
@@ -625,6 +630,9 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   this.completion = options.completion || 1;
 
   // setup the div
+  if(this.objects.length === 0) {
+    return;
+  }
   var div = document.createElement('div');
   div.classList.add('object-menu');
   document.getElementsByTagName('body')[0].appendChild(div);
@@ -1195,6 +1203,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.bed = bed;
   var nightstandOne = new INTERACTIVEWORLD.Nightstand();
   nightstandOne.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -1208,6 +1217,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.nightstandOne = nightstandOne;
   var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
   nightstandTwo.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -1221,6 +1231,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.nightstandTwo = nightstandTwo;
   var dresser = new INTERACTIVEWORLD.Dresser();
   dresser.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -1234,6 +1245,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.dresser = dresser;
 
   // set the positions
   var buffer = INTERACTIVEWORLD.WALL_WIDTH;
@@ -1470,6 +1482,7 @@ INTERACTIVEWORLD.House = function(options) {
     that.eventHandler.emit('addition', event);
   });
   this.add(bedroom);
+  this.bedroom = bedroom;
 
   var kitchen = new INTERACTIVEWORLD.Kitchen({
     controls : controls
@@ -1484,6 +1497,7 @@ INTERACTIVEWORLD.House = function(options) {
       + ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       - wallBuffer;
   this.add(kitchen);
+  this.kitchen = kitchen;
 
   var livingRoom = new INTERACTIVEWORLD.LivingRoom({
     controls : controls
@@ -1498,6 +1512,7 @@ INTERACTIVEWORLD.House = function(options) {
       - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       + wallBuffer;
   this.add(livingRoom);
+  this.livingRoom = livingRoom;
 
   var diningRoom = new INTERACTIVEWORLD.DiningRoom({
     controls : controls
@@ -1512,6 +1527,7 @@ INTERACTIVEWORLD.House = function(options) {
       - ((INTERACTIVEWORLD.HOUSE_HEIGHT / 2.0) - INTERACTIVEWORLD.ROOM_HEIGHT)
       + wallBuffer;
   this.add(diningRoom);
+  this.diningRoom = diningRoom;
 
   // create a config JSON object for logging
   this.config = {
@@ -1967,18 +1983,18 @@ INTERACTIVEWORLD.Viewer = function(options) {
   var objs = [];
   var count = 0;
   var text = '';
-  if (task === 0) {
+  if (task === INTERACTIVEWORLD.TASK_TABLE_SETTING) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
         new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
     count = 3;
     text = 'Set the table with these objects.';
-  } else if (task === 1) {
+  } else if (task === INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Magazines()];
     count = 3;
     text = 'Place the object where it belongs.';
-  } else if (task === 2) {
+  } else if (task === INTERACTIVEWORLD.TASK_DIRTY_DISHES) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
         new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
@@ -2030,6 +2046,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
   world.interactionHandler.on('addition', function(event) {
     that.emit('addition', event);
   });
+  this.world = world;
 
   function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -2101,5 +2118,6 @@ INTERACTIVEWORLD.World = function(options) {
   this.add(house);
   this.interactionHandler = house.eventHandler;
   this.config = house.config;
+  this.house = house;
 };
 INTERACTIVEWORLD.World.prototype.__proto__ = THREE.Object3D.prototype;

@@ -34,6 +34,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.bed = bed;
   var nightstandOne = new INTERACTIVEWORLD.Nightstand();
   nightstandOne.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -47,6 +48,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.nightstandOne = nightstandOne;
   var nightstandTwo = new INTERACTIVEWORLD.Nightstand();
   nightstandTwo.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -60,6 +62,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.nightstandTwo = nightstandTwo;
   var dresser = new INTERACTIVEWORLD.Dresser();
   dresser.eventHandler.on('addition', function(furn) {
     that.eventHandler.emit('addition', {
@@ -73,6 +76,7 @@ INTERACTIVEWORLD.Bedroom = function(options) {
       furniture : furn
     });
   });
+  this.dresser = dresser;
 
   // set the positions
   var buffer = INTERACTIVEWORLD.WALL_WIDTH;
