@@ -3,7 +3,7 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.1'
+  REVISION : '0.0.2'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
@@ -125,7 +125,12 @@ INTERACTIVEWORLD.FORK_MODEL = 'resources/models/fork.min.dae';
 
 INTERACTIVEWORLD.DIV_ID = 'interactive-world';
 
-INTERACTIVEWORLD.init = function(task) {
+INTERACTIVEWORLD.PATH = '/';
+
+INTERACTIVEWORLD.init = function(options) {
+  options = options || {};
+  var task = options.task;
+
   // start with a fresh page
   document.body.innerHTML = '';
 
@@ -156,7 +161,7 @@ INTERACTIVEWORLD.Model = function(options) {
   this.interactions = [];
   this.pois = [];
 
-  var model = options.model;
+  var model = INTERACTIVEWORLD.PATH + options.model;
   var offsetX = options.offsetX || 0;
   var offsetY = options.offsetY || 0;
   var offsetZ = options.offsetZ || 0;

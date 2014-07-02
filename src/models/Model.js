@@ -10,7 +10,7 @@ INTERACTIVEWORLD.Model = function(options) {
   this.interactions = [];
   this.pois = [];
 
-  var model = options.model;
+  var model = INTERACTIVEWORLD.PATH + options.model;
   var offsetX = options.offsetX || 0;
   var offsetY = options.offsetY || 0;
   var offsetZ = options.offsetZ || 0;
