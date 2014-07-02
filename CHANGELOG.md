@@ -1,3 +1,6 @@
+2014-07-02 - **0.0.3**
+ * Textures now use global path [(rctoris)](https://github.com/rctoris/)
+
 2014-07-02 - **0.0.2**
  * A path to resources can now be given via a global [(rctoris)](https://github.com/rctoris/)
  * Task is now an option [(rctoris)](https://github.com/rctoris/)

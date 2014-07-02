@@ -2,7 +2,7 @@ INTERACTIVEWORLD.TexturePlane = function(options) {
   options = options || {};
   var width = options.width;
   var height = options.height;
-  var texture = options.texture;
+  var texture = INTERACTIVEWORLD.PATH + options.texture;
   var repeat = options.repeat;
   this.name = 'Plane';
 

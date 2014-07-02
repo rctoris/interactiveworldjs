@@ -3,7 +3,7 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.2'
+  REVISION : '0.0.3'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
@@ -1133,7 +1133,7 @@ INTERACTIVEWORLD.TexturePlane = function(options) {
   options = options || {};
   var width = options.width;
   var height = options.height;
-  var texture = options.texture;
+  var texture = INTERACTIVEWORLD.PATH + options.texture;
   var repeat = options.repeat;
   this.name = 'Plane';
 
@@ -1153,7 +1153,7 @@ INTERACTIVEWORLD.TexturePlane.prototype.__proto__ = THREE.Mesh.prototype;
 INTERACTIVEWORLD.Wall = function(options) {
   options = options || {};
   var length = options.length;
-  var texture = options.texture;
+  var texture = INTERACTIVEWORLD.PATH + options.texture;
   this.name = 'Wall';
 
   // load the material

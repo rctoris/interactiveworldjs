@@ -1,7 +1,7 @@
 INTERACTIVEWORLD.Wall = function(options) {
   options = options || {};
   var length = options.length;
-  var texture = options.texture;
+  var texture = INTERACTIVEWORLD.PATH + options.texture;
   this.name = 'Wall';
 
   // load the material
