@@ -1,3 +1,6 @@
+2014-07-02 - **0.0.4**
+ * Images now use global path [(rctoris)](https://github.com/rctoris/)
+
 2014-07-02 - **0.0.3**
  * Textures now use global path [(rctoris)](https://github.com/rctoris/)
 

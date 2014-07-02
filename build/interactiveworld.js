@@ -3,7 +3,7 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.3'
+  REVISION : '0.0.4'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
@@ -682,7 +682,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   // add the navigation bar
   var nav = document.createElement('div');
   var previousArrow = document.createElement('img');
-  previousArrow.src = INTERACTIVEWORLD.PREVIOUS_ARROW;
+  previousArrow.src = INTERACTIVEWORLD.PATH + INTERACTIVEWORLD.PREVIOUS_ARROW;
   previousArrow.onclick = previous;
   previousArrow.style.cursor = 'pointer';
   nav.appendChild(previousArrow);
@@ -691,7 +691,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + this.displayObject.name
       + '&nbsp;&nbsp;&nbsp;';
   var nextArrow = document.createElement('img');
-  nextArrow.src = INTERACTIVEWORLD.NEXT_ARROW;
+  nextArrow.src = INTERACTIVEWORLD.PATH + INTERACTIVEWORLD.NEXT_ARROW;
   nextArrow.onclick = next;
   nextArrow.style.cursor = 'pointer';
   nav.appendChild(nextArrow);
