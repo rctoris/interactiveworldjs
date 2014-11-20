@@ -79,6 +79,18 @@ module.exports = function(grunt) {
           destination : 'doc'
         }
       }
+    },
+    watch: {
+      dev: {
+        options: {
+          interrupt: true
+        },
+        files: [
+          'src/*.js',
+          'src/**/*.js'
+        ],
+        tasks: ['dev']
+      }
     }
   });
 
@@ -89,8 +101,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-imagemin');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-csslint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('build', ['imagemin', 'csslint', 'cssmin', 'concat', 'jshint', 'uglify']);
+  grunt.registerTask('dev', ['csslint', 'concat', 'jshint']);
+  grunt.registerTask('build', ['imagemin', 'dev', 'cssmin', 'uglify']);
   grunt.registerTask('doc', ['clean', 'jsdoc']);
 };
