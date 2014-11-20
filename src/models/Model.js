@@ -51,7 +51,7 @@ INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
       position : {
         x : that.position.x,
         y : that.position.y,
-        z : that.position.z,
+        z : that.position.z
       },
       rotation : that.rotation.z,
       surface : surf

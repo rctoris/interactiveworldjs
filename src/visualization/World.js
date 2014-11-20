@@ -15,7 +15,7 @@ INTERACTIVEWORLD.World = function(options) {
   this.add(grass);
 
   // add the skybox
-  var sky = INTERACTIVEWORLD.PATH + INTERACTIVEWORLD.SKY_TEXTURE;
+  var sky = INTERACTIVEWORLD.TEXTURE_PATH + INTERACTIVEWORLD.SKY_TEXTURE;
   var textureCube = THREE.ImageUtils.loadTextureCube(
     [sky, sky, sky, sky, sky, sky]
   );

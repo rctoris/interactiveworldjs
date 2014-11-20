@@ -58,7 +58,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   // add the navigation bar
   var nav = document.createElement('div');
   var previousArrow = document.createElement('img');
-  previousArrow.src = INTERACTIVEWORLD.PATH + INTERACTIVEWORLD.PREVIOUS_ARROW;
+  previousArrow.src = INTERACTIVEWORLD.IMAGE_PATH + INTERACTIVEWORLD.PREVIOUS_ARROW;
   previousArrow.onclick = previous;
   previousArrow.style.cursor = 'pointer';
   nav.appendChild(previousArrow);
@@ -67,7 +67,7 @@ INTERACTIVEWORLD.ObjectMenu = function(options) {
   objectName.innerHTML = '&nbsp;&nbsp;&nbsp;' + this.displayObject.name
       + '&nbsp;&nbsp;&nbsp;';
   var nextArrow = document.createElement('img');
-  nextArrow.src = INTERACTIVEWORLD.PATH + INTERACTIVEWORLD.NEXT_ARROW;
+  nextArrow.src = INTERACTIVEWORLD.IMAGE_PATH + INTERACTIVEWORLD.NEXT_ARROW;
   nextArrow.onclick = next;
   nextArrow.style.cursor = 'pointer';
   nav.appendChild(nextArrow);
