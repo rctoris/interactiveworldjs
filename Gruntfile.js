@@ -5,11 +5,11 @@ module.exports = function(grunt) {
     concat : {
       build : {
         src : [
-          '../src/*.js',
-          '../src/models/Model.js',
-          '../src/**/*.js'
+          'src/*.js',
+          'src/models/Model.js',
+          'src/**/*.js'
         ],
-        dest : '../build/interactiveworld.js'
+        dest : 'build/interactiveworld.js'
       }
     },
     jshint : {
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
       },
       files : [
         'Gruntfile.js',
-        '../build/interactiveworld.js'
+        'build/interactiveworld.js'
       ]
     },
     uglify : {
@@ -26,8 +26,8 @@ module.exports = function(grunt) {
         report : 'min'
       },
       build : {
-        src : '../build/interactiveworld.js',
-        dest : '../build/interactiveworld.min.js'
+        src : 'build/interactiveworld.js',
+        dest : 'build/interactiveworld.min.js'
       }
     },
     csslint : {
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
           csslintrc : '.csslintrc'
         },
         src : [
-          '../resources/css/interactiveworld.css',
+          'resources/css/interactiveworld.css',
         ]
       }
     },
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
       },
       build : {
         files : {
-          '../resources/css/interactiveworld.min.css' : ['../resources/css/interactiveworld.css']
+          'resources/css/interactiveworld.min.css' : ['resources/css/interactiveworld.css']
         }
       }
     },
@@ -57,9 +57,9 @@ module.exports = function(grunt) {
         },
         files: [{
           expand: true,
-          cwd: '../resources',
+          cwd: 'resources',
           src: '**/*.{png,jpg}',
-          dest: '../resources'
+          dest: 'resources'
         }]
       }
     },
@@ -67,16 +67,16 @@ module.exports = function(grunt) {
       options : {
         force : true
       },
-      doc : ['../doc']
+      doc : ['doc']
     },
     jsdoc : {
       doc : {
         src : [
-          '../src/*.js',
-          '../src/**/*.js'
+          'src/*.js',
+          'src/**/*.js'
         ],
         options : {
-          destination : '../doc'
+          destination : 'doc'
         }
       }
     }

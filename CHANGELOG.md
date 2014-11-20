@@ -1,3 +1,6 @@
+2014-11-20 - **0.0.6**
+ * Use of CDN resources now made for meshes [(rctoris)](https://github.com/rctoris/)
+
 2014-07-02 - **0.0.5**
  * Sky now use global path [(rctoris)](https://github.com/rctoris/)
 
