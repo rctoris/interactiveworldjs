@@ -3,7 +3,7 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.7-SNAPSHOT'
+  REVISION : '0.0.7'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
@@ -106,9 +106,6 @@ INTERACTIVEWORLD.CSS_PATH = '/';
 INTERACTIVEWORLD.init = function(options) {
   options = options || {};
   var task = options.task;
-
-  // start with a fresh page
-  document.body.innerHTML = '';
 
   // load CSS
   var link = document.createElement('link');

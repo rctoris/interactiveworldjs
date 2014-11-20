@@ -1,3 +1,6 @@
+2014-11-20 - **0.0.7**
+ * No longer clears HTML [(rctoris)](https://github.com/rctoris/)
+
 2014-11-20 - **0.0.6**
  * Use of CDN resources now made for meshes [(rctoris)](https://github.com/rctoris/)
 
