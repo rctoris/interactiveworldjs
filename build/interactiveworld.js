@@ -3,7 +3,7 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.8'
+  REVISION : '0.0.9'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
@@ -1967,7 +1967,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
 
   // determine the task
   var objs = [];
-  var objNames = [];
+  var objInfo= [];
   var count = 0;
   var text = '';
   if (task === INTERACTIVEWORLD.TASK_TABLE_SETTING) {
@@ -1989,7 +1989,11 @@ INTERACTIVEWORLD.Viewer = function(options) {
     text = 'Place the dirty dishes where they belong.';
   }
   for (var i=0; i < objs.length; i++) {
-    objNames.push(objs[i].name);
+    objInfo.push({
+      name: objs[i].name,
+      width: objs[i].width,
+      height: objs[i].depth
+    });
   }
 
   // add an object menu
@@ -2033,7 +2037,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
   });
   scene.add(world);
   this.config = world.config;
-  this.config.objects = objNames;
+  this.config.objects = objInfo;
   this.config.task = text;
   world.interactionHandler.on('addition', function(event) {
     that.emit('addition', event);
