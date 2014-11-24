@@ -7,6 +7,7 @@ INTERACTIVEWORLD.Viewer = function(options) {
 
   // determine the task
   var objs = [];
+  var objNames = [];
   var count = 0;
   var text = '';
   if (task === INTERACTIVEWORLD.TASK_TABLE_SETTING) {
@@ -26,6 +27,9 @@ INTERACTIVEWORLD.Viewer = function(options) {
         new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
     count = 3;
     text = 'Place the dirty dishes where they belong.';
+  }
+  for (var i=0; i < objs.length; i++) {
+    objNames.push(objs[i].name);
   }
 
   // add an object menu
@@ -69,6 +73,8 @@ INTERACTIVEWORLD.Viewer = function(options) {
   });
   scene.add(world);
   this.config = world.config;
+  this.config.objects = objNames;
+  this.config.task = text;
   world.interactionHandler.on('addition', function(event) {
     that.emit('addition', event);
   });

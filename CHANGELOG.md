@@ -1,3 +1,6 @@
+2014-11-24 - **0.0.8**
+ * Config now has objects and task description [(rctoris)](https://github.com/rctoris/)
+
 2014-11-20 - **0.0.7**
  * No longer clears HTML [(rctoris)](https://github.com/rctoris/)
 
