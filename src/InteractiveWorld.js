@@ -11,6 +11,8 @@ INTERACTIVEWORLD.TASK_TABLE_SETTING = 0;
 INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT = 1;
 INTERACTIVEWORLD.TASK_DIRTY_DISHES = 2;
 
+INTERACTIVEWORLD.DOT_RADIUS = 0.04;
+
 INTERACTIVEWORLD.BRICKS_TEXTURE = 'resources/textures/bricks.jpg';
 INTERACTIVEWORLD.CARPET_GREY_TEXTURE = 'resources/textures/carpet-grey.jpg';
 INTERACTIVEWORLD.CARPET_TAN_TEXTURE = 'resources/textures/carpet-tan.jpg';
@@ -166,5 +168,8 @@ INTERACTIVEWORLD.createObjectByName = function(name) {
       return new INTERACTIVEWORLD.Spoon();
     case 'TV':
       return new INTERACTIVEWORLD.TV();
+    default:
+      var r = INTERACTIVEWORLD.DOT_RADIUS;
+      return new THREE.Mesh(new THREE.SphereGeometry(r, r / 10000, r / 10000), new THREE.MeshNormalMaterial());
   }
 };

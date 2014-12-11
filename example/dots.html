@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+  <script src="http://cdn.robotwebtools.org/threejs/current/three.min.js"></script>
+  <script src="http://cdn.robotwebtools.org/threejs/current/ColladaLoader.min.js"></script>
+  <script src="../build/interactiveworld.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:700" />
+
+  <script>
+    function start() {
+      var viewer = INTERACTIVEWORLD.init({task: INTERACTIVEWORLD.TASK_NONE});
+      viewer.placeObjectOnSurface({
+        surfaceName: 'Nightstand',
+        position: {
+          x: -0.008161851520911343,
+          y: -0.0379664917336993,
+          z: 0.75
+        },
+        rotation: {
+          z: -1.0070291772181504E-4
+        }
+      });
+    }
+  </script>
+</head>
+
+<body onload="start();"></body>
+</html>
