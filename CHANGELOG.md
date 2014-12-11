@@ -1,3 +1,9 @@
+2014-12-11 - **0.1.0**
+ * Allows for NONE as task type [(rctoris)](https://github.com/rctoris/)
+ * createObjectByName method added [(rctoris)](https://github.com/rctoris/)
+ * placeObjectOnSurface added [(rctoris)](https://github.com/rctoris/)
+ * Dot model added [(rctoris)](https://github.com/rctoris/)
+
 2014-11-24 - **0.0.9**
  * Config now has object sizes [(rctoris)](https://github.com/rctoris/)
 
