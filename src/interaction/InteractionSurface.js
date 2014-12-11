@@ -10,7 +10,7 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
 
   // create the surface
   var geom = new THREE.CubeGeometry(this.width, this.height,
-      INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS);
+    INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS);
   var mat = new THREE.MeshLambertMaterial({
     transparent : true,
     color : 0x00FF00
@@ -23,11 +23,12 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
   this.position.x = offsetX;
   this.position.y = offsetY;
   this.position.z = INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS + offsetZ;
+  this.name = options.name || 'surface';
 };
 INTERACTIVEWORLD.InteractionSurface.prototype.__proto__ = THREE.Mesh.prototype;
 
 INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(object,
-    vector) {
+                                                                   vector) {
   // become visible
   this.material.opacity = 0.5;
 
@@ -58,13 +59,14 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType, ve
   if (ObjectType === null) {
     return;
   }
+
   var that = this;
   // create the object
   var object = new ObjectType();
   // set the location and add it
   this.setObjectPose(object, vector);
   this.eventHandler.emit('addition', {
-    name : 'surface',
+    name : this.name,
     position : {
       x : that.position.x,
       y : that.position.y,
@@ -113,7 +115,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object, w
 
   // now check the rotation
   if (Math.abs(object.position.x) / this.width > Math.abs(object.position.y)
-      / this.height) {
+    / this.height) {
     if (object.position.x > 0) {
       object.rotation.z = Math.PI / 2.0;
     } else {

@@ -1,3 +1,6 @@
+2014-12-11 - **0.2.0**
+ * Surfaces now recorded in data [(rctoris)](https://github.com/rctoris/)
+
 2014-12-11 - **0.1.0**
  * Allows for NONE as task type [(rctoris)](https://github.com/rctoris/)
  * createObjectByName method added [(rctoris)](https://github.com/rctoris/)
