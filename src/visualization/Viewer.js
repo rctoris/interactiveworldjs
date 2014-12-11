@@ -113,3 +113,27 @@ INTERACTIVEWORLD.Viewer = function(options) {
   draw();
 };
 INTERACTIVEWORLD.Viewer.prototype.__proto__ = EventEmitter2.prototype;
+
+INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
+  options = options || {};
+  var surfaceName = options.surfaceName;
+  var itemName = options.itemName;
+  var position = options.position;
+  var rotation = options.rotation;
+
+  for (var i = 0; i < this.world.house.rooms.length; i++) {
+    var room = this.world.house.rooms[i];
+    for (var j = 0; j < room.furniture.length; j++) {
+      var surface = room.furniture[j];
+      if (surface.name === surfaceName) {
+        // create the item
+        var item = INTERACTIVEWORLD.createObjectByName(itemName);
+        item.position.x = position.x;
+        item.position.y = position.y;
+        item.position.z = position.z;
+        item.rotation.z = rotation.z;
+        surface.add(item);
+      }
+    }
+  }
+};

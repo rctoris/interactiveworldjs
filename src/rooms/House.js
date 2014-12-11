@@ -84,5 +84,6 @@ INTERACTIVEWORLD.House = function(options) {
     rooms : [ bedroom.getConfig(), kitchen.getConfig(), livingRoom.getConfig(),
         diningRoom.getConfig() ]
   };
+  this.rooms = [bedroom, kitchen, livingRoom, diningRoom];
 };
 INTERACTIVEWORLD.House.prototype.__proto__ = THREE.Object3D.prototype;

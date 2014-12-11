@@ -11,20 +11,18 @@
   <script>
     function start() {
       var viewer = INTERACTIVEWORLD.init({task: INTERACTIVEWORLD.TASK_NONE});
-
-      var magazinesOne = INTERACTIVEWORLD.createObjectByName('Magazines');
-      magazinesOne.position.x = -0.008161851520911343;
-      magazinesOne.position.y = -0.0379664917336993;
-      magazinesOne.position.z = 0.75;
-      magazinesOne.rotation.z = -1.0070291772181504E-4;
-      var magazinesTwo = INTERACTIVEWORLD.createObjectByName('Magazines');
-      magazinesTwo.position.x = magazinesOne.position.x;
-      magazinesTwo.position.y = magazinesOne.position.y;
-      magazinesTwo.position.z = magazinesOne.position.z;
-      magazinesTwo.rotation.z = magazinesOne.rotation.z;
-
-      viewer.world.house.bedroom.nightstandOne.add(magazinesOne);
-      viewer.world.house.bedroom.nightstandTwo.add(magazinesTwo);
+      viewer.placeObjectOnSurface({
+        surfaceName: 'Nightstand',
+        itemName: 'Magazines',
+        position: {
+          x: -0.008161851520911343,
+          y: -0.0379664917336993,
+          z: 0.75
+        },
+        rotation: {
+          z: -1.0070291772181504E-4
+        }
+      });
     }
   </script>
 </head>
