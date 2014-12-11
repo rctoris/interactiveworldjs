@@ -116,7 +116,8 @@ INTERACTIVEWORLD.Viewer.prototype.__proto__ = EventEmitter2.prototype;
 
 INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
   options = options || {};
-  var surfaceName = options.surfaceName;
+  var furnitureName = options.furnitureName;
+  var surfaceName = options.surfaceName || 'surface';
   var itemName = options.itemName;
   var position = options.position;
   var rotation = options.rotation;
@@ -124,15 +125,20 @@ INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
   for (var i = 0; i < this.world.house.rooms.length; i++) {
     var room = this.world.house.rooms[i];
     for (var j = 0; j < room.furniture.length; j++) {
-      var surface = room.furniture[j];
-      if (surface.name === surfaceName) {
-        // create the item
-        var item = INTERACTIVEWORLD.createObjectByName(itemName);
-        item.position.x = position.x;
-        item.position.y = position.y;
-        item.position.z = position.z;
-        item.rotation.z = rotation.z;
-        surface.add(item);
+      var furniture = room.furniture[j];
+      if (furniture.name === furnitureName) {
+        for (var k = 0; k < furniture.interactions.length; k++) {
+          var interaction = furniture.interactions[k];
+          if (interaction.name === surfaceName) {
+            // create the item
+            var item = INTERACTIVEWORLD.createObjectByName(itemName);
+            item.position.x = position.x;
+            item.position.y = position.y;
+            item.position.z = position.z;
+            item.rotation.z = rotation.z;
+            interaction.add(item);
+          }
+        }
       }
     }
   }

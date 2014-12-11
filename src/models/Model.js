@@ -35,15 +35,17 @@ INTERACTIVEWORLD.Model = function(options) {
 INTERACTIVEWORLD.Model.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
-    height, offsetZ, offsetX, offsetY) {
+                                                                  height, offsetZ, offsetX, offsetY) {
   var that = this;
 
+  var name = 'surface' + this.interactions.length;
   var interaction = new INTERACTIVEWORLD.InteractionSurface({
     width : width,
     height : height,
     offsetX : offsetX,
     offsetY : offsetY,
-    offsetZ : offsetZ
+    offsetZ : offsetZ,
+    name : name
   });
   interaction.eventHandler.on('addition', function(surf) {
     that.eventHandler.emit('addition', {
@@ -62,7 +64,7 @@ INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
 };
 
 INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
-    offsetZ, offsetX, offsetY, rotation) {
+                                                   offsetZ, offsetX, offsetY, rotation) {
   this.pois.push({
     name : name,
     width : width,

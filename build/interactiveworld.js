@@ -211,15 +211,17 @@ INTERACTIVEWORLD.Model = function(options) {
 INTERACTIVEWORLD.Model.prototype.__proto__ = THREE.Object3D.prototype;
 
 INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
-    height, offsetZ, offsetX, offsetY) {
+                                                                  height, offsetZ, offsetX, offsetY) {
   var that = this;
 
+  var name = 'surface' + this.interactions.length;
   var interaction = new INTERACTIVEWORLD.InteractionSurface({
     width : width,
     height : height,
     offsetX : offsetX,
     offsetY : offsetY,
-    offsetZ : offsetZ
+    offsetZ : offsetZ,
+    name : name
   });
   interaction.eventHandler.on('addition', function(surf) {
     that.eventHandler.emit('addition', {
@@ -238,7 +240,7 @@ INTERACTIVEWORLD.Model.prototype.addInteractionSurface = function(width,
 };
 
 INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
-    offsetZ, offsetX, offsetY, rotation) {
+                                                   offsetZ, offsetX, offsetY, rotation) {
   this.pois.push({
     name : name,
     width : width,
@@ -283,7 +285,7 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
 
   // create the surface
   var geom = new THREE.CubeGeometry(this.width, this.height,
-      INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS);
+    INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS);
   var mat = new THREE.MeshLambertMaterial({
     transparent : true,
     color : 0x00FF00
@@ -296,11 +298,12 @@ INTERACTIVEWORLD.InteractionSurface = function(options) {
   this.position.x = offsetX;
   this.position.y = offsetY;
   this.position.z = INTERACTIVEWORLD.INTERACTION_SURFACE_THICKNESS + offsetZ;
+  this.name = options.name || 'surface';
 };
 INTERACTIVEWORLD.InteractionSurface.prototype.__proto__ = THREE.Mesh.prototype;
 
 INTERACTIVEWORLD.InteractionSurface.prototype.mousemove = function(object,
-    vector) {
+                                                                   vector) {
   // become visible
   this.material.opacity = 0.5;
 
@@ -331,13 +334,14 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType, ve
   if (ObjectType === null) {
     return;
   }
+
   var that = this;
   // create the object
   var object = new ObjectType();
   // set the location and add it
   this.setObjectPose(object, vector);
   this.eventHandler.emit('addition', {
-    name : 'surface',
+    name : this.name,
     position : {
       x : that.position.x,
       y : that.position.y,
@@ -386,7 +390,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object, w
 
   // now check the rotation
   if (Math.abs(object.position.x) / this.width > Math.abs(object.position.y)
-      / this.height) {
+    / this.height) {
     if (object.position.x > 0) {
       object.rotation.z = Math.PI / 2.0;
     } else {
@@ -2130,7 +2134,8 @@ INTERACTIVEWORLD.Viewer.prototype.__proto__ = EventEmitter2.prototype;
 
 INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
   options = options || {};
-  var surfaceName = options.surfaceName;
+  var furnitureName = options.furnitureName;
+  var surfaceName = options.surfaceName || 'surface';
   var itemName = options.itemName;
   var position = options.position;
   var rotation = options.rotation;
@@ -2138,15 +2143,20 @@ INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
   for (var i = 0; i < this.world.house.rooms.length; i++) {
     var room = this.world.house.rooms[i];
     for (var j = 0; j < room.furniture.length; j++) {
-      var surface = room.furniture[j];
-      if (surface.name === surfaceName) {
-        // create the item
-        var item = INTERACTIVEWORLD.createObjectByName(itemName);
-        item.position.x = position.x;
-        item.position.y = position.y;
-        item.position.z = position.z;
-        item.rotation.z = rotation.z;
-        surface.add(item);
+      var furniture = room.furniture[j];
+      if (furniture.name === furnitureName) {
+        for (var k = 0; k < furniture.interactions.length; k++) {
+          var interaction = furniture.interactions[k];
+          if (interaction.name === surfaceName) {
+            // create the item
+            var item = INTERACTIVEWORLD.createObjectByName(itemName);
+            item.position.x = position.x;
+            item.position.y = position.y;
+            item.position.z = position.z;
+            item.rotation.z = rotation.z;
+            interaction.add(item);
+          }
+        }
       }
     }
   }
