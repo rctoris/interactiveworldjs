@@ -161,7 +161,11 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
 };
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
-  return this.displayObject.constructor;
+  if (this.displayObject === undefined) {
+    return null;
+  } else {
+    return this.displayObject.constructor;
+  }
 };
 
 INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {

@@ -54,8 +54,10 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
   }
 };
 
-INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
-    vector) {
+INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType, vector) {
+  if (ObjectType === null) {
+    return;
+  }
   var that = this;
   // create the object
   var object = new ObjectType();
@@ -66,7 +68,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
     position : {
       x : that.position.x,
       y : that.position.y,
-      z : that.position.z,
+      z : that.position.z
     },
     rotation : that.rotation.z,
     object : {
@@ -74,7 +76,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
       position : {
         x : object.position.x,
         y : object.position.y,
-        z : object.position.z,
+        z : object.position.z
       },
       rotation : object.rotation.z
     }
@@ -82,8 +84,11 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
   this.add(object);
 };
 
-INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object,
-    worldPose) {
+INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object, worldPose) {
+  if (object === undefined || object === null) {
+    return;
+  }
+
   // convert to local coords
   this.parent.updateMatrixWorld();
   var local = new THREE.Vector3();
