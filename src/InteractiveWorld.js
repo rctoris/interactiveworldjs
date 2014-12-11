@@ -3,13 +3,15 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.9'
+  REVISION : '0.1.0'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
 INTERACTIVEWORLD.TASK_TABLE_SETTING = 0;
 INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT = 1;
 INTERACTIVEWORLD.TASK_DIRTY_DISHES = 2;
+
+INTERACTIVEWORLD.DOT_RADIUS = 0.04;
 
 INTERACTIVEWORLD.BRICKS_TEXTURE = 'resources/textures/bricks.jpg';
 INTERACTIVEWORLD.CARPET_GREY_TEXTURE = 'resources/textures/carpet-grey.jpg';
@@ -128,4 +130,46 @@ INTERACTIVEWORLD.init = function(options) {
   });
 
   return viewer;
+};
+
+INTERACTIVEWORLD.createObjectByName = function(name) {
+  switch (name) {
+    case 'Bed':
+      return new INTERACTIVEWORLD.Bed();
+    case 'Cabinet':
+      return new INTERACTIVEWORLD.Cabinet();
+    case 'Coffee Table':
+      return new INTERACTIVEWORLD.CoffeeTable();
+    case 'Couch':
+      return new INTERACTIVEWORLD.Couch();
+    case 'Counter':
+      return new INTERACTIVEWORLD.Counter();
+    case 'Cup':
+      return new INTERACTIVEWORLD.Cup();
+    case 'Dining Table with Chairs':
+      return new INTERACTIVEWORLD.DiningTable();
+    case 'Dresser':
+      return new INTERACTIVEWORLD.Dresser();
+    case 'Fork':
+      return new INTERACTIVEWORLD.Fork();
+    case 'Magazines':
+      return new INTERACTIVEWORLD.Magazines();
+    case 'Nightstand':
+      return new INTERACTIVEWORLD.Nightstand();
+    case 'Oven':
+      return new INTERACTIVEWORLD.Oven();
+    case 'Plate':
+      return new INTERACTIVEWORLD.Plate();
+    case 'Refrigerator':
+      return new INTERACTIVEWORLD.Refrigerator();
+    case 'Sink Unit':
+      return new INTERACTIVEWORLD.Sink();
+    case 'Spoon':
+      return new INTERACTIVEWORLD.Spoon();
+    case 'TV':
+      return new INTERACTIVEWORLD.TV();
+    default:
+      var r = INTERACTIVEWORLD.DOT_RADIUS;
+      return new THREE.Mesh(new THREE.SphereGeometry(r, r / 10000, r / 10000), new THREE.MeshNormalMaterial());
+  }
 };

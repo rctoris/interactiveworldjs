@@ -3,13 +3,15 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.0.9'
+  REVISION : '0.1.0'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
 INTERACTIVEWORLD.TASK_TABLE_SETTING = 0;
 INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT = 1;
 INTERACTIVEWORLD.TASK_DIRTY_DISHES = 2;
+
+INTERACTIVEWORLD.DOT_RADIUS = 0.04;
 
 INTERACTIVEWORLD.BRICKS_TEXTURE = 'resources/textures/bricks.jpg';
 INTERACTIVEWORLD.CARPET_GREY_TEXTURE = 'resources/textures/carpet-grey.jpg';
@@ -128,6 +130,48 @@ INTERACTIVEWORLD.init = function(options) {
   });
 
   return viewer;
+};
+
+INTERACTIVEWORLD.createObjectByName = function(name) {
+  switch (name) {
+    case 'Bed':
+      return new INTERACTIVEWORLD.Bed();
+    case 'Cabinet':
+      return new INTERACTIVEWORLD.Cabinet();
+    case 'Coffee Table':
+      return new INTERACTIVEWORLD.CoffeeTable();
+    case 'Couch':
+      return new INTERACTIVEWORLD.Couch();
+    case 'Counter':
+      return new INTERACTIVEWORLD.Counter();
+    case 'Cup':
+      return new INTERACTIVEWORLD.Cup();
+    case 'Dining Table with Chairs':
+      return new INTERACTIVEWORLD.DiningTable();
+    case 'Dresser':
+      return new INTERACTIVEWORLD.Dresser();
+    case 'Fork':
+      return new INTERACTIVEWORLD.Fork();
+    case 'Magazines':
+      return new INTERACTIVEWORLD.Magazines();
+    case 'Nightstand':
+      return new INTERACTIVEWORLD.Nightstand();
+    case 'Oven':
+      return new INTERACTIVEWORLD.Oven();
+    case 'Plate':
+      return new INTERACTIVEWORLD.Plate();
+    case 'Refrigerator':
+      return new INTERACTIVEWORLD.Refrigerator();
+    case 'Sink Unit':
+      return new INTERACTIVEWORLD.Sink();
+    case 'Spoon':
+      return new INTERACTIVEWORLD.Spoon();
+    case 'TV':
+      return new INTERACTIVEWORLD.TV();
+    default:
+      var r = INTERACTIVEWORLD.DOT_RADIUS;
+      return new THREE.Mesh(new THREE.SphereGeometry(r, r / 10000, r / 10000), new THREE.MeshNormalMaterial());
+  }
 };
 
 INTERACTIVEWORLD.Model = function(options) {
@@ -283,8 +327,10 @@ INTERACTIVEWORLD.InteractionSurface.prototype.mouseout = function() {
   }
 };
 
-INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
-    vector) {
+INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType, vector) {
+  if (ObjectType === null) {
+    return;
+  }
   var that = this;
   // create the object
   var object = new ObjectType();
@@ -295,7 +341,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
     position : {
       x : that.position.x,
       y : that.position.y,
-      z : that.position.z,
+      z : that.position.z
     },
     rotation : that.rotation.z,
     object : {
@@ -303,7 +349,7 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
       position : {
         x : object.position.x,
         y : object.position.y,
-        z : object.position.z,
+        z : object.position.z
       },
       rotation : object.rotation.z
     }
@@ -311,8 +357,11 @@ INTERACTIVEWORLD.InteractionSurface.prototype.dblclick = function(ObjectType,
   this.add(object);
 };
 
-INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object,
-    worldPose) {
+INTERACTIVEWORLD.InteractionSurface.prototype.setObjectPose = function(object, worldPose) {
+  if (object === undefined || object === null) {
+    return;
+  }
+
   // convert to local coords
   this.parent.updateMatrixWorld();
   var local = new THREE.Vector3();
@@ -766,7 +815,11 @@ INTERACTIVEWORLD.ObjectMenu.prototype.getMenuHeight = function() {
 };
 
 INTERACTIVEWORLD.ObjectMenu.prototype.getDisplayObjectType = function() {
-  return this.displayObject.constructor;
+  if (this.displayObject === undefined) {
+    return null;
+  } else {
+    return this.displayObject.constructor;
+  }
 };
 
 INTERACTIVEWORLD.ObjectMenu.prototype.markPlacedItem = function() {
@@ -1520,6 +1573,7 @@ INTERACTIVEWORLD.House = function(options) {
     rooms : [ bedroom.getConfig(), kitchen.getConfig(), livingRoom.getConfig(),
         diningRoom.getConfig() ]
   };
+  this.rooms = [bedroom, kitchen, livingRoom, diningRoom];
 };
 INTERACTIVEWORLD.House.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -2073,6 +2127,30 @@ INTERACTIVEWORLD.Viewer = function(options) {
   draw();
 };
 INTERACTIVEWORLD.Viewer.prototype.__proto__ = EventEmitter2.prototype;
+
+INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
+  options = options || {};
+  var surfaceName = options.surfaceName;
+  var itemName = options.itemName;
+  var position = options.position;
+  var rotation = options.rotation;
+
+  for (var i = 0; i < this.world.house.rooms.length; i++) {
+    var room = this.world.house.rooms[i];
+    for (var j = 0; j < room.furniture.length; j++) {
+      var surface = room.furniture[j];
+      if (surface.name === surfaceName) {
+        // create the item
+        var item = INTERACTIVEWORLD.createObjectByName(itemName);
+        item.position.x = position.x;
+        item.position.y = position.y;
+        item.position.z = position.z;
+        item.rotation.z = rotation.z;
+        surface.add(item);
+      }
+    }
+  }
+};
 
 INTERACTIVEWORLD.World = function(options) {
   options = options || [];
