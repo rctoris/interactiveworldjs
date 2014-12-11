@@ -130,6 +130,45 @@ INTERACTIVEWORLD.init = function(options) {
   return viewer;
 };
 
+INTERACTIVEWORLD.createObjectByName = function(name) {
+  switch (name) {
+    case 'Bed':
+      return new INTERACTIVEWORLD.Bed();
+    case 'Cabinet':
+      return new INTERACTIVEWORLD.Cabinet();
+    case 'Coffee Table':
+      return new INTERACTIVEWORLD.CoffeeTable();
+    case 'Couch':
+      return new INTERACTIVEWORLD.Couch();
+    case 'Counter':
+      return new INTERACTIVEWORLD.Counter();
+    case 'Cup':
+      return new INTERACTIVEWORLD.Cup();
+    case 'Dining Table with Chairs':
+      return new INTERACTIVEWORLD.DiningTable();
+    case 'Dresser':
+      return new INTERACTIVEWORLD.Dresser();
+    case 'Fork':
+      return new INTERACTIVEWORLD.Fork();
+    case 'Magazines':
+      return new INTERACTIVEWORLD.Magazines();
+    case 'Nightstand':
+      return new INTERACTIVEWORLD.Nightstand();
+    case 'Oven':
+      return new INTERACTIVEWORLD.Oven();
+    case 'Plate':
+      return new INTERACTIVEWORLD.Plate();
+    case 'Refrigerator':
+      return new INTERACTIVEWORLD.Refrigerator();
+    case 'Sink Unit':
+      return new INTERACTIVEWORLD.Sink();
+    case 'Spoon':
+      return new INTERACTIVEWORLD.Spoon();
+    case 'TV':
+      return new INTERACTIVEWORLD.TV();
+  }
+};
+
 INTERACTIVEWORLD.Model = function(options) {
   var that = this;
   options = options || {};
