@@ -31,6 +31,7 @@
   var divID = options.divID;
   var antialias = options.antialias;
   var task = options.task || 0;
+  this.manuallyPlacedItems = [];
 
   // determine the task
   var objs = [];
@@ -164,8 +165,188 @@ INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
             item.position.z = position.z;
             item.rotation.z = rotation.z;
             interaction.add(item);
+            this.manuallyPlacedItems.push(item);
           }
         }
+      }
+    }
+  }
+};
+
+INTERACTIVEWORLD.Viewer.prototype.placeObjectOnFurniture = function(options) {
+  options = options || {};
+  var furnitureName = options.furnitureName;
+  var itemName = options.itemName;
+  var position = options.position;
+  var rotation = options.rotation;
+
+  for (var i = 0; i &lt; this.world.house.rooms.length; i++) {
+    var room = this.world.house.rooms[i];
+    for (var j = 0; j &lt; room.furniture.length; j++) {
+      var furniture = room.furniture[j];
+      if (furniture.name === furnitureName) {
+        // create the item
+        var item = INTERACTIVEWORLD.createObjectByName(itemName);
+        item.position.x = position.x;
+        item.position.y = position.y;
+        item.position.z = furniture.interactions[0].position.z;
+        item.rotation.z = rotation.z;
+        furniture.add(item);
+        this.manuallyPlacedItems.push(item);
+      }
+    }
+  }
+};
+
+INTERACTIVEWORLD.Viewer.prototype.placeObjectOnPoi = function(options) {
+  options = options || {};
+  var furnitureName = options.furnitureName;
+  var poiName = options.poiName;
+  var itemName = options.itemName;
+  var position = options.position;
+  var rotation = options.rotation;
+
+  for (var i = 0; i &lt; this.world.house.rooms.length; i++) {
+    var room = this.world.house.rooms[i];
+    for (var j = 0; j &lt; room.furniture.length; j++) {
+      var furniture = room.furniture[j];
+      if (furniture.name === furnitureName) {
+        for (var k = 0; k &lt; furniture.pois.length; k++) {
+          var poi = furniture.pois[k];
+          if (poi.name === poiName) {
+            // create the item
+            var item = INTERACTIVEWORLD.createObjectByName(itemName);
+            item.position.x = position.x;
+            item.position.y = position.y;
+            item.position.z = poi.height;
+            item.rotation.z = rotation.z;
+            furniture.poiFrames[k].add(item);
+            this.manuallyPlacedItems.push(item);
+            return;
+          }
+        }
+      }
+    }
+  }
+};
+
+INTERACTIVEWORLD.Viewer.prototype.placeObjectOnObject = function(options) {
+  options = options || {};
+  var referenceItemName = options.referenceItemName;
+  var itemName = options.itemName;
+  var position = options.position;
+  var rotation = options.rotation;
+
+  for (var i = 0; i &lt; this.manuallyPlacedItems.length; i++) {
+    var referenceItem = this.manuallyPlacedItems[i];
+    if (referenceItem.name === referenceItemName) {
+      // create the item
+      var item = INTERACTIVEWORLD.createObjectByName(itemName);
+      item.position.x = position.x;
+      item.position.y = position.y;
+      item.position.z = position.z;
+      item.rotation.z = rotation.z;
+      referenceItem.add(item);
+      this.manuallyPlacedItems.push(item);
+      return;
+    }
+  }
+};
+
+INTERACTIVEWORLD.Viewer.prototype.displayTemplateFromModels = function(models) {
+  // get the initial state
+  var availableFrames = [];
+  for (var i = 0; i &lt; this.world.house.rooms.length; i++) {
+    var room = this.world.house.rooms[i];
+    for (var j = 0; j &lt; room.furniture.length; j++) {
+      var furniture = room.furniture[j];
+      availableFrames.push({name: furniture.name, type: 'furniture'});
+      for (var k = 0; k &lt; furniture.pois.length; k++) {
+        var poi = furniture.pois[k];
+        var add = true;
+        for (var l = 0; l &lt; availableFrames.length; l++) {
+          if (availableFrames[l].name === poi.name) {
+            add = false;
+            break;
+          }
+        }
+        if (add) {
+          availableFrames.push({name: poi.name, type: 'poi', furniture: furniture.name});
+        }
+      }
+    }
+  }
+
+  // available items
+  var availableItems = [];
+  for (var m = 0; m &lt; models.length; m++) {
+    if (availableItems.indexOf(models[m].placement.item.name) === -1) {
+      availableItems.push(models[m].placement.item.name);
+    }
+  }
+
+  // place all the items we need to place
+  while(availableItems.length > 0) {
+    var bestValue = Infinity;
+    var bestPlacement = {};
+    for (var n = 0; n &lt; models.length; n++) {
+      var model = models[n];
+      // check if this item needs to be placed still
+      if (availableItems.indexOf(model.placement.item.name) >= 0) {
+        // now check if the reference frame is available
+        var available = false;
+        for (var o = 0; o &lt; availableFrames.length; o++) {
+          if (availableFrames[o].name === model.placement.reference_frame_id) {
+            available = true;
+            break;
+          }
+        }
+        if (available && model.decision_value &lt; bestValue) {
+          bestValue = model.decision_value;
+          bestPlacement = model.placement;
+        }
+      }
+    }
+
+    // find the reference frame to place in
+    for (var p = 0; p &lt; availableFrames.length; p++) {
+      var frame = availableFrames[p];
+      if (frame.name === bestPlacement.reference_frame_id) {
+        console.log('Placing ' + bestPlacement.item.name + ' w.r.t ' + bestPlacement.reference_frame_id);
+        // place the item
+        switch (frame.type) {
+          case 'furniture':
+            this.placeObjectOnFurniture({
+              furnitureName : frame.name,
+              itemName : bestPlacement.item.name,
+              position : bestPlacement.position,
+              rotation : {z: bestPlacement.rotation}
+            });
+            break;
+          case 'poi':
+            this.placeObjectOnPoi({
+              furnitureName : frame.furniture,
+              poiName : frame.name,
+              itemName : bestPlacement.item.name,
+              position : bestPlacement.position,
+              rotation : {z: bestPlacement.rotation}
+            });
+            break;
+          case 'item':
+            this.placeObjectOnObject({
+              referenceItemName : frame.name,
+              itemName : bestPlacement.item.name,
+              position : bestPlacement.position,
+              rotation : {z: bestPlacement.rotation}
+            });
+            break;
+        }
+
+        // remove the item from the list
+        availableItems.splice(availableItems.indexOf(bestPlacement.item.name), 1);
+        // add the item as a possible reference frame
+        availableFrames.push({name: bestPlacement.item.name, type: 'item'});
+        break;
       }
     }
   }
@@ -186,7 +367,7 @@ INTERACTIVEWORLD.Viewer.prototype.placeObjectOnSurface = function(options) {
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Dec 11 2014 12:54:21 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Dec 12 2014 08:59:59 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>
