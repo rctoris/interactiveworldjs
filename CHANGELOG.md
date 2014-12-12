@@ -1,3 +1,8 @@
+2014-12-12 - **0.3.0**
+ * Template building added [(rctoris)](https://github.com/rctoris/)
+ * Add to POI added [(rctoris)](https://github.com/rctoris/)
+ * Add to object added [(rctoris)](https://github.com/rctoris/)
+
 2014-12-11 - **0.2.0**
  * Surfaces now recorded in data [(rctoris)](https://github.com/rctoris/)
 
