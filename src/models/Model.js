@@ -9,6 +9,7 @@ INTERACTIVEWORLD.Model = function(options) {
   this.depth = options.depth;
   this.interactions = [];
   this.pois = [];
+  this.poiFrames = [];
 
   var model = INTERACTIVEWORLD.PATH + options.model;
   var offsetX = options.offsetX || 0;
@@ -76,6 +77,15 @@ INTERACTIVEWORLD.Model.prototype.addPOI = function(name, width, height,
     },
     rotation : rotation
   });
+  // create a point as the mesh
+  var r = 0.001;
+  var mesh = new THREE.Mesh(new THREE.SphereGeometry(r, r, r), new THREE.MeshNormalMaterial());
+  mesh.position.x = offsetX;
+  mesh.position.y = offsetY;
+  mesh.position.z = offsetZ;
+  mesh.rotation.z = rotation;
+  this.add(mesh);
+  this.poiFrames.push(mesh);
 };
 
 INTERACTIVEWORLD.Model.prototype.getConfig = function() {
