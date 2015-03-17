@@ -3,13 +3,14 @@
  */
 
 var INTERACTIVEWORLD = INTERACTIVEWORLD || {
-  REVISION : '0.3.0'
+  REVISION : '0.4.0'
 };
 
 INTERACTIVEWORLD.TASK_NONE = -1;
 INTERACTIVEWORLD.TASK_TABLE_SETTING = 0;
 INTERACTIVEWORLD.TASK_MAGAZINE_PLACEMENT = 1;
 INTERACTIVEWORLD.TASK_DIRTY_DISHES = 2;
+INTERACTIVEWORLD.TASK_PUT_AWAY_GENERAL = 3;
 
 INTERACTIVEWORLD.DOT_RADIUS = 0.04;
 
@@ -2053,9 +2054,16 @@ INTERACTIVEWORLD.Viewer = function(options) {
   } else if (task === INTERACTIVEWORLD.TASK_DIRTY_DISHES) {
     // table setting
     objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
-        new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
+      new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon() ];
     count = 3;
     text = 'Place the dirty dishes where they belong.';
+  } else if (task === INTERACTIVEWORLD.TASK_PUT_AWAY_GENERAL) {
+    // general put away
+    objs = [ new INTERACTIVEWORLD.Plate(), new INTERACTIVEWORLD.Cup(),
+      new INTERACTIVEWORLD.Fork(), new INTERACTIVEWORLD.Spoon(),
+      new INTERACTIVEWORLD.Magazines()];
+    count = 3;
+    text = 'Put the items away where they belong.';
   }
   for (var i=0; i < objs.length; i++) {
     objInfo.push({
