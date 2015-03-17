@@ -1,3 +1,6 @@
+2015-03-17 - **0.5.0**
+ * General put away task added [(rctoris)](https://github.com/rctoris/)
+
 2014-12-12 - **0.3.0**
  * Template building added [(rctoris)](https://github.com/rctoris/)
  * Add to POI added [(rctoris)](https://github.com/rctoris/)
