@@ -4,7 +4,12 @@ interactiveworldjs [![Build Status](https://api.travis-ci.org/rctoris/interactiv
 #### 3D Visualization Interface for Learning Object Reference Frames
 
 ### Usage
-Pre-built files can be found in either [interactiveworld.js](build/interactiveworld.js) or [interactiveworld.min.js](build/interactiveworld.min.js).
+Pre-built CDN files can be at:
+
+ * [http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.js](http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.min.js)
+ * [http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.min.js](http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.min.js)
+ * [http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.css](http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.min.css)
+ * [http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.min.css](http://cdn.robotwebtools.org/interactiveworldjs/current/interactiveworld.min.css)
 
 ### Build
 Checkout [CONTRIBUTING.md](CONTRIBUTING.md) for details on building.
